@@ -48,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Text(
           label,
           style: TextStyle(
-            fontSize: FontSizes.f14,
+            fontSize: FontSizes.f14.sp,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
           ),
@@ -62,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             hintText: hintText,
             hintStyle: TextStyle(
               color: Colors.grey[700],
-              fontSize: FontSizes.f14,
+              fontSize: FontSizes.f14.sp,
             ),
             filled: true,
             fillColor: Colors.transparent,
@@ -102,7 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         label: Text(
           text,
           style: TextStyle(
-            fontSize: FontSizes.f14,
+            fontSize: FontSizes.f14.sp,
             color: Colors.black87,
             fontWeight: FontWeight.w500,
           ),
@@ -126,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.grey,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black87, size: 26),
+          icon: Icon(Icons.arrow_back, color: Colors.black87, size: 26.sp),
           onPressed: () => Navigator.pop(context),
         ),
         title: Padding(
@@ -135,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             "Create Account",
             style: TextStyle(
               color: AppColors.blue3,
-              fontSize: FontSizes.f16,
+              fontSize: FontSizes.f16.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -157,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Text(
                   'Get Started',
                   style: TextStyle(
-                    fontSize: FontSizes.f20,
+                    fontSize: FontSizes.f20.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -166,7 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Text(
                   'Sign up to begin your visa application process.',
                   style: TextStyle(
-                    fontSize: FontSizes.f14,
+                    fontSize: FontSizes.f14.sp,
                     color: Colors.grey[600],
                   ),
                 ),
@@ -246,7 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              fontSize: FontSizes.f12,
+                              fontSize: FontSizes.f12.sp,
                               color: Colors.grey[700],
                             ),
                             children: [
@@ -296,7 +296,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(width: 12.w),
                     _buildSocialButton(
                       text: 'Apple',
-                      icon: Icon(Icons.apple, color: Colors.black, size: 24),
+                      icon: Icon(Icons.apple, color: Colors.black, size: 24.sp),
                       onPressed: () {},
                     ),
                   ],
@@ -308,7 +308,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Text(
                       'Already have an account  ',
                       style: TextStyle(
-                        fontSize: FontSizes.f16,
+                        fontSize: FontSizes.f14.sp,
                         color: Colors.black87,
                       ),
                     ),
@@ -319,7 +319,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Text(
                         'Sign in',
                         style: TextStyle(
-                          fontSize: FontSizes.f14,
+                          fontSize: FontSizes.f14.sp,
                           color: AppColors.blue2,
                           fontWeight: FontWeight.w600,
                         ),

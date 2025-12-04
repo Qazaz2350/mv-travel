@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 
 class FRectangleButton extends StatelessWidget {
@@ -19,15 +20,17 @@ class FRectangleButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        minimumSize: const Size(double.infinity, 0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        padding: EdgeInsets.symmetric(vertical: 12.h), // responsive height
+        minimumSize: Size(double.infinity, 45.h), // responsive height
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r), // responsive radius
+        ),
         elevation: 0,
       ),
       child: Text(
         text,
         style: TextStyle(
-          fontSize: FontSizes.f16,
+          fontSize: FontSizes.f16, // your font system
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
