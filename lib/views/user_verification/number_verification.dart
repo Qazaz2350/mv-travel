@@ -20,9 +20,9 @@ class PhoneNumberScreen extends StatelessWidget {
       child: Consumer<PhoneNumberViewModel>(
         builder: (context, vm, _) {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.grey,
             appBar: AppBar(
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.grey,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -102,12 +102,12 @@ class PhoneNumberScreen extends StatelessWidget {
                           style: TextStyle(fontSize: FontSizes.f16),
                           decoration: InputDecoration(
                             hintText: '312 456 789',
-                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            hintStyle: TextStyle(color: AppColors.black),
                             border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey[300]!),
+                              borderSide: BorderSide(color: AppColors.black),
                             ),
                             enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey[300]!),
+                              borderSide: BorderSide(color: Colors.grey[500]!),
                             ),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(

@@ -20,9 +20,9 @@ class BirthDateScreen extends StatelessWidget {
       child: Consumer<BirthDateViewModel>(
         builder: (context, vm, _) {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.grey,
             appBar: AppBar(
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.grey,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -49,7 +49,7 @@ class BirthDateScreen extends StatelessWidget {
                   Text(
                     'Select your Birth Date',
                     style: TextStyle(
-                      fontSize: FontSizes.f28,
+                      fontSize: FontSizes.f20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -60,14 +60,15 @@ class BirthDateScreen extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey[300]!),
+                        color: Colors.white,
+                        border: Border.all(color: AppColors.grey2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.calendar_today_outlined,
-                            color: Colors.grey[600],
+                            color: AppColors.grey2,
                           ),
                           SizedBox(width: 12),
                           Text(
@@ -77,7 +78,7 @@ class BirthDateScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: FontSizes.f16,
                               color: vm.dateController.text.isEmpty
-                                  ? Colors.grey[400]
+                                  ? AppColors.grey2
                                   : Colors.black,
                             ),
                           ),
