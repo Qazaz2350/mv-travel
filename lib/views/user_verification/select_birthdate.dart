@@ -44,7 +44,7 @@ class BirthDateScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StepIndicator(totalSteps: 3, currentStep: 2),
+                  StepIndicator(totalSteps: 9, currentStep: 2),
                   SizedBox(height: 32),
                   Text(
                     'Select your Birth Date',

@@ -7,6 +7,7 @@ import 'package:mvtravel/utilis/commen/progress_indicator.dart';
 import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/nationality_residence_viewmodel.dart';
+import 'package:mvtravel/views/user_verification/purpose_of_visit.dart';
 import 'package:provider/provider.dart';
 
 class NationalityResidenceScreen extends StatelessWidget {
@@ -39,7 +40,7 @@ class NationalityResidenceScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StepIndicator(totalSteps: 3, currentStep: 3),
+                  StepIndicator(totalSteps: 9, currentStep: 3),
                   SizedBox(height: 32.h),
 
                   /// Title
@@ -69,7 +70,7 @@ class NationalityResidenceScreen extends StatelessWidget {
                       vertical: 2.h,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.grey2),
+                      // border: Border.all(color: AppColors.grey2),
                       borderRadius: BorderRadius.circular(12.r),
                       color: Colors.white,
                     ),
@@ -119,7 +120,7 @@ class NationalityResidenceScreen extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      border: Border.all(color: AppColors.grey2),
+                      // border: Border.all(color: AppColors.grey2),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: DropdownButtonHideUnderline(
@@ -156,7 +157,9 @@ class NationalityResidenceScreen extends StatelessWidget {
                   FRectangleButton(
                     text: 'Next',
                     color: AppColors.blue3,
-                    onPressed: () {},
+                    onPressed: () {
+                      Nav.push(context, VisitPurposeView());
+                    },
                   ),
                   SizedBox(height: 12.h),
                 ],

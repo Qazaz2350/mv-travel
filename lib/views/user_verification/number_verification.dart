@@ -44,7 +44,7 @@ class PhoneNumberScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StepIndicator(totalSteps: 3, currentStep: 1),
+                  StepIndicator(totalSteps: 9, currentStep: 1),
                   SizedBox(height: 32),
                   Text(
                     'What is your phone number?',
