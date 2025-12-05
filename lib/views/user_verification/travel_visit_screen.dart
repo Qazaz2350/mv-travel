@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/commen/full_size_button.dart';
+import 'package:mvtravel/utilis/commen/progress_indicator.dart';
+import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/travel_visit_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -63,141 +65,143 @@ class _TravelVisaContent extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 22.sp),
           onPressed: () => Nav.pop(context),
         ),
-        title: Text(
-          'Visit Application Details',
-          style: TextStyle(
-            color: AppColors.black,
-            fontSize: FontSizes.f16,
-            fontWeight: FontWeight.w600,
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 16.w),
+            child: SkipButton(onPressed: () {}),
           ),
-        ),
-        centerTitle: true,
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            Text(
-              'Travel Visa',
-              style: TextStyle(
-                fontSize: FontSizes.f20,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              StepIndicator(totalSteps: 9, currentStep: 5),
+              SizedBox(height: 32.h),
+              // Title
+              Text(
+                'Travel Visa',
+                style: TextStyle(
+                  fontSize: FontSizes.f20,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                ),
               ),
-            ),
-            SizedBox(height: 24.h),
+              SizedBox(height: 24.h),
 
-            // Start Date and End Date Row
-            Row(
-              children: [
-                Expanded(
-                  child: _DateField(
-                    label: 'Start Date',
-                    date: viewModel.model.startDate,
-                    formattedDate: viewModel.formatDate(
-                      viewModel.model.startDate,
+              // Start Date and End Date Row
+              Row(
+                children: [
+                  Expanded(
+                    child: _DateField(
+                      label: 'Start Date',
+                      date: viewModel.model.startDate,
+                      formattedDate: viewModel.formatDate(
+                        viewModel.model.startDate,
+                      ),
+                      onTap: () => _selectDate(context, true, viewModel),
                     ),
-                    onTap: () => _selectDate(context, true, viewModel),
                   ),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: _DateField(
-                    label: 'End Date',
-                    date: viewModel.model.endDate,
-                    formattedDate: viewModel.formatDate(
-                      viewModel.model.endDate,
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: _DateField(
+                      label: 'End Date',
+                      date: viewModel.model.endDate,
+                      formattedDate: viewModel.formatDate(
+                        viewModel.model.endDate,
+                      ),
+                      onTap: () => _selectDate(context, false, viewModel),
                     ),
-                    onTap: () => _selectDate(context, false, viewModel),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 24.h),
+                ],
+              ),
+              SizedBox(height: 24.h),
 
-            // Reason Field
-            Text(
-              'Reason',
-              style: TextStyle(
-                fontSize: FontSizes.f14,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: TextField(
-                onChanged: viewModel.setReason,
-                maxLines: 3,
-                style: TextStyle(fontSize: FontSizes.f14),
-                decoration: InputDecoration(
-                  hintText: 'Type Reasons',
-                  hintStyle: TextStyle(
-                    color: AppColors.grey2,
-                    fontSize: FontSizes.f14,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.all(16.w),
-                  filled: true,
-                  fillColor: AppColors.white,
+              // Reason Field
+              Text(
+                'Reason',
+                style: TextStyle(
+                  fontSize: FontSizes.f14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
                 ),
               ),
-            ),
-            SizedBox(height: 24.h),
-
-            // Estimated Budget Field
-            Text(
-              'Estimated Budget for Trip (in USD)',
-              style: TextStyle(
-                fontSize: FontSizes.f14,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: TextField(
-                onChanged: viewModel.setEstimatedBudget,
-                keyboardType: TextInputType.number,
-                style: TextStyle(fontSize: FontSizes.f14),
-                decoration: InputDecoration(
-                  hintText: '\$ e.g., 5000',
-                  hintStyle: TextStyle(
-                    color: AppColors.grey2,
-                    fontSize: FontSizes.f14,
+              SizedBox(height: 8.h),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: TextField(
+                  onChanged: viewModel.setReason,
+                  maxLines: 3,
+                  style: TextStyle(fontSize: FontSizes.f14),
+                  decoration: InputDecoration(
+                    hintText: 'Type Reasons',
+                    hintStyle: TextStyle(
+                      color: AppColors.grey2,
+                      fontSize: FontSizes.f14,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: EdgeInsets.all(16.w),
+                    filled: true,
+                    fillColor: AppColors.white,
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.all(16.w),
-                  filled: true,
-                  fillColor: AppColors.white,
                 ),
               ),
-            ),
-            SizedBox(height: 200.h),
+              SizedBox(height: 24.h),
 
-            // Save Button
-            FRectangleButton(
-              text: 'Save',
-              color: AppColors.blue3,
-              onPressed: () {},
-            ),
-          ],
+              // Estimated Budget Field
+              Text(
+                'Estimated Budget for Trip (in USD)',
+                style: TextStyle(
+                  fontSize: FontSizes.f14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: TextField(
+                  onChanged: viewModel.setEstimatedBudget,
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(fontSize: FontSizes.f14),
+                  decoration: InputDecoration(
+                    hintText: '\$ e.g., 5000',
+                    hintStyle: TextStyle(
+                      color: AppColors.grey2,
+                      fontSize: FontSizes.f14,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: EdgeInsets.all(16.w),
+                    filled: true,
+                    fillColor: AppColors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: 200.h),
+
+              // Save Button
+              FRectangleButton(
+                text: 'Save',
+                color: AppColors.blue3,
+                onPressed: () {},
+              ),
+            ],
+          ),
         ),
       ),
     );
