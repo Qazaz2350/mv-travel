@@ -9,8 +9,9 @@ import 'package:mvtravel/utilis/commen/full_size_button.dart';
 import 'package:mvtravel/utilis/commen/progress_indicator.dart';
 import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
-import 'package:mvtravel/view_model/VisitPurpose_ViewModel.dart';
-import 'package:mvtravel/views/user_verification/travel_visit_screen.dart';
+import 'package:mvtravel/view_model/Purpose_of_visit_ViewModel.dart';
+import 'package:mvtravel/views/user_verification/purpose/international_students_view.dart';
+import 'package:mvtravel/views/user_verification/purpose/travel_visit_screen.dart';
 import 'package:provider/provider.dart';
 
 class VisitPurposeView extends StatelessWidget {
@@ -112,7 +113,19 @@ class _VisitPurposeContent extends StatelessWidget {
                   return _PurposeCard(
                     purpose: purpose,
                     isSelected: viewModel.isPurposeSelected(purpose.id),
-                    onTap: () => viewModel.selectPurpose(purpose.id),
+                    onTap: () {
+                      viewModel.selectPurpose(purpose.id);
+
+                      if (purpose.id == 'travel') {
+                        Nav.push(context, const TravelVisaView());
+                      } else if (purpose.id == 'student') {
+                        Nav.push(context, const InternationalStudentsView());
+                      } else if (purpose.id == 'work') {
+                        Nav.push(context, const TravelVisaView());
+                      } else if (purpose.id == 'investment') {
+                        Nav.push(context, const TravelVisaView());
+                      }
+                    },
                   );
                 },
               ),
@@ -121,7 +134,7 @@ class _VisitPurposeContent extends StatelessWidget {
             FRectangleButton(
               text: 'Next',
               color: AppColors.blue3,
-              onPressed: () => Nav.push(context, const TravelVisaView()),
+              onPressed: () => Nav.pop(context),
             ),
             SizedBox(height: 24.h),
           ],

@@ -8,10 +8,12 @@ class VisitPurposeViewModel extends ChangeNotifier {
 
   final List<VisitPurpose> purposes = [
     VisitPurpose(
+      
       id: 'travel',
       imagePath: 'assets/icon_images/plane.png',
       title: 'Travel Visa',
       description: 'For tourism, family visits, or short-term leisure.',
+      
     ),
     VisitPurpose(
       id: 'student',

@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/commen/full_size_button.dart';
-import 'package:mvtravel/utilis/commen/progress_indicator.dart';
-import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/travel_visit_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -60,17 +58,24 @@ class _TravelVisaContent extends StatelessWidget {
       backgroundColor: AppColors.grey,
       appBar: AppBar(
         backgroundColor: AppColors.grey,
+        title: Padding(
+          padding: const EdgeInsets.only(right: 40.0),
+          child: Center(
+            child: const Text(
+              'Visit Application Details',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 22.sp),
           onPressed: () => Nav.pop(context),
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 16.w),
-            child: SkipButton(onPressed: () {}),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -79,8 +84,7 @@ class _TravelVisaContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              StepIndicator(totalSteps: 9, currentStep: 5),
-              SizedBox(height: 32.h),
+              // SizedBox(height: 32.h),
               // Title
               Text(
                 'Travel Visa',
@@ -195,10 +199,13 @@ class _TravelVisaContent extends StatelessWidget {
               SizedBox(height: 200.h),
 
               // Save Button
+              SizedBox(height: 35.h),
               FRectangleButton(
                 text: 'Save',
                 color: AppColors.blue3,
-                onPressed: () {},
+                onPressed: () {
+                  Nav.pop(context);
+                },
               ),
             ],
           ),
@@ -208,9 +215,6 @@ class _TravelVisaContent extends StatelessWidget {
   }
 }
 
-// ============================================
-// WIDGET - _DateField
-// ============================================
 class _DateField extends StatelessWidget {
   final String label;
   final DateTime? date;
@@ -234,7 +238,7 @@ class _DateField extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: FontSizes.f14,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w400,
             color: AppColors.black,
           ),
         ),
@@ -252,14 +256,14 @@ class _DateField extends StatelessWidget {
                 Icon(
                   Icons.calendar_today_outlined,
                   size: 18.sp,
-                  color: AppColors.grey2,
+                  color: AppColors.black,
                 ),
                 SizedBox(width: 8.w),
                 Text(
                   formattedDate,
                   style: TextStyle(
                     fontSize: FontSizes.f14,
-                    color: date != null ? AppColors.black : AppColors.grey2,
+                    color: date != null ? AppColors.black : AppColors.black,
                   ),
                 ),
               ],
