@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/commen/full_size_button.dart';
-import 'package:mvtravel/utilis/commen/progress_indicator.dart';
-import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
+import 'package:mvtravel/commen/full_size_button.dart';
+import 'package:mvtravel/commen/progress_indicator.dart';
+import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
+import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/view_model/phone_number_viewmodel.dart';
-import 'package:mvtravel/views/user_verification/select_birthdate.dart';
+import 'package:mvtravel/views/home_page_view.dart';
+import 'package:mvtravel/views/select_birthdate.dart';
 import 'package:provider/provider.dart';
 
 class PhoneNumberScreen extends StatelessWidget {
@@ -33,7 +35,7 @@ class PhoneNumberScreen extends StatelessWidget {
                   padding: EdgeInsets.only(right: 16.w),
                   child: SkipButton(
                     onPressed: () {
-                      BirthDateScreen();
+                      Nav.push(context, HomePageView());
                     },
                   ),
                 ),

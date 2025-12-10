@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/commen/full_size_button.dart';
-import 'package:mvtravel/utilis/commen/progress_indicator.dart';
+import 'package:mvtravel/commen/full_size_button.dart';
+import 'package:mvtravel/commen/progress_indicator.dart';
 import 'package:mvtravel/view_model/work_application_details_viewmodel.dart';
 import 'package:mvtravel/utilis/Nav.dart';
-import 'package:mvtravel/views/user_verification/purpose/Investment%20Details.dart';
+import 'package:mvtravel/views/Investment%20Details.dart';
 
 class WorkApplicationDetailsView extends StatefulWidget {
   const WorkApplicationDetailsView({Key? key}) : super(key: key);

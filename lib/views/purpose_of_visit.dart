@@ -5,15 +5,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/model/purpose_of_visit_model.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/commen/full_size_button.dart';
-import 'package:mvtravel/utilis/commen/progress_indicator.dart';
-import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
+import 'package:mvtravel/commen/full_size_button.dart';
+import 'package:mvtravel/commen/progress_indicator.dart';
+import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/Purpose_of_visit_ViewModel.dart';
-import 'package:mvtravel/views/user_verification/purpose/Investment%20Details.dart';
-import 'package:mvtravel/views/user_verification/purpose/Work_Application_Details.dart';
-import 'package:mvtravel/views/user_verification/purpose/international_students_view.dart';
-import 'package:mvtravel/views/user_verification/purpose/travel_visit_screen.dart';
+import 'package:mvtravel/views/Investment%20Details.dart';
+import 'package:mvtravel/views/Work_Application_Details.dart';
+import 'package:mvtravel/views/international_students_view.dart';
+import 'package:mvtravel/views/travel_visit_screen.dart';
 import 'package:provider/provider.dart';
 
 class VisitPurposeView extends StatelessWidget {

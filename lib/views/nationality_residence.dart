@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/commen/full_size_button.dart';
-import 'package:mvtravel/utilis/commen/progress_indicator.dart';
-import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
+import 'package:mvtravel/commen/full_size_button.dart';
+import 'package:mvtravel/commen/progress_indicator.dart';
+import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/nationality_residence_viewmodel.dart';
-import 'package:mvtravel/views/user_verification/purpose/purpose_of_visit.dart';
+import 'package:mvtravel/views/purpose_of_visit.dart';
 import 'package:provider/provider.dart';
 
 class NationalityResidenceScreen extends StatelessWidget {

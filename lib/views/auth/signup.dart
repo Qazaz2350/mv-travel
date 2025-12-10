@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/commen/full_size_button.dart';
+import 'package:mvtravel/commen/full_size_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/views/auth/signin.dart';
 

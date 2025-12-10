@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/commen/full_size_button.dart';
-import 'package:mvtravel/utilis/commen/progress_indicator.dart';
-import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
+import 'package:mvtravel/commen/full_size_button.dart';
+import 'package:mvtravel/commen/progress_indicator.dart';
+import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/birthdate_viewmodel.dart';
-import 'package:mvtravel/views/user_verification/nationality_residence.dart';
+import 'package:mvtravel/views/nationality_residence.dart';
 import 'package:provider/provider.dart';
 
 class BirthDateScreen extends StatelessWidget {

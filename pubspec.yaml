@@ -68,6 +68,12 @@ flutter:
     - assets/onboarding/
     - assets/icon_images/
     - assets/lottie/
+    - assets/home/
+    # - assets/
+    # - assets/
+    # - assets/
+    # - assets/
+
     # assets\lottie\loading.json
     
 

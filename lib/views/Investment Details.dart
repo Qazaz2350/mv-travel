@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/model/investment_details_model.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/commen/full_size_button.dart';
-import 'package:mvtravel/utilis/commen/progress_indicator.dart';
+import 'package:mvtravel/commen/full_size_button.dart';
+import 'package:mvtravel/commen/progress_indicator.dart';
 import 'package:mvtravel/view_model/investment_details_viewmodel.dart';
 import 'package:mvtravel/utilis/Nav.dart';
-import 'package:mvtravel/views/user_verification/loading_page.dart';
+import 'package:mvtravel/views/loading_page.dart';
 import 'package:provider/provider.dart';
 
 class InvestmentDetailsView extends StatelessWidget {
@@ -20,24 +20,24 @@ class InvestmentDetailsView extends StatelessWidget {
       create: (_) => InvestmentDetailsViewModel(),
       child: Consumer<InvestmentDetailsViewModel>(
         builder: (context, viewModel, child) {
-          Future<void> _handleSave() async {
-            final success = await viewModel.saveInvestmentDetails();
-            if (success && context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Investment details saved successfully'),
-                  backgroundColor: AppColors.green1,
-                ),
-              );
-            } else if (viewModel.errorMessage != null && context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(viewModel.errorMessage!),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          }
+          // Future<void> _handleSave() async {
+          //   final success = await viewModel.saveInvestmentDetails();
+          //   if (success && context.mounted) {
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       SnackBar(
+          //         content: Text('Investment details saved successfully'),
+          //         backgroundColor: AppColors.green1,
+          //       ),
+          //     );
+          //   } else if (viewModel.errorMessage != null && context.mounted) {
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       SnackBar(
+          //         content: Text(viewModel.errorMessage!),
+          //         backgroundColor: Colors.red,
+          //       ),
+          //     );
+          //   }
+          // }
 
           return Scaffold(
             backgroundColor: AppColors.grey,

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/commen/full_size_button.dart';
+import 'package:mvtravel/commen/full_size_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/sign_in_view_model.dart';
-import 'package:mvtravel/views/user_verification/number_verification.dart';
+import 'package:mvtravel/views/number_verification.dart';
 // import 'sign_in_view_model.dart';
 import 'package:provider/provider.dart';
 
