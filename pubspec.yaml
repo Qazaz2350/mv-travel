@@ -37,6 +37,8 @@ dependencies:
   intl:
   flutter_screenutil:
   provider: 
+  file_picker:
+  lottie: 
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +67,8 @@ flutter:
     - assets/
     - assets/onboarding/
     - assets/icon_images/
+    - assets/lottie/
+    # assets\lottie\loading.json
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

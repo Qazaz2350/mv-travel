@@ -10,6 +10,8 @@ import 'package:mvtravel/utilis/commen/progress_indicator.dart';
 import 'package:mvtravel/utilis/commen/widgets/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/Purpose_of_visit_ViewModel.dart';
+import 'package:mvtravel/views/user_verification/purpose/Investment%20Details.dart';
+import 'package:mvtravel/views/user_verification/purpose/Work_Application_Details.dart';
 import 'package:mvtravel/views/user_verification/purpose/international_students_view.dart';
 import 'package:mvtravel/views/user_verification/purpose/travel_visit_screen.dart';
 import 'package:provider/provider.dart';
@@ -121,9 +123,9 @@ class _VisitPurposeContent extends StatelessWidget {
                       } else if (purpose.id == 'student') {
                         Nav.push(context, const InternationalStudentsView());
                       } else if (purpose.id == 'work') {
-                        Nav.push(context, const TravelVisaView());
+                        Nav.push(context, const WorkApplicationDetailsView());
                       } else if (purpose.id == 'investment') {
-                        Nav.push(context, const TravelVisaView());
+                        Nav.push(context, const InvestmentDetailsView());
                       }
                     },
                   );
@@ -134,7 +136,7 @@ class _VisitPurposeContent extends StatelessWidget {
             FRectangleButton(
               text: 'Next',
               color: AppColors.blue3,
-              onPressed: () => Nav.pop(context),
+              onPressed: () => Nav.push(context, TravelVisaView()),
             ),
             SizedBox(height: 24.h),
           ],

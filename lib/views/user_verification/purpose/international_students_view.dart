@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/commen/full_size_button.dart';
+import 'package:mvtravel/utilis/commen/progress_indicator.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/international_students_viewmodel.dart';
+import 'package:mvtravel/views/user_verification/purpose/Work_Application_Details.dart';
 import 'package:provider/provider.dart';
 
 class InternationalStudentsView extends StatelessWidget {
@@ -34,13 +36,15 @@ class InternationalStudentsView extends StatelessWidget {
                   ),
                 ),
               ),
-              backgroundColor: AppColors.white,
+              backgroundColor: AppColors.grey,
               elevation: 0,
             ),
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: 18.w),
               child: ListView(
                 children: [
+                  SizedBox(height: 30.h),
+                  StepIndicator(totalSteps: 9, currentStep: 6),
                   SizedBox(height: 40.h),
                   Text(
                     "Academic Information",
@@ -58,7 +62,7 @@ class InternationalStudentsView extends StatelessWidget {
                     style: TextStyle(
                       fontSize: FontSizes.f14,
                       color: AppColors.black,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   SizedBox(height: 8.h),
@@ -75,7 +79,7 @@ class InternationalStudentsView extends StatelessWidget {
                         ),
 
                         filled: true,
-                        fillColor: AppColors.white,
+                        fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
                           borderSide: BorderSide.none,
@@ -91,7 +95,7 @@ class InternationalStudentsView extends StatelessWidget {
                     style: TextStyle(
                       fontSize: FontSizes.f14,
                       color: AppColors.black,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   SizedBox(height: 10.h),
@@ -121,7 +125,7 @@ class InternationalStudentsView extends StatelessWidget {
                     "What is your intended level of study?",
                     style: TextStyle(
                       fontSize: FontSizes.f14,
-                      color: AppColors.grey2,
+                      color: AppColors.black,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -129,7 +133,7 @@ class InternationalStudentsView extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     decoration: BoxDecoration(
-                      color: AppColors.grey,
+                      color: AppColors.white,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: DropdownButton<String>(
@@ -142,7 +146,10 @@ class InternationalStudentsView extends StatelessWidget {
                               value: e,
                               child: Text(
                                 e,
-                                style: TextStyle(fontSize: FontSizes.f14),
+                                style: TextStyle(
+                                  fontSize: FontSizes.f14,
+                                  color: AppColors.grey2,
+                                ),
                               ),
                             );
                           })
@@ -150,13 +157,16 @@ class InternationalStudentsView extends StatelessWidget {
                       onChanged: vm.setStudyLevel,
                     ),
                   ),
-                  SizedBox(height: 40.h),
-
+                  // SizedBox(height: 40.h), SizedBox(height: 35.h),
+                  SizedBox(height: 255.h),
                   // ========== SAVE BUTTON ==========
                   FRectangleButton(
-                    text: "Save",
+                    text: "Next",
                     color: AppColors.blue3,
-                    onPressed: vm.save,
+                    onPressed: () {
+                      // Navigate to the next screen
+                      Nav.push(context, WorkApplicationDetailsView());
+                    },
                   ),
                   SizedBox(height: 20.h),
                 ],

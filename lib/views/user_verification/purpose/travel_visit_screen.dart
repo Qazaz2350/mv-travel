@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/commen/full_size_button.dart';
+import 'package:mvtravel/utilis/commen/progress_indicator.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/travel_visit_viewmodel.dart';
+import 'package:mvtravel/views/user_verification/purpose/international_students_view.dart';
 import 'package:provider/provider.dart';
 
 class TravelVisaView extends StatelessWidget {
@@ -84,7 +86,9 @@ class _TravelVisaContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // SizedBox(height: 32.h),
+              StepIndicator(totalSteps: 9, currentStep: 5),
+
+              SizedBox(height: 32.h),
               // Title
               Text(
                 'Travel Visa',
@@ -201,10 +205,10 @@ class _TravelVisaContent extends StatelessWidget {
               // Save Button
               SizedBox(height: 35.h),
               FRectangleButton(
-                text: 'Save',
+                text: 'Next',
                 color: AppColors.blue3,
                 onPressed: () {
-                  Nav.pop(context);
+                  Nav.push(context, InternationalStudentsView());
                 },
               ),
             ],

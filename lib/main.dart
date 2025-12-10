@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/view_model/splash_view_model.dart';
 import 'package:mvtravel/views/onboarding.dart';
