@@ -1,0 +1,263 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mvtravel/model/onboarding/application_model.dart';
+import 'package:mvtravel/utilis/FontSizes.dart';
+import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/view_model/onboarding/application_view_model.dart';
+
+class ApplicationCardWidget extends StatelessWidget {
+  final ApplicationViewModel viewModel;
+
+  const ApplicationCardWidget({super.key, required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 225.h,
+      child: PageView.builder(
+        controller: PageController(
+          viewportFraction: 0.96, // card spacing like ListView
+        ),
+        itemCount: viewModel.applications.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6.w),
+            child: _buildCard(viewModel.applications[index]),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCard(ApplicationModel app) {
+    final statusColor = viewModel.getStatusColor(app.status);
+
+    return Container(
+      height: 320.h,
+      width: 320.w,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppColors.grey1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Header - Title and Status
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  app.title,
+                  style: TextStyle(
+                    fontSize: FontSizes.f20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.blue2,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              _statusChip(app.status, statusColor),
+            ],
+          ),
+
+          SizedBox(height: 12.h),
+
+          /// Country Section
+          _countrySection(app),
+          SizedBox(height: 12.h),
+
+          /// Steps Section
+          _buildStepsSection(app),
+
+          const Spacer(),
+
+          /// Footer
+          _footer(app),
+        ],
+      ),
+    );
+  }
+
+  Widget _statusChip(String status, Color color) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.r)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6.w,
+            height: 6.h,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          SizedBox(width: 6.w),
+          Text(
+            status,
+            style: TextStyle(
+              fontSize: FontSizes.f12,
+              fontWeight: FontWeight.w500,
+              color: AppColors.blue3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _countrySection(ApplicationModel app) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Country',
+          style: TextStyle(
+            fontSize: FontSizes.f14,
+            color: AppColors.black,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(app.fromFlag, width: 20.w, height: 20.h),
+            // SizedBox(width: 8.w),
+            Text(
+              '${app.fromCountry} to ${app.toCountry}',
+              style: TextStyle(
+                fontSize: FontSizes.f12,
+                fontWeight: FontWeight.w500,
+                color: AppColors.black,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            // SizedBox(width: 8.w),
+            Image.asset(app.toFlag, width: 20.w, height: 20.h),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepsSection(ApplicationModel app) {
+    return SizedBox(
+      height: 60.h,
+      child: Stack(
+        children: [
+          // Background line
+          Positioned(
+            top: 5.h,
+            left: 0,
+            right: 0,
+            child: Container(height: 2.h, color: AppColors.grey1),
+          ),
+
+          // Active progress line
+          Positioned(
+            top: 5.h,
+            left: 0,
+            child: Container(
+              height: 2.h,
+              width: 100.w, // Adjust based on progress
+              color: AppColors.blue2,
+            ),
+          ),
+
+          // Steps
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildStep('Application Submitted', true),
+              _buildStep('Documents\nVerified', true),
+              _buildStep('Payment Conformation', false),
+              _buildStep('                           Decision', false),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStep(String label, bool isActive) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12.w,
+          height: 12.h,
+          decoration: BoxDecoration(
+            color: isActive ? AppColors.blue2 : AppColors.white,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: isActive ? AppColors.blue2 : AppColors.grey1,
+              width: 2.w,
+            ),
+          ),
+        ),
+        SizedBox(height: 6.h),
+        SizedBox(
+          width: 65.w,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: FontSizes.f10,
+              fontWeight: FontWeight.w400,
+              color: isActive ? AppColors.black : AppColors.grey2,
+              height: 1.2,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _footer(ApplicationModel app) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Applied Date :${app.appliedDate}',
+          style: TextStyle(
+            fontSize: FontSizes.f10,
+            color: AppColors.black,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+
+        // SizedBox(height: 4.h),
+        Text(
+          'Fee Status',
+          style: TextStyle(
+            fontSize: FontSizes.f10,
+            color: AppColors.grey2,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+
+        // SizedBox(height: 4.h),
+        // Text(
+        //   app.feeStatus,
+        //   style: TextStyle(
+        //     fontSize: FontSizes.f12,
+        //     fontWeight: FontWeight.w600,
+        //     color: app.feeStatus == 'Paid' ? AppColors.green1 : AppColors.blue2,
+        //   ),
+        // ),
+      ],
+    );
+  }
+}
