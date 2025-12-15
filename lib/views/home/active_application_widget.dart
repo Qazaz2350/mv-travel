@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mvtravel/utilis/nav.dart';
+import 'package:mvtravel/utilis/Nav.dart';
+// import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/onboarding/application_view_model.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/views/homepage/visa_detail_screen/visa_detail_view.dart';
-import 'package:mvtravel/views/homepage/home/ApplicationCard_Widget.dart';
+import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
+// import 'package:mvtravel/views/homepage/visa_detail_screen/visa_detail_view.dart';
+import 'package:mvtravel/views/home/tracking_card_home.dart';
+import 'package:mvtravel/views/visa_tracking/visa_tracking.dart';
+import 'package:provider/provider.dart';
 
 class ActiveApplicationWidget extends StatelessWidget {
   final HomePageViewModel viewModel;
@@ -45,7 +49,18 @@ class ActiveApplicationWidget extends StatelessWidget {
           // ...viewModel.homeData.activeApplications
           //     .map((app) => ApplicationCardWidget(application: app))
           //     .toList(),
-          ApplicationCardWidget(viewModel: ApplicationViewModel()),
+          GestureDetector(
+            onTap: () {
+              Nav.push(
+                context,
+                ChangeNotifierProvider(
+                  create: (_) => VisaTrackingViewModel(),
+                  child: const VisaTracking(),
+                ),
+              );
+            },
+            child: ApplicationCardWidget(viewModel: ApplicationViewModel()),
+          ),
         ],
       ),
     );

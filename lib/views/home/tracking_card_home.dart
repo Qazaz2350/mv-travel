@@ -78,7 +78,7 @@ class ApplicationCardWidget extends StatelessWidget {
           SizedBox(height: 12.h),
 
           /// Steps Section
-          _buildStepsSection(app),
+          _progressTracker(),
 
           const Spacer(),
 
@@ -147,45 +147,6 @@ class ApplicationCardWidget extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildStepsSection(ApplicationModel app) {
-    return SizedBox(
-      height: 60.h,
-      child: Stack(
-        children: [
-          // Background line
-          Positioned(
-            top: 5.h,
-            left: 0,
-            right: 0,
-            child: Container(height: 2.h, color: AppColors.grey1),
-          ),
-
-          // Active progress line
-          Positioned(
-            top: 5.h,
-            left: 0,
-            child: Container(
-              height: 2.h,
-              width: 100.w, // Adjust based on progress
-              color: AppColors.blue2,
-            ),
-          ),
-
-          // Steps
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildStep('Application Submitted', true),
-              _buildStep('Documents\nVerified', true),
-              _buildStep('Payment Conformation', false),
-              _buildStep('                           Decision', false),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
@@ -260,4 +221,57 @@ class ApplicationCardWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget _progressTracker() {
+  final steps = [
+    'Application\nSubmitted',
+    'Documents\nVerified',
+    'Payment\nConfirmation',
+    '     Decision',
+  ];
+
+  // Static current step (e.g., step 2 is active)
+  final int currentStep = 2;
+
+  return Column(
+    children: [
+      Row(
+        children: List.generate(steps.length * 2 - 1, (index) {
+          if (index.isOdd) {
+            bool done = index ~/ 2 < currentStep;
+            return Expanded(
+              child: Container(
+                height: 2.h,
+                color: done ? AppColors.blue3 : AppColors.grey1,
+              ),
+            );
+          }
+          bool done = index ~/ 2 < currentStep;
+          return Container(
+            width: 12.w,
+            height: 12.w,
+            decoration: BoxDecoration(
+              color: done ? AppColors.blue3 : AppColors.grey,
+              shape: BoxShape.circle,
+            ),
+          );
+        }),
+      ),
+      SizedBox(height: 8.h),
+      Row(
+        children: steps
+            .map(
+              (e) => Expanded(
+                child: Text(
+                  e,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: FontSizes.f10),
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    ],
+  );
 }

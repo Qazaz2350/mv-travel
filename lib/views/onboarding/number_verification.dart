@@ -6,9 +6,9 @@ import 'package:mvtravel/commen/full_size_button.dart';
 import 'package:mvtravel/commen/progress_indicator.dart';
 import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
-import 'package:mvtravel/view_model/home_page_viewmodel.dart';
+// import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/view_model/onboarding/phone_number_viewmodel.dart';
-import 'package:mvtravel/views/homepage/home/home_dashboard.dart';
+import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:mvtravel/views/onboarding/select_birthdate.dart';
 import 'package:provider/provider.dart';
 

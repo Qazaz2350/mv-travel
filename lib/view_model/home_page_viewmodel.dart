@@ -31,10 +31,33 @@ class HomePageViewModel extends ChangeNotifier {
           entry: "Single Entry",
           lengthOfStay: "30 Days",
           price: 20000,
-          documents: ["Passport", "Photo", "Bank Statement"],
+          documents: ["Passport", "Photo"],
           faqs: [
-            FAQItem(question: "How long is processing?", answer: "3-5 days"),
-            FAQItem(question: "Can I extend?", answer: "Yes, apply online"),
+            FAQItem(
+              question: "Can I change my plan later?",
+              answer:
+                  "Yes, you can upgrade or downgrade your plan at any time. Simply visit your account settings to manage your subscription preferences.",
+            ),
+            FAQItem(
+              question: "What is your cancellation policy?",
+              answer:
+                  "We have a no-questions-asked cancellation policy. You can cancel anytime, and your access will remain active until the end of the current billing cycle.",
+            ),
+            FAQItem(
+              question: "Can other info be added to an invoice?",
+              answer:
+                  "Yes, you can customize your invoices. Navigate to Billing Settings to add your company name, VAT ID, or specific address details.",
+            ),
+            FAQItem(
+              question: "How does billing work?",
+              answer:
+                  "We charge your saved payment method automatically at the start of every billing period (monthly or annually). You will receive a receipt via email.",
+            ),
+            FAQItem(
+              question: "How do I change my account email?",
+              answer:
+                  "To update your email, go to Profile > Account Security. Enter your new email address and click 'Save'. You will need to verify the new email.",
+            ),
           ],
         ),
         TravelDestination(

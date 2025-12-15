@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
-import 'package:mvtravel/views/homepage/home/Action_Buttons_Widget.dart';
-import 'package:mvtravel/views/homepage/home/CategoryTabs_Widget.dart';
-import 'package:mvtravel/views/homepage/home/active_application_widget.dart';
-import 'package:mvtravel/views/homepage/home/featured_destinations_widget.dart';
-import 'package:mvtravel/views/homepage/home/floating_buttons_widget.dart';
-import 'package:mvtravel/views/homepage/home/home_header_widget.dart';
-import 'package:mvtravel/views/homepage/home/searchtab.dart';
+import 'package:mvtravel/views/home/Action_Buttons_Widget.dart';
+import 'package:mvtravel/views/home/CategoryTabs_Widget.dart';
+import 'package:mvtravel/views/home/active_application_widget.dart';
+import 'package:mvtravel/views/home/featured_destinations_widget.dart';
+import 'package:mvtravel/views/home/floating_buttons_widget.dart';
+import 'package:mvtravel/views/home/home_header_widget.dart';
+import 'package:mvtravel/views/home/searchtab.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({Key? key}) : super(key: key);
@@ -64,8 +64,12 @@ class _HomePageViewState extends State<HomePageView> {
                       ),
 
                       SizedBox(height: 24.h),
+                      //
+                      GestureDetector(
+                        onTap: () {},
 
-                      ActiveApplicationWidget(viewModel: _viewModel),
+                        child: ActiveApplicationWidget(viewModel: _viewModel),
+                      ),
                       SizedBox(height: 20.h),
 
                       ActionButtonsWidget(viewModel: _viewModel),

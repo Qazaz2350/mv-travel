@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/view_model/onboarding/splash_view_model.dart';
 import 'package:mvtravel/views/onboarding/onboarding.dart';
 import 'package:mvtravel/views/onboarding/splash_screen.dart';
-import 'package:mvtravel/views/homepage/visa_detail_screen/visa_detail_view.dart';
+// import 'package:mvtravel/views/homepage/visa_detail_screen/visa_detail_view.dart';
 import 'package:provider/provider.dart';
 
 void main() {

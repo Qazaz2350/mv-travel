@@ -1,39 +1,42 @@
 import 'package:flutter/material.dart';
-import '../../../utilis/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mvtravel/model/home_page_model.dart';
+import 'package:mvtravel/utilis/colors.dart';
 
-class VisaHeaderImage extends StatelessWidget {
-  const VisaHeaderImage({super.key});
+class HeaderImage extends StatelessWidget {
+  final TravelDestination destination;
+  const HeaderImage({required this.destination});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
-          height: 360,
+          height: 360.h,
           width: double.infinity,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/home/islamabad_home.png'),
+              image: AssetImage(destination.imageUrl),
               fit: BoxFit.cover,
             ),
           ),
         ),
         SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.w),
             child: GestureDetector(
               onTap: () => Navigator.pop(context),
               child: Container(
-                width: 40,
-                height: 40,
+                width: 40.w,
+                height: 40.h,
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.9),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
-                  size: 20,
+                  color: AppColors.black,
+                  size: 20.w,
                 ),
               ),
             ),

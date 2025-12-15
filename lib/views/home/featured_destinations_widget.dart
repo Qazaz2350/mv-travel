@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/model/home_page_model.dart';
-import 'package:mvtravel/utilis/nav.dart';
+// import 'package:mvtravel/utilis/nav.dart';
 // import 'package:mvtravel/view_model/featured_destinations_view_model.dart';
 import 'package:mvtravel/view_model/featured_destinations_view_model.dart';
-import 'package:mvtravel/views/homepage/visa_detail_screen/visa_detail_view.dart';
+import 'package:mvtravel/views/visa_detail_screen/visa_detail_view.dart';
 import 'package:provider/provider.dart';
 
 class FeaturedDestinationsWidget extends StatefulWidget {
