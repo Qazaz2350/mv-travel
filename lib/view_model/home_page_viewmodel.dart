@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvtravel/model/home/home_page_model.dart';
+import 'package:mvtravel/model/home_page_model.dart';
 
 class HomePageViewModel extends ChangeNotifier {
   bool isLoading = false;
@@ -27,13 +27,32 @@ class HomePageViewModel extends ChangeNotifier {
           cityName: "Islamabad",
           imageUrl: "assets/home/islamabad_home.png",
           formattedArrival: "Get on 28 Nov, 2025 - 5:55 PM",
+          visaType: "Tourist Visa",
+          entry: "Single Entry",
+          lengthOfStay: "30 Days",
+          price: 20000,
+          documents: ["Passport", "Photo", "Bank Statement"],
+          faqs: [
+            FAQItem(question: "How long is processing?", answer: "3-5 days"),
+            FAQItem(question: "Can I extend?", answer: "Yes, apply online"),
+          ],
         ),
         TravelDestination(
           country: "France",
           cityName: "Paris",
           imageUrl: "assets/home/france.png",
           formattedArrival: "Get on 15 Dec, 2025 - 3:30 PM",
+          visaType: "Tourist Visa",
+          entry: "Multiple Entry",
+          lengthOfStay: "90 Days",
+          price: 35000,
+          documents: ["Passport", "Photo", "Travel Insurance"],
+          faqs: [
+            FAQItem(question: "Is travel insurance required?", answer: "Yes"),
+            FAQItem(question: "Visa fee refundable?", answer: "No"),
+          ],
         ),
+        // Existing other destinations can stay simple
         TravelDestination(
           country: "UAE",
           cityName: "Dubai",
@@ -64,16 +83,6 @@ class HomePageViewModel extends ChangeNotifier {
           formattedAppliedDate: "12 - Nov - 2025",
           feeStatus: "Paid",
         ),
-        // VisaApplication(
-        //   visaType: "Work Visa",
-        //   status: VisaStatus.pending,
-        //   fromFlag: "assets/home/PK_flag.png",
-        //   toFlag: "assets/home/berlin_flag.png",
-        //   fromToCountry: "Pakistan to Germany",
-        //   progress: 0.5,
-        //   formattedAppliedDate: "12 - Nov - 2025",
-        //   feeStatus: "Paid",
-        // ),
       ],
     );
 

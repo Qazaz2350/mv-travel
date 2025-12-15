@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvtravel/model/home/home_page_model.dart';
+import 'package:mvtravel/model/home_page_model.dart';
 
 class FeaturedDestinationsViewModel extends ChangeNotifier {
   final List<TravelDestination> destinations;

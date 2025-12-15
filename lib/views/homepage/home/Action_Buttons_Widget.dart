@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/view_model/onboarding/home_page_viewmodel.dart';
+import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 
 class ActionButtonsWidget extends StatelessWidget {
   final HomePageViewModel viewModel;

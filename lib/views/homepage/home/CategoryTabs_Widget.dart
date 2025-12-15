@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/view_model/onboarding/home_page_viewmodel.dart';
-import 'package:mvtravel/model/home/home_page_model.dart';
+import 'package:mvtravel/view_model/home_page_viewmodel.dart';
+import 'package:mvtravel/model/home_page_model.dart';
 
 class CategoryTabsWidget extends StatelessWidget {
   final HomePageViewModel viewModel;
