@@ -37,7 +37,8 @@ dependencies:
   intl:
   flutter_screenutil:
   provider: 
-  file_picker:
+  file_picker: 
+  image_picker:
   lottie: 
 
 dev_dependencies:

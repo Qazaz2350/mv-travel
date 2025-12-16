@@ -18,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: AppColors.grey,
       appBar: AppBar(
         backgroundColor: AppColors.white,
-        surfaceTintColor: Colors.white, // 
+        surfaceTintColor: Colors.white, //
         scrolledUnderElevation: 0,
         // elevation: 0,
         leading: IconButton(
@@ -316,10 +316,10 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider() {
-    return Padding(
-      padding: EdgeInsets.only(left: 68.w),
-      child: Divider(height: 1.h, thickness: 1.h, color: AppColors.grey),
-    );
-  }
+  // Widget _buildDivider() {
+  //   return Padding(
+  //     padding: EdgeInsets.only(left: 68.w),
+  //     child: Divider(height: 1.h, thickness: 1.h, color: AppColors.grey),
+  //   );
+  // }
 }

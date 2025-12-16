@@ -5,6 +5,7 @@ import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/views/apply_processs/apply_process.dart';
+// import 'package:mvtravel/views/apply_processs/apply_process.dart';
 import 'package:mvtravel/views/profile/Profile_Screen.dart';
 
 class HeaderWidget extends StatelessWidget {
@@ -53,7 +54,7 @@ class HeaderWidget extends StatelessWidget {
 
           GestureDetector(
             onTap: () {
-              // Nav.push(context, ApplyProcess());
+              Nav.push(context, ApplyProcess());
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),

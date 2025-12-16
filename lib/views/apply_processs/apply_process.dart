@@ -1,824 +1,354 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'dart:io';
-// import 'package:mvtravel/utilis/FontSizes.dart';
-// import 'package:mvtravel/utilis/colors.dart';
+import 'dart:io';
 
-// import 'package:mvtravel/utilis/nav.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
+import 'package:provider/provider.dart';
+import 'package:mvtravel/utilis/FontSizes.dart';
+import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/utilis/nav.dart';
 
-// // Import your custom classes (adjust the paths as per your project structure)
-// // import 'package:mvtravel/utilis/AppColors.dart';
-// // import 'package:mvtravel/utilis/FontSizes.dart';
-// // import 'package:mvtravel/utilis/Nav.dart';
-// // import 'package:mvtravel/utilis/ActionButton.dart';
+class ApplyProcess extends StatelessWidget {
+  const ApplyProcess({Key? key}) : super(key: key);
 
-// class ApplyProcess extends StatefulWidget {
-//   const ApplyProcess({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => ApplyProcessViewModel(),
+      child: const _ApplyProcessView(),
+    );
+  }
+}
 
-//   @override
-//   State<ApplyProcess> createState() => _ApplyProcessState();
-// }
+class _ApplyProcessView extends StatelessWidget {
+  const _ApplyProcessView();
 
-// class _ApplyProcessState extends State<ApplyProcess> {
-//   int _currentStep = 0;
-//   File? _photoFile;
-//   File? _passportFile;
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<ApplyProcessViewModel>();
 
-//   final ImagePicker _picker = ImagePicker();
+    return Scaffold(
+      backgroundColor: AppColors.grey,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColors.black),
+          onPressed: () => Nav.pop(context),
+        ),
+        title: Text(
+          'Apply to Germany',
+          style: TextStyle(
+            color: AppColors.black,
+            fontSize: FontSizes.f20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          SizedBox(height: 16.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12.r),
+              child: Container(
+                color: Colors.white, // ✅ apply color here
+                child: _buildStepper(vm),
+              ),
+            ),
+          ),
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: AppColors.grey,
-//       appBar: AppBar(
-//         backgroundColor: Colors.white,
-//         elevation: 0,
-//         leading: IconButton(
-//           icon: Icon(Icons.arrow_back, color: AppColors.black),
-//           onPressed: () => Nav.pop(context),
-//         ),
-//         title: Text(
-//           'Apply to Germany',
-//           style: TextStyle(
-//             color: AppColors.black,
-//             fontSize: FontSizes.f20,
-//             fontWeight: FontWeight.w600,
-//           ),
-//         ),
-//         centerTitle: true,
-//       ),
-//       body: Column(
-//         children: [
-//           // Custom Progress Stepper Header
-//           Container(
-//             color: Colors.white,
-//             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-//             child: Row(
-//               children: [
-//                 _buildStepItem(
-//                   icon: Icons.photo_library_outlined,
-//                   label: 'Photo',
-//                   stepIndex: 0,
-//                 ),
-//                 _buildStepLine(0),
-//                 _buildStepItem(
-//                   icon: Icons.description_outlined,
-//                   label: 'Passport',
-//                   stepIndex: 1,
-//                 ),
-//                 _buildStepLine(1),
-//                 _buildStepItem(
-//                   icon: Icons.info_outline,
-//                   label: 'Detail',
-//                   stepIndex: 2,
-//                 ),
-//                 _buildStepLine(2),
-//                 _buildStepItem(
-//                   icon: Icons.check_circle_outline,
-//                   label: 'Checkout',
-//                   stepIndex: 3,
-//                 ),
-//               ],
-//             ),
-//           ),
+          SizedBox(height: 16.h),
+          Expanded(child: _buildStepContent(vm, context)),
+          _buildBottomButtons(vm, context),
+        ],
+      ),
+    );
+  }
 
-//           SizedBox(height: 16.h),
+  // ================= STEPPER =================
 
-//           // Stepper Content
-//           Expanded(child: _buildStepContent()),
+  Widget _buildStepper(ApplyProcessViewModel vm) {
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+      child: Row(
+        children: [
+          _buildStepItem(vm, "assets/home/applyphoto.png", 'Photo', 0),
+          _buildStepLine(vm, 0),
+          _buildStepItem(vm, "assets/home/applypassport.png", 'Passport', 1),
+          _buildStepLine(vm, 1),
+          _buildStepItem(vm, "assets/home/applyuser.png", 'Detail', 2),
+          _buildStepLine(vm, 2),
+          _buildStepItem(vm, "assets/home/applycheckout.png", 'Checkout', 3),
+        ],
+      ),
+    );
+  }
 
-//           // Bottom Action Buttons
-//           _buildBottomButtons(),
-//         ],
-//       ),
-//     );
-//   }
+  Widget _buildStepItem(
+    ApplyProcessViewModel vm,
+    String image, // REQUIRED
+    String label,
+    int index,
+  ) {
+    final isActive = vm.currentStep == index;
+    final isCompleted = vm.currentStep > index;
 
-//   Widget _buildStepContent() {
-//     switch (_currentStep) {
-//       case 0:
-//         return _buildPhotoUploadStep();
-//       case 1:
-//         return _buildPassportUploadStep();
-//       case 2:
-//         return _buildDetailStep();
-//       case 3:
-//         return _buildCheckoutStep();
-//       default:
-//         return _buildPhotoUploadStep();
-//     }
-//   }
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            width: 22.w,
+            height: 22.w,
+            decoration: BoxDecoration(),
+            child: ImageIcon(
+              AssetImage(image), // ✅ using required image
+              size: 16.sp,
+              color: isActive || isCompleted
+                  ? AppColors.blue2
+                  : AppColors.grey1,
+            ),
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: FontSizes.f12,
+              color: isActive ? AppColors.blue2 : AppColors.grey2,
+              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-//   // Step 1: Photo Upload
-//   Widget _buildPhotoUploadStep() {
-//     return SingleChildScrollView(
-//       child: Container(
-//         margin: EdgeInsets.symmetric(horizontal: 16.w),
-//         padding: EdgeInsets.all(16.w),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(12.r),
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               'Upload Photo',
-//               style: TextStyle(
-//                 fontSize: FontSizes.f20,
-//                 fontWeight: FontWeight.w700,
-//                 color: AppColors.black,
-//               ),
-//             ),
-//             SizedBox(height: 8.h),
-//             Text(
-//               'Lorem ipsum dolor sit amet consectetur. Vestibulum malesuada in amet urna.',
-//               style: TextStyle(
-//                 fontSize: FontSizes.f14,
-//                 color: AppColors.grey2,
-//                 height: 1.5,
-//               ),
-//             ),
-//             SizedBox(height: 24.h),
+  Widget _buildStepLine(ApplyProcessViewModel vm, int index) {
+    return Container(
+      width: 20.w,
+      height: 2.h,
+      margin: EdgeInsets.only(bottom: 20.h),
+      color: vm.currentStep > index ? AppColors.blue2 : AppColors.grey1,
+    );
+  }
 
-//             // Upload Box
-//             if (_photoFile == null)
-//               GestureDetector(
-//                 onTap: () {
-//                   _showUploadOptions(isPhoto: true);
-//                 },
-//                 child: Container(
-//                   width: double.infinity,
-//                   padding: EdgeInsets.symmetric(vertical: 48.h),
-//                   decoration: BoxDecoration(
-//                     border: Border.all(
-//                       color: AppColors.grey1,
-//                       width: 2,
-//                       style: BorderStyle.solid,
-//                     ),
-//                     borderRadius: BorderRadius.circular(12.r),
-//                   ),
-//                   child: Column(
-//                     children: [
-//                       Container(
-//                         width: 56.w,
-//                         height: 56.w,
-//                         decoration: BoxDecoration(
-//                           color: AppColors.grey,
-//                           shape: BoxShape.circle,
-//                         ),
-//                         child: Icon(
-//                           Icons.file_upload_outlined,
-//                           color: AppColors.grey2,
-//                           size: 28.sp,
-//                         ),
-//                       ),
-//                       SizedBox(height: 16.h),
-//                       Text(
-//                         'Tap to Upload',
-//                         style: TextStyle(
-//                           fontSize: FontSizes.f16,
-//                           fontWeight: FontWeight.w600,
-//                           color: AppColors.black,
-//                         ),
-//                       ),
-//                       SizedBox(height: 4.h),
-//                       Text(
-//                         'JPG, PNG,PDF, Max 5MB',
-//                         style: TextStyle(
-//                           fontSize: FontSizes.f12,
-//                           color: AppColors.grey2,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               )
-//             else
-//               _buildUploadedFilePreview(_photoFile!, () {
-//                 setState(() {
-//                   _photoFile = null;
-//                 });
-//               }),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+  // ================= CONTENT =================
 
-//   // Step 2: Passport Upload
-//   Widget _buildPassportUploadStep() {
-//     return SingleChildScrollView(
-//       child: Container(
-//         margin: EdgeInsets.symmetric(horizontal: 16.w),
-//         padding: EdgeInsets.all(16.w),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(12.r),
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               'Upload Passport',
-//               style: TextStyle(
-//                 fontSize: FontSizes.f20,
-//                 fontWeight: FontWeight.w700,
-//                 color: AppColors.black,
-//               ),
-//             ),
-//             SizedBox(height: 8.h),
-//             Text(
-//               'Please upload a clear copy of your passport. Make sure all details are visible.',
-//               style: TextStyle(
-//                 fontSize: FontSizes.f14,
-//                 color: AppColors.grey2,
-//                 height: 1.5,
-//               ),
-//             ),
-//             SizedBox(height: 24.h),
+  Widget _buildStepContent(ApplyProcessViewModel vm, BuildContext context) {
+    switch (vm.currentStep) {
+      case 0:
+        return _photoStep(vm, context);
+      case 1:
+        return _passportStep(vm, context);
+      case 2:
+        return _detailStep();
+      case 3:
+        return _checkoutStep(vm);
+      default:
+        return _photoStep(vm, context);
+    }
+  }
 
-//             if (_passportFile == null)
-//               GestureDetector(
-//                 onTap: () {
-//                   _showUploadOptions(isPhoto: false);
-//                 },
-//                 child: Container(
-//                   width: double.infinity,
-//                   padding: EdgeInsets.symmetric(vertical: 48.h),
-//                   decoration: BoxDecoration(
-//                     border: Border.all(color: AppColors.grey1, width: 2),
-//                     borderRadius: BorderRadius.circular(12.r),
-//                   ),
-//                   child: Column(
-//                     children: [
-//                       Container(
-//                         width: 56.w,
-//                         height: 56.w,
-//                         decoration: BoxDecoration(
-//                           color: AppColors.grey,
-//                           shape: BoxShape.circle,
-//                         ),
-//                         child: Icon(
-//                           Icons.file_upload_outlined,
-//                           color: AppColors.grey2,
-//                           size: 28.sp,
-//                         ),
-//                       ),
-//                       SizedBox(height: 16.h),
-//                       Text(
-//                         'Tap to Upload',
-//                         style: TextStyle(
-//                           fontSize: FontSizes.f16,
-//                           fontWeight: FontWeight.w600,
-//                           color: AppColors.black,
-//                         ),
-//                       ),
-//                       SizedBox(height: 4.h),
-//                       Text(
-//                         'JPG, PNG, PDF, Max 5MB',
-//                         style: TextStyle(
-//                           fontSize: FontSizes.f12,
-//                           color: AppColors.grey2,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               )
-//             else
-//               _buildUploadedFilePreview(_passportFile!, () {
-//                 setState(() {
-//                   _passportFile = null;
-//                 });
-//               }),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+  Widget _photoStep(ApplyProcessViewModel vm, BuildContext context) {
+    return _uploadCard(
+      title: 'Upload Photo',
+      description:
+          'Lorem ipsum dolor sit amet consectetur. Vestibulum malesuada in amet urna.',
+      file: vm.photoFile,
+      onRemove: vm.removePhoto,
+      onTap: () => _showUploadOptions(context, vm, true),
+    );
+  }
 
-//   // Step 3: Detail Step
-//   Widget _buildDetailStep() {
-//     return SingleChildScrollView(
-//       child: Container(
-//         margin: EdgeInsets.symmetric(horizontal: 16.w),
-//         padding: EdgeInsets.all(16.w),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(12.r),
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               'Personal Details',
-//               style: TextStyle(
-//                 fontSize: FontSizes.f20,
-//                 fontWeight: FontWeight.w700,
-//                 color: AppColors.black,
-//               ),
-//             ),
-//             SizedBox(height: 8.h),
-//             Text(
-//               'Please fill in your personal information.',
-//               style: TextStyle(
-//                 fontSize: FontSizes.f14,
-//                 color: AppColors.grey2,
-//                 height: 1.5,
-//               ),
-//             ),
-//             SizedBox(height: 24.h),
-//             _buildTextField('Full Name', 'Enter your full name'),
-//             SizedBox(height: 16.h),
-//             _buildTextField('Date of Birth', 'DD/MM/YYYY'),
-//             SizedBox(height: 16.h),
-//             _buildTextField('Nationality', 'Enter your nationality'),
-//             SizedBox(height: 16.h),
-//             _buildTextField('Phone Number', '+92 xxx xxx xxxx'),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+  Widget _passportStep(ApplyProcessViewModel vm, BuildContext context) {
+    return _uploadCard(
+      title: 'Upload Passport',
+      description:
+          'Please upload a clear copy of your passport. Make sure all details are visible.',
+      file: vm.passportFile,
+      onRemove: vm.removePassport,
+      onTap: () => _showUploadOptions(context, vm, false),
+    );
+  }
 
-//   // Step 4: Checkout Step
-//   Widget _buildCheckoutStep() {
-//     return SingleChildScrollView(
-//       child: Container(
-//         margin: EdgeInsets.symmetric(horizontal: 16.w),
-//         padding: EdgeInsets.all(16.w),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(12.r),
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               'Review & Checkout',
-//               style: TextStyle(
-//                 fontSize: FontSizes.f20,
-//                 fontWeight: FontWeight.w700,
-//                 color: AppColors.black,
-//               ),
-//             ),
-//             SizedBox(height: 8.h),
-//             Text(
-//               'Please review your application before submitting.',
-//               style: TextStyle(
-//                 fontSize: FontSizes.f14,
-//                 color: AppColors.grey2,
-//                 height: 1.5,
-//               ),
-//             ),
-//             SizedBox(height: 24.h),
-//             _buildReviewItem(
-//               'Photo',
-//               _photoFile != null ? 'Uploaded ✓' : 'Not uploaded',
-//             ),
-//             SizedBox(height: 12.h),
-//             _buildReviewItem(
-//               'Passport',
-//               _passportFile != null ? 'Uploaded ✓' : 'Not uploaded',
-//             ),
-//             SizedBox(height: 12.h),
-//             _buildReviewItem('Personal Details', 'Completed ✓'),
-//             SizedBox(height: 24.h),
-//             Container(
-//               padding: EdgeInsets.all(16.w),
-//               decoration: BoxDecoration(
-//                 color: AppColors.grey,
-//                 borderRadius: BorderRadius.circular(12.r),
-//               ),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Text(
-//                     'Total Amount',
-//                     style: TextStyle(
-//                       fontSize: FontSizes.f16,
-//                       fontWeight: FontWeight.w600,
-//                       color: AppColors.black,
-//                     ),
-//                   ),
-//                   Text(
-//                     '\$250',
-//                     style: TextStyle(
-//                       fontSize: FontSizes.f20,
-//                       fontWeight: FontWeight.w700,
-//                       color: AppColors.blue2,
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+  Widget _detailStep() {
+    return _card(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _title('Personal Details'),
+          _desc('Please fill in your personal information.'),
+          SizedBox(height: 24.h),
+          _textField('Full Name', 'Enter your full name'),
+          SizedBox(height: 16.h),
+          _textField('Date of Birth', 'DD/MM/YYYY'),
+          SizedBox(height: 16.h),
+          _textField('Nationality', 'Enter your nationality'),
+          SizedBox(height: 16.h),
+          _textField('Phone Number', '+92 xxx xxx xxxx'),
+        ],
+      ),
+    );
+  }
 
-//   Widget _buildUploadedFilePreview(File file, VoidCallback onRemove) {
-//     return Container(
-//       padding: EdgeInsets.all(16.w),
-//       decoration: BoxDecoration(
-//         color: AppColors.grey,
-//         borderRadius: BorderRadius.circular(12.r),
-//       ),
-//       child: Row(
-//         children: [
-//           Container(
-//             width: 60.w,
-//             height: 60.w,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(8.r),
-//               image: DecorationImage(image: FileImage(file), fit: BoxFit.cover),
-//             ),
-//           ),
-//           SizedBox(width: 12.w),
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   file.path.split('/').last,
-//                   style: TextStyle(
-//                     fontSize: FontSizes.f14,
-//                     fontWeight: FontWeight.w600,
-//                     color: AppColors.black,
-//                   ),
-//                   maxLines: 1,
-//                   overflow: TextOverflow.ellipsis,
-//                 ),
-//                 SizedBox(height: 4.h),
-//                 Text(
-//                   'Uploaded successfully',
-//                   style: TextStyle(
-//                     fontSize: FontSizes.f12,
-//                     color: AppColors.green1,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           IconButton(
-//             icon: Icon(Icons.close, color: AppColors.grey2),
-//             onPressed: onRemove,
-//           ),
-//         ],
-//       ),
-//     );
-//   }
+  Widget _checkoutStep(ApplyProcessViewModel vm) {
+    return _card(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _title('Review & Checkout'),
+          _desc('Please review your application before submitting.'),
+          SizedBox(height: 24.h),
+          _reviewItem(
+            'Photo',
+            vm.photoFile != null ? 'Uploaded ✓' : 'Not uploaded',
+          ),
+          SizedBox(height: 12.h),
+          _reviewItem(
+            'Passport',
+            vm.passportFile != null ? 'Uploaded ✓' : 'Not uploaded',
+          ),
+          SizedBox(height: 12.h),
+          _reviewItem('Personal Details', 'Completed ✓'),
+        ],
+      ),
+    );
+  }
 
-//   Widget _buildTextField(String label, String hint) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Text(
-//           label,
-//           style: TextStyle(
-//             fontSize: FontSizes.f14,
-//             fontWeight: FontWeight.w600,
-//             color: AppColors.black,
-//           ),
-//         ),
-//         SizedBox(height: 8.h),
-//         TextField(
-//           decoration: InputDecoration(
-//             hintText: hint,
-//             hintStyle: TextStyle(color: AppColors.grey2),
-//             filled: true,
-//             fillColor: AppColors.grey,
-//             border: OutlineInputBorder(
-//               borderRadius: BorderRadius.circular(12.r),
-//               borderSide: BorderSide.none,
-//             ),
-//             contentPadding: EdgeInsets.symmetric(
-//               horizontal: 16.w,
-//               vertical: 14.h,
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
+  // ================= BOTTOM =================
 
-//   Widget _buildReviewItem(String title, String status) {
-//     return Container(
-//       padding: EdgeInsets.all(16.w),
-//       decoration: BoxDecoration(
-//         color: AppColors.grey,
-//         borderRadius: BorderRadius.circular(12.r),
-//       ),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Text(
-//             title,
-//             style: TextStyle(
-//               fontSize: FontSizes.f14,
-//               fontWeight: FontWeight.w600,
-//               color: AppColors.black,
-//             ),
-//           ),
-//           Text(
-//             status,
-//             style: TextStyle(
-//               fontSize: FontSizes.f14,
-//               color: status.contains('✓') ? AppColors.green1 : AppColors.grey2,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
+  Widget _buildBottomButtons(ApplyProcessViewModel vm, BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.all(16.w),
+      child: Row(
+        children: [
+          if (vm.currentStep > 0)
+            Expanded( 
+              child: ElevatedButton(
+                onPressed: vm.previousStep,
+                child: const Text('Back'),
+              ),
+            ),
+          if (vm.currentStep > 0) SizedBox(width: 12.w),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: vm.nextStep,
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.blue2),
+              child: Text(vm.currentStep == 3 ? 'Submit' : 'Continue'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-//   Widget _buildStepItem({
-//     required IconData icon,
-//     required String label,
-//     required int stepIndex,
-//   }) {
-//     bool isActive = _currentStep == stepIndex;
-//     bool isCompleted = _currentStep > stepIndex;
+  // ================= HELPERS =================
 
-//     return Expanded(
-//       child: Column(
-//         children: [
-//           Container(
-//             width: 32.w,
-//             height: 32.w,
-//             decoration: BoxDecoration(
-//               color: isActive || isCompleted
-//                   ? AppColors.blue2
-//                   : Colors.transparent,
-//               shape: BoxShape.circle,
-//               border: Border.all(
-//                 color: isActive || isCompleted
-//                     ? AppColors.blue2
-//                     : AppColors.grey1,
-//                 width: 2,
-//               ),
-//             ),
-//             child: Icon(
-//               icon,
-//               color: isActive || isCompleted ? Colors.white : AppColors.grey1,
-//               size: 16.sp,
-//             ),
-//           ),
-//           SizedBox(height: 6.h),
-//           Text(
-//             label,
-//             style: TextStyle(
-//               fontSize: FontSizes.f12,
-//               color: isActive ? AppColors.blue2 : AppColors.grey2,
-//               fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
+  Widget _uploadCard({
+    required String title,
+    required String description,
+    required File? file,
+    required VoidCallback onTap,
+    required VoidCallback onRemove,
+  }) {
+    return _card(
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _title(title),
+          _desc(description),
+          SizedBox(height: 24.h),
+          file == null
+              ? GestureDetector(
+                  onTap: onTap,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 48.h),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.grey1, width: 2),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: const Center(child: Text('Tap to Upload')),
+                  ),
+                )
+              : _filePreview(file, onRemove),
+        ],
+      ),
+    );
+  }
 
-//   Widget _buildStepLine(int stepIndex) {
-//     bool isCompleted = _currentStep > stepIndex;
-//     return Container(
-//       width: 20.w,
-//       height: 2.h,
-//       color: isCompleted ? AppColors.blue2 : AppColors.grey1,
-//       margin: EdgeInsets.only(bottom: 20.h),
-//     );
-//   }
+  Widget _filePreview(File file, VoidCallback onRemove) {
+    return ListTile(
+      leading: Image.file(file, width: 50, height: 50, fit: BoxFit.cover),
+      title: Text(file.path.split('/').last),
+      trailing: IconButton(icon: const Icon(Icons.close), onPressed: onRemove),
+    );
+  }
 
-//   Widget _buildBottomButtons() {
-//     if (_currentStep == 0 || _currentStep == 1) {
-//       return Container(
-//         color: Colors.white,
-//         padding: EdgeInsets.all(16.w),
-//         child: Row(
-//           children: [
-//             Expanded(
-//               child: ElevatedButton(
-//                 onPressed: () {
-//                   _pickImageFromGallery(_currentStep == 0);
-//                 },
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: Color(0xFFE3F2FD),
-//                   foregroundColor: AppColors.blue2,
-//                   padding: EdgeInsets.symmetric(vertical: 14.h),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(12.r),
-//                   ),
-//                   elevation: 0,
-//                 ),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Icon(Icons.upload_outlined, size: 20.sp),
-//                     SizedBox(width: 8.w),
-//                     Text(
-//                       'Upload',
-//                       style: TextStyle(
-//                         fontSize: FontSizes.f16,
-//                         fontWeight: FontWeight.w600,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             SizedBox(width: 12.w),
-//             Expanded(
-//               child: ElevatedButton(
-//                 onPressed: () {
-//                   _pickImageFromCamera(_currentStep == 0);
-//                 },
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: Colors.white,
-//                   foregroundColor: AppColors.black,
-//                   padding: EdgeInsets.symmetric(vertical: 14.h),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(12.r),
-//                     side: BorderSide(color: AppColors.grey1, width: 1.5),
-//                   ),
-//                   elevation: 0,
-//                 ),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Icon(Icons.camera_alt_outlined, size: 20.sp),
-//                     SizedBox(width: 8.w),
-//                     Text(
-//                       'Live Capture',
-//                       style: TextStyle(
-//                         fontSize: FontSizes.f16,
-//                         fontWeight: FontWeight.w600,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       );
-//     } else {
-//       return Container(
-//         color: Colors.white,
-//         padding: EdgeInsets.all(16.w),
-//         child: Row(
-//           children: [
-//             if (_currentStep > 0)
-//               Expanded(
-//                 child: ElevatedButton(
-//                   onPressed: () {
-//                     setState(() {
-//                       _currentStep--;
-//                     });
-//                   },
-//                   style: ElevatedButton.styleFrom(
-//                     backgroundColor: Colors.white,
-//                     foregroundColor: AppColors.black,
-//                     padding: EdgeInsets.symmetric(vertical: 14.h),
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(12.r),
-//                       side: BorderSide(color: AppColors.grey1, width: 1.5),
-//                     ),
-//                     elevation: 0,
-//                   ),
-//                   child: Text(
-//                     'Back',
-//                     style: TextStyle(
-//                       fontSize: FontSizes.f16,
-//                       fontWeight: FontWeight.w600,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             if (_currentStep > 0) SizedBox(width: 12.w),
-//             Expanded(
-//               child: ElevatedButton(
-//                 onPressed: () {
-//                   if (_currentStep < 3) {
-//                     setState(() {
-//                       _currentStep++;
-//                     });
-//                   } else {
-//                     // Submit application
-//                     _showSuccessDialog();
-//                   }
-//                 },
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: AppColors.blue2,
-//                   foregroundColor: Colors.white,
-//                   padding: EdgeInsets.symmetric(vertical: 14.h),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(12.r),
-//                   ),
-//                   elevation: 0,
-//                 ),
-//                 child: Text(
-//                   _currentStep == 3 ? 'Submit' : 'Continue',
-//                   style: TextStyle(
-//                     fontSize: FontSizes.f16,
-//                     fontWeight: FontWeight.w600,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       );
-//     }
-//   }
+  Widget _card(Widget child) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: child,
+    );
+  }
 
-//   void _showUploadOptions({required bool isPhoto}) {
-//     showModalBottomSheet(
-//       context: context,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-//       ),
-//       builder: (context) => Container(
-//         padding: EdgeInsets.all(16.w),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             ListTile(
-//               leading: Icon(Icons.photo_library, color: AppColors.blue2),
-//               title: Text('Choose from Gallery'),
-//               onTap: () {
-//                 Nav.pop(context);
-//                 _pickImageFromGallery(isPhoto);
-//               },
-//             ),
-//             ListTile(
-//               leading: Icon(Icons.camera_alt, color: AppColors.blue2),
-//               title: Text('Take Photo'),
-//               onTap: () {
-//                 Nav.pop(context);
-//                 _pickImageFromCamera(isPhoto);
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+  Widget _title(String text) => Text(
+    text,
+    style: TextStyle(fontSize: FontSizes.f20, fontWeight: FontWeight.w700),
+  );
 
-//   Future<void> _pickImageFromGallery(bool isPhoto) async {
-//     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-//     if (image != null) {
-//       setState(() {
-//         if (isPhoto) {
-//           _photoFile = File(image.path);
-//         } else {
-//           _passportFile = File(image.path);
-//         }
-//       });
-//     }
-//   }
+  Widget _desc(String text) => Text(
+    text,
+    style: TextStyle(fontSize: FontSizes.f14, color: AppColors.grey2),
+  );
 
-//   Future<void> _pickImageFromCamera(bool isPhoto) async {
-//     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-//     if (image != null) {
-//       setState(() {
-//         if (isPhoto) {
-//           _photoFile = File(image.path);
-//         } else {
-//           _passportFile = File(image.path);
-//         }
-//       });
-//     }
-//   }
+  Widget _textField(String label, String hint) {
+    return TextField(
+      decoration: InputDecoration(labelText: label, hintText: hint),
+    );
+  }
 
-//   void _showSuccessDialog() {
-//     showDialog(
-//       context: context,
-//       builder: (context) => AlertDialog(
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(16.r),
-//         ),
-//         title: Column(
-//           children: [
-//             Icon(Icons.check_circle, color: AppColors.green1, size: 64.sp),
-//             SizedBox(height: 16.h),
-//             Text('Application Submitted!'),
-//           ],
-//         ),
-//         content: Text(
-//           'Your visa application has been submitted successfully.',
-//           textAlign: TextAlign.center,
-//         ),
-//         actions: [
-//           TextButton(
-//             onPressed: () {
-//               Nav.pop(context);
-//               Nav.pop(context);
-//             },
-//             child: Text('OK'),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  Widget _reviewItem(String title, String status) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [Text(title), Text(status)],
+    );
+  }
+
+  void _showUploadOptions(
+    BuildContext context,
+    ApplyProcessViewModel vm,
+    bool isPhoto,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            title: const Text('Gallery'),
+            onTap: () {
+              Nav.pop(context);
+              vm.pickFromGallery(isPhoto);
+            },
+          ),
+          ListTile(
+            title: const Text('Camera'),
+            onTap: () {
+              Nav.pop(context);
+              vm.pickFromCamera(isPhoto);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
