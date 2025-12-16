@@ -87,7 +87,7 @@ class ApplicationsStatusScreen extends StatelessWidget {
                         _buildProgressLine(true),
                         _buildProgressStep('Payment\nconfirmation', true),
                         _buildProgressLine(true),
-                        _buildProgressStep('Decision', true),
+                        _buildProgressStep('Decision  ', true),
                       ],
                     ),
                   ),
@@ -96,8 +96,11 @@ class ApplicationsStatusScreen extends StatelessWidget {
 
                   // Documents Uploaded Section
                   Container(
-                    color: Colors.white,
                     padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.r),
+                      color: Colors.white,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -111,9 +114,9 @@ class ApplicationsStatusScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 16.h),
                         _buildDocumentItem('Passport.pdf'),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 6.h),
                         _buildDocumentItem('CNIC.jpg'),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 6.h),
                         _buildDocumentItem('Photo.jpg'),
                       ],
                     ),
@@ -123,8 +126,12 @@ class ApplicationsStatusScreen extends StatelessWidget {
 
                   // Application Details Section
                   Container(
-                    color: Colors.white,
                     padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.r),
+                      color: Colors.white,
+                    ),
+
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -151,58 +158,60 @@ class ApplicationsStatusScreen extends StatelessWidget {
                   SizedBox(height: 12.h),
 
                   // Need Help Section
-                  Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.all(16.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Need Help?',
-                          style: TextStyle(
-                            fontSize: FontSizes.f16,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ActionButton(
-                                text: 'Call Now',
-                                bgColor: AppColors.blue2,
-                                textColor: AppColors.white,
-                                onTap: () {
-                                  // Handle call action
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: ActionButton(
-                                text: 'Chat Now',
-                                bgColor: AppColors.green1,
-                                textColor: AppColors.white,
-                                onTap: () {
-                                  // Handle chat action
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
 
-                  SizedBox(height: 24.h),
+                  // SizedBox(height: 24.h),
                 ],
               ),
             ),
 
-            SizedBox(height: 12.h),
+            // SizedBox(height: 12.h),
 
             // Progress Steps
+            Container(
+              // height: 30.h,
+              color: Colors.white,
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Need Help?',
+                    style: TextStyle(
+                      fontSize: FontSizes.f16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.black,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ActionButton(
+                          text: 'Call Now',
+                          bgColor: AppColors.blue2,
+                          textColor: AppColors.white,
+                          onTap: () {
+                            // Handle call action
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: ActionButton(
+                          text: 'Chat Now',
+                          bgColor: AppColors.green1,
+                          textColor: AppColors.white,
+                          onTap: () {
+                            // Handle chat action
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -253,12 +262,28 @@ class ApplicationsStatusScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: AppColors.grey,
-        borderRadius: BorderRadius.circular(8.r),
+        // color: AppColors.grey,
+        borderRadius: BorderRadius.circular(15.r),
       ),
       child: Row(
         children: [
-          Icon(Icons.description_outlined, color: AppColors.grey2, size: 32.sp),
+          Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: AppColors.grey,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ImageIcon(
+                AssetImage('assets/home/empty.png'),
+                color: AppColors.grey2,
+                size: 20.w,
+              ),
+            ),
+          ),
           SizedBox(width: 12.w),
           Expanded(
             child: Column(
@@ -285,13 +310,13 @@ class ApplicationsStatusScreen extends StatelessWidget {
             ),
           ),
           Container(
-            width: 24.w,
-            height: 24.w,
+            width: 20.w,
+            height: 20.w,
             decoration: BoxDecoration(
               color: AppColors.green1,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.check, color: Colors.white, size: 16.sp),
+            child: Icon(Icons.check, color: Colors.white, size: 12.sp),
           ),
         ],
       ),
@@ -304,13 +329,13 @@ class ApplicationsStatusScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: FontSizes.f14, color: AppColors.grey2),
+          style: TextStyle(fontSize: FontSizes.f14, color: AppColors.black),
         ),
         Text(
           value,
           style: TextStyle(
             fontSize: FontSizes.f14,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w400,
             color: isPaid ? AppColors.green1 : AppColors.black,
           ),
         ),

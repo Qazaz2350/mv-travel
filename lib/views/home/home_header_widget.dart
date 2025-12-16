@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
+import 'package:mvtravel/views/apply_processs/apply_process.dart';
+import 'package:mvtravel/views/profile/Profile_Screen.dart';
 
 class HeaderWidget extends StatelessWidget {
   final HomePageViewModel viewModel;
@@ -20,12 +23,17 @@ class HeaderWidget extends StatelessWidget {
             height: 40.h,
             child: CircleAvatar(
               backgroundColor: AppColors.grey,
-              child: ClipOval(
-                child: Image.asset(
-                  "assets/home/profile.avif",
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
+              child: GestureDetector(
+                onTap: () {
+                  Nav.push(context, ProfileScreen());
+                },
+                child: ClipOval(
+                  child: Image.asset(
+                    "assets/home/profile.avif",
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                  ),
                 ),
               ),
             ),
@@ -45,7 +53,7 @@ class HeaderWidget extends StatelessWidget {
 
           GestureDetector(
             onTap: () {
-              // Handle document icon tap
+              // Nav.push(context, ApplyProcess());
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
