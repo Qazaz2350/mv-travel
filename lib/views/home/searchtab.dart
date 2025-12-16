@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
+import 'package:mvtravel/views/filter.dart/FiltersDialog.dart';
 
 class SearchBarWidget extends StatelessWidget {
   final HomePageViewModel viewModel;
@@ -75,10 +76,18 @@ class SearchBarWidget extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center, // center the icon
-              child: ImageIcon(
-                AssetImage('assets/home/settings.png'),
-                size: 20,
-                color: Colors.white,
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => FiltersDialog(),
+                  );
+                },
+                child: ImageIcon(
+                  AssetImage('assets/home/settings.png'),
+                  size: 20,
+                  color: Colors.white,
+                ),
               ),
               // child: Icon(Icons.tune, color: Colors.white, size: 22),
             ),

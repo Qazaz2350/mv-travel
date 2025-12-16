@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mvtravel/utilis/FontSizes.dart';
+import 'package:mvtravel/commen/half_button.dart';
 import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
+import 'package:mvtravel/views/visa_application_screen/visa_application_view.dart';
 
 class ActionButtonsWidget extends StatelessWidget {
   final HomePageViewModel viewModel;
@@ -17,46 +19,22 @@ class ActionButtonsWidget extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.blue2,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                elevation: 0,
-              ),
-              child: Text(
-                'All Application',
-                style: TextStyle(
-                  fontSize: FontSizes.f16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
+            child: ActionButton(
+              textColor: AppColors.white,
+              text: "All Applications",
+              bgColor: AppColors.blue2,
+              onTap: () {
+                Nav.push(context, ApplicationsStatusScreen());
+              },
             ),
           ),
           SizedBox(width: 12.w),
           Expanded(
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.blue3,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                elevation: 0,
-              ),
-              child: Text(
-                'Apply for Visa',
-                style: TextStyle(
-                  fontSize: FontSizes.f16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
+            child: ActionButton(
+              textColor: AppColors.white,
+              text: "Apply for Visa",
+              bgColor: AppColors.blue3,
+              onTap: () {},
             ),
           ),
         ],

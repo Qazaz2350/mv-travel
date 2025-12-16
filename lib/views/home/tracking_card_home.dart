@@ -150,41 +150,41 @@ class ApplicationCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStep(String label, bool isActive) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 12.w,
-          height: 12.h,
-          decoration: BoxDecoration(
-            color: isActive ? AppColors.blue2 : AppColors.white,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isActive ? AppColors.blue2 : AppColors.grey1,
-              width: 2.w,
-            ),
-          ),
-        ),
-        SizedBox(height: 6.h),
-        SizedBox(
-          width: 65.w,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: FontSizes.f10,
-              fontWeight: FontWeight.w400,
-              color: isActive ? AppColors.black : AppColors.grey2,
-              height: 1.2,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildStep(String label, bool isActive) {
+  //   return Column(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: [
+  //       Container(
+  //         width: 12.w,
+  //         height: 12.h,
+  //         decoration: BoxDecoration(
+  //           color: isActive ? AppColors.blue2 : AppColors.white,
+  //           shape: BoxShape.circle,
+  //           border: Border.all(
+  //             color: isActive ? AppColors.blue2 : AppColors.grey1,
+  //             width: 2.w,
+  //           ),
+  //         ),
+  //       ),
+  //       SizedBox(height: 6.h),
+  //       SizedBox(
+  //         width: 65.w,
+  //         child: Text(
+  //           label,
+  //           textAlign: TextAlign.center,
+  //           style: TextStyle(
+  //             fontSize: FontSizes.f10,
+  //             fontWeight: FontWeight.w400,
+  //             color: isActive ? AppColors.black : AppColors.grey2,
+  //             height: 1.2,
+  //           ),
+  //           maxLines: 2,
+  //           overflow: TextOverflow.ellipsis,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _footer(ApplicationModel app) {
     return Row(
