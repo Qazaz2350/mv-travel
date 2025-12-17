@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mvtravel/model/apply_process_model.dart';
 import 'package:mvtravel/utilis/colors.dart';
@@ -219,5 +220,69 @@ class DetailViewModel extends ChangeNotifier {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
+  }
+}
+
+//payment
+class PaymentViewModel extends ChangeNotifier {
+  final cardNumberController = TextEditingController();
+  final nameController = TextEditingController();
+  final expiryController = TextEditingController();
+  final cvvController = TextEditingController();
+
+  bool usePayPal = false;
+
+  void togglePayPal() {
+    usePayPal = !usePayPal;
+    notifyListeners();
+  }
+
+  void disposeControllers() {
+    cardNumberController.dispose();
+    nameController.dispose();
+    expiryController.dispose();
+    cvvController.dispose();
+  }
+}
+
+// Formatter for card number
+class CardNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text.replaceAll(' ', '');
+    final buffer = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      if ((i + 1) % 4 == 0 && (i + 1) != text.length) buffer.write(' ');
+    }
+    final string = buffer.toString();
+    return newValue.copyWith(
+      text: string,
+      selection: TextSelection.collapsed(offset: string.length),
+    );
+  }
+}
+
+// Formatter for expiry date
+class ExpiryDateFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+    if (text.length > 2) {
+      final month = text.substring(0, 2);
+      final year = text.substring(2);
+      final formatted = '$month/$year';
+      return newValue.copyWith(
+        text: formatted,
+        selection: TextSelection.collapsed(offset: formatted.length),
+      );
+    }
+    return newValue;
   }
 }

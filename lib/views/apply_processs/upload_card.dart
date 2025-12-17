@@ -40,10 +40,7 @@ class UploadCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.grey,
                       borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(
-                        color: AppColors.grey2,
-                        width: 1,
-                      ),
+                      border: Border.all(color: AppColors.grey2, width: 1),
                     ),
                     child: Column(
                       children: [
@@ -105,18 +102,12 @@ class UploadCard extends StatelessWidget {
   }
 
   Widget _title(String text) => Text(
-        text,
-        style: TextStyle(
-          fontSize: FontSizes.f20,
-          fontWeight: FontWeight.w700,
-        ),
-      );
+    text,
+    style: TextStyle(fontSize: FontSizes.f20, fontWeight: FontWeight.w700),
+  );
 
   Widget _desc(String text) => Text(
-        text,
-        style: TextStyle(
-          fontSize: FontSizes.f14,
-          color: AppColors.grey2,
-        ),
-      );
+    text,
+    style: TextStyle(fontSize: FontSizes.f14, color: AppColors.grey2),
+  );
 }

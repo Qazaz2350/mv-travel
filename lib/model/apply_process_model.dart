@@ -33,3 +33,10 @@ class DetailModel {
     this.photoPath,
   });
 }
+
+class PaymentModel {
+  final double totalAmount;
+  final String applicationNumber;
+
+  PaymentModel({required this.totalAmount, required this.applicationNumber});
+}

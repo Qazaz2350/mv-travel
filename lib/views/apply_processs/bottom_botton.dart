@@ -11,6 +11,11 @@ class BottomButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Step index starts from 0, so 3rd step = index 2
+    if (vm.currentStep == 2) {
+      return _thirdStepConfirm();
+    }
+
     if (vm.currentStep == 0) {
       if (vm.photoFile == null) {
         return _uploadButtons();
@@ -18,7 +23,27 @@ class BottomButtons extends StatelessWidget {
         return _confirmButtons();
       }
     }
+
     return _defaultButtons();
+  }
+
+  // ===== Third Step: Only Confirm Button =====
+  Widget _thirdStepConfirm() {
+    return Container(
+      width: double.infinity,
+      color: AppColors.white,
+      padding: EdgeInsets.all(16.w),
+      child: SizedBox(
+        width: double.infinity,
+        child: ActionButton(
+          text: 'Continue',
+          bgColor: AppColors.blue2,
+          textColor: AppColors.white,
+          // icon: Icons.check,
+          onTap: vm.nextStep, // Navigate to next page
+        ),
+      ),
+    );
   }
 
   Widget _uploadButtons() {
@@ -40,7 +65,7 @@ class BottomButtons extends StatelessWidget {
           SizedBox(width: 12.w),
           Expanded(
             child: ActionButton(
-              text: 'live Capture',
+              text: 'Live Capture',
               bgColor: AppColors.grey,
               textColor: AppColors.black,
               imageIcon: AssetImage('assets/home/applyphoto.png'),
@@ -84,6 +109,25 @@ class BottomButtons extends StatelessWidget {
   }
 
   Widget _defaultButtons() {
+    if (vm.currentStep == 3) {
+      // 4th page: only one full-width button (Submit)
+      return Container(
+        width: double.infinity,
+        color: AppColors.white,
+        padding: EdgeInsets.all(16.w),
+        child: SizedBox(
+          width: double.infinity,
+          child: ActionButton(
+            text: ' Confirm Your Apply',
+            bgColor: AppColors.blue1,
+            textColor: AppColors.white,
+            onTap: vm.nextStep, // or your final submit function
+          ),
+        ),
+      );
+    }
+
+    // Default two-button layout for other steps
     return Container(
       width: double.infinity,
       color: AppColors.white,
@@ -91,22 +135,17 @@ class BottomButtons extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Continue Button
           SizedBox(
             width: double.infinity,
             child: ActionButton(
-              text: vm.currentStep == 3 ? 'Submit' : 'Confirm',
+              text: 'Confirm',
               bgColor: AppColors.blue1,
               textColor: AppColors.white,
-              // imageIcon: AssetImage('assets/home/upload.png'),
               imageIconColor: AppColors.blue2,
               onTap: vm.nextStep,
             ),
           ),
-
           SizedBox(height: 12.h),
-
-          // Live Capture Button
           SizedBox(
             width: double.infinity,
             child: ActionButton(
@@ -115,7 +154,6 @@ class BottomButtons extends StatelessWidget {
               textColor: AppColors.black,
               imageIcon: AssetImage('assets/home/applyphoto.png'),
               onTap: () {
-                // Camera logic based on step
                 if (vm.currentStep == 1) {
                   vm.pickFromCamera(false); // passport
                 } else if (vm.currentStep == 0) {

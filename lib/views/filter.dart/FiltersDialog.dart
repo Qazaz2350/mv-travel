@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/commen/half_button.dart';
-import 'package:mvtravel/model/home_page_model.dart';
+// import 'package:mvtravel/model/home_page_model.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/utilis/nav.dart';
+// import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/filters_viewmodel.dart';
 import 'package:mvtravel/views/filter.dart/country_picker.dart';
 import 'package:mvtravel/views/filter.dart/date_field_widget.dart';
@@ -13,7 +13,7 @@ import 'package:mvtravel/views/filter.dart/region_picker.dart';
 import 'package:mvtravel/views/filter.dart/select_tile.dart';
 import 'package:mvtravel/views/filter.dart/status_chip.dart';
 import 'package:mvtravel/views/filter.dart/tabbar.dart';
-import 'package:mvtravel/views/visa_application_screen/visa_application_view.dart';
+// import 'package:mvtravel/views/visa_application_screen/visa_application_view.dart';
 
 // Make sure the import paths match your project structure.
 // Previously this file contained both UI and state. Now UI uses the viewModel.

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mvtravel/views/apply_processs/CHECKOUT.dart';
 import 'package:mvtravel/views/apply_processs/bottom_botton.dart';
 import 'package:mvtravel/views/apply_processs/personal_details.dart';
 import 'package:mvtravel/views/apply_processs/upload_card.dart';
@@ -157,71 +158,12 @@ class _ApplyProcessView extends StatelessWidget {
         return const DetailStepView(); // 👈 use your saved DetailStep widget here
 
       case 3:
-        return _checkoutStep(vm);
+        return Paymentdetails();
 
       default:
         return const SizedBox();
     }
   }
 
-  Widget _checkoutStep(ApplyProcessViewModel vm) {
-    return _card(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _title('Review & Checkout'),
-          _desc('Please review your application before submitting.'),
-          SizedBox(height: 24.h),
-          _reviewItem(
-            'Photo',
-            vm.photoFile != null ? 'Uploaded ✓' : 'Not uploaded',
-          ),
-          SizedBox(height: 12.h),
-          _reviewItem(
-            'Passport',
-            vm.passportFile != null ? 'Uploaded ✓' : 'Not uploaded',
-          ),
-          SizedBox(height: 12.h),
-          _reviewItem('Personal Details', 'Completed ✓'),
-        ],
-      ),
-    );
-  }
-
   // ================= HELPERS =================
-
-  Widget _card(Widget child) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w),
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: child,
-    );
-  }
-
-  Widget _title(String text) => Text(
-    text,
-    style: TextStyle(fontSize: FontSizes.f20, fontWeight: FontWeight.w700),
-  );
-
-  Widget _desc(String text) => Text(
-    text,
-    style: TextStyle(fontSize: FontSizes.f14, color: AppColors.grey2),
-  );
-
-  Widget _textField(String label, String hint) {
-    return TextField(
-      decoration: InputDecoration(labelText: label, hintText: hint),
-    );
-  }
-
-  Widget _reviewItem(String title, String status) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [Text(title), Text(status)],
-    );
-  }
 }
