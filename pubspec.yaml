@@ -39,6 +39,7 @@ dependencies:
   provider: 
   file_picker: 
   image_picker:
+  dotted_border:
   lottie: 
 
 dev_dependencies:

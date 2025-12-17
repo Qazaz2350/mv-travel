@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mvtravel/model/apply_process_model.dart';
+import 'package:mvtravel/utilis/colors.dart';
 
 class ApplyProcessViewModel extends ChangeNotifier {
   final ImagePicker picker = ImagePicker();
@@ -57,5 +58,166 @@ class ApplyProcessViewModel extends ChangeNotifier {
       }
       notifyListeners();
     }
+  }
+}
+
+class DetailViewModel extends ChangeNotifier {
+  // Controllers
+  final fullNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passportController = TextEditingController();
+  final addressController = TextEditingController();
+  final phoneController = TextEditingController();
+  final dobController = TextEditingController();
+
+  // Dropdown values
+  String? selectedNationality;
+  String? selectedVisaType;
+  String selectedCountryCode = '+92';
+
+  // File uploads
+  File? passportDocument;
+  File? photoDocument;
+  String? passportDocumentName;
+  String? photoDocumentName;
+
+  // Date
+  DateTime? selectedDate;
+
+  // Dispose all controllers
+  void disposeControllers() {
+    fullNameController.dispose();
+    emailController.dispose();
+    passportController.dispose();
+    addressController.dispose();
+    phoneController.dispose();
+    dobController.dispose();
+  }
+
+  // Select date
+  Future<void> selectDate(BuildContext context) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime(2000),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.blue ?? Colors.blue,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (date != null) {
+      selectedDate = date;
+      dobController.text =
+          '${date.month.toString().padLeft(2, '0')} / ${date.day.toString().padLeft(2, '0')} / ${date.year}';
+      notifyListeners();
+    }
+  }
+
+  // Pick image
+  Future<void> pickImage(bool isPassport) async {
+    try {
+      final picker = ImagePicker();
+      final image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1800,
+        maxHeight: 1800,
+      );
+      if (image != null) {
+        if (isPassport) {
+          passportDocument = File(image.path);
+          passportDocumentName = image.name;
+        } else {
+          photoDocument = File(image.path);
+          photoDocumentName = image.name;
+        }
+        notifyListeners();
+      }
+    } catch (e) {
+      throw Exception('Error picking image: $e');
+    }
+  }
+
+  bool validateForm(BuildContext context) {
+    if (fullNameController.text.isEmpty) {
+      _showError(context, 'Please enter your full name');
+      return false;
+    }
+    if (emailController.text.isEmpty || !emailController.text.contains('@')) {
+      _showError(context, 'Please enter a valid email address');
+      return false;
+    }
+    if (selectedNationality == null) {
+      _showError(context, 'Please select your nationality');
+      return false;
+    }
+    if (passportController.text.isEmpty) {
+      _showError(context, 'Please enter your passport number');
+      return false;
+    }
+    if (selectedVisaType == null) {
+      _showError(context, 'Please select a visa type');
+      return false;
+    }
+    if (addressController.text.isEmpty) {
+      _showError(context, 'Please enter your address');
+      return false;
+    }
+    if (selectedDate == null) {
+      _showError(context, 'Please select your date of birth');
+      return false;
+    }
+    if (phoneController.text.isEmpty) {
+      _showError(context, 'Please enter your phone number');
+      return false;
+    }
+    if (passportDocument == null) {
+      _showError(context, 'Please upload your passport document');
+      return false;
+    }
+    if (photoDocument == null) {
+      _showError(context, 'Please upload your photo');
+      return false;
+    }
+    return true;
+  }
+
+  void submitForm(BuildContext context) {
+    if (validateForm(context)) {
+      final formData = DetailModel(
+        fullName: fullNameController.text,
+        email: emailController.text,
+        nationality: selectedNationality,
+        passportNumber: passportController.text,
+        visaType: selectedVisaType,
+        address: addressController.text,
+        dateOfBirth: selectedDate,
+        phoneNumber: '$selectedCountryCode ${phoneController.text}',
+        passportDocumentPath: passportDocument?.path,
+        photoPath: photoDocument?.path,
+      );
+
+      print('Form Data: ${formData.toString()}');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Form submitted successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 }
