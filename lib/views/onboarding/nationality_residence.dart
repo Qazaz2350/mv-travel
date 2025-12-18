@@ -88,15 +88,49 @@ class NationalityResidenceScreen extends StatelessWidget {
                         icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
                         items: vm.countries
                             .map(
-                              (country) => DropdownMenuItem(
-                                value: country,
-                                child: Text(
-                                  country,
-                                  style: TextStyle(fontSize: FontSizes.f14),
+                              (country) => DropdownMenuItem<String>(
+                                value: country['name'],
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12.w,
+                                    vertical: 8.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      // Flag Circle
+                                      Container(
+                                        padding: EdgeInsets.all(4.w),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          // color: Colors.grey.shade100,
+                                        ),
+                                        child: Text(
+                                          country['flag']!,
+                                          style: TextStyle(fontSize: 18.sp),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.w),
+                                      // Country Name
+                                      Expanded(
+                                        child: Text(
+                                          country['name']!,
+                                          style: TextStyle(
+                                            fontSize: FontSizes.f14,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             )
                             .toList(),
+
                         onChanged: vm.setNationality,
                       ),
                     ),
@@ -137,15 +171,51 @@ class NationalityResidenceScreen extends StatelessWidget {
                         icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
                         items: vm.countries
                             .map(
-                              (country) => DropdownMenuItem(
-                                value: country,
-                                child: Text(
-                                  country,
-                                  style: TextStyle(fontSize: FontSizes.f14),
+                              (country) => DropdownMenuItem<String>(
+                                value: country['name'],
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12.w,
+                                    vertical: 8.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // Flag Circle
+                                      Container(
+                                        padding: EdgeInsets.all(4.w),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          // color: Colors.grey.shade100,
+                                        ),
+                                        child: Text(
+                                          country['flag']!,
+                                          style: TextStyle(fontSize: 18.sp),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.w),
+                                      // Country Name
+                                      Expanded(
+                                        child: Text(
+                                          country['name']!,
+                                          style: TextStyle(
+                                            fontSize: FontSizes.f14,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             )
                             .toList(),
+
                         onChanged: vm.setResidence,
                       ),
                     ),
@@ -157,10 +227,13 @@ class NationalityResidenceScreen extends StatelessWidget {
                   FRectangleButton(
                     text: 'Next',
                     color: AppColors.blue3,
-                    onPressed: () {
+                    onPressed: () async {
+                      final vm = context.read<NationalityResidenceViewModel>();
+                      await vm.saveToFirebase(); // Save values to Firebase
                       Nav.push(context, VisitPurposeView());
                     },
                   ),
+
                   SizedBox(height: 12.h),
                 ],
               ),

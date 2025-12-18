@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "979472627330",
+    "project_id": "mbtravels-2d0bb",
+    "storage_bucket": "mbtravels-2d0bb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979472627330:android:eaf0f7dabf029d7919e69b",
+        "android_client_info": {
+          "package_name": "com.example.mvtravel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_d5-OEhp5_rdR2q9zHqmey-gS95SJEuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

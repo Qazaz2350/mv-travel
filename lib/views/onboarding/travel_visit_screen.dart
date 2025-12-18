@@ -207,7 +207,10 @@ class _TravelVisaContent extends StatelessWidget {
               FRectangleButton(
                 text: 'Next',
                 color: AppColors.blue3,
-                onPressed: () {
+                onPressed: () async {
+                  final vm = context.read<TravelVisaViewModel>();
+                  await vm
+                      .saveToFirebase(); // Saves startDate & endDate as Timestamp
                   Nav.push(context, InternationalStudentsView());
                 },
               ),

@@ -1,13 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/view_model/onboarding/splash_view_model.dart';
 import 'package:mvtravel/views/onboarding/onboarding.dart';
 import 'package:mvtravel/views/onboarding/splash_screen.dart';
-// import 'package:mvtravel/views/homepage/visa_detail_screen/visa_detail_view.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const MyApp());
 }
 
@@ -17,10 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => SplashViewModel()),
-        // Add other ViewModels here later
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => SplashViewModel())],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
@@ -29,10 +30,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             home: child,
             debugShowCheckedModeBanner: false,
-            routes: {
-              '/onboarding': (context) => const OnboardingScreen(),
-              // Add other routes if needed
-            },
+            routes: {'/onboarding': (context) => const OnboardingScreen()},
           );
         },
         child: const SplashScreen(),

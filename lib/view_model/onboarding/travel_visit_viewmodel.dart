@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mvtravel/model/onboarding/travel_visa_model.dart';
 
 class TravelVisaViewModel extends ChangeNotifier {
@@ -30,6 +32,36 @@ class TravelVisaViewModel extends ChangeNotifier {
 
   String formatDate(DateTime? date) {
     if (date == null) return 'mm/dd/yyyy';
-    return '${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}';
+    return '${date.month.toString().padLeft(2, '0')}/'
+        '${date.day.toString().padLeft(2, '0')}/'
+        '${date.year}';
+  }
+
+  /// 🔹 Convert to Map with Firestore Timestamps
+  Map<String, dynamic> toMap() {
+    return {
+      'startDate': _model.startDate != null
+          ? Timestamp.fromDate(_model.startDate!)
+          : null,
+      'endDate': _model.endDate != null
+          ? Timestamp.fromDate(_model.endDate!)
+          : null,
+      'reason': _model.reason ?? '',
+      'estimatedBudget': _model.estimatedBudget ?? '',
+    };
+  }
+
+  /// 🔹 Save Travel Visa details to Firebase
+  Future<void> saveToFirebase() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'travelVisa': toMap(),
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      debugPrint('Error saving travel visa: $e');
+    }
   }
 }

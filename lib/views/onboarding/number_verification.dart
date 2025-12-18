@@ -69,7 +69,7 @@ class PhoneNumberScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: 90,
+                        width: 110,
                         height: 49,
                         decoration: BoxDecoration(
                           border: Border(
@@ -84,27 +84,40 @@ class PhoneNumberScreen extends StatelessWidget {
                             value: vm.selectedCountryCode,
                             items: vm.countryCodes
                                 .map(
-                                  (code) => DropdownMenuItem(
-                                    value: code,
-                                    child: Text(code),
+                                  (country) => DropdownMenuItem(
+                                    value: country['code'],
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          country['flag']!,
+                                          style: TextStyle(fontSize: 13),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          country['code']!,
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 )
                                 .toList(),
+
                             onChanged: (value) {
                               vm.changeCountry(value!);
                             },
                           ),
                         ),
                       ),
-                      SizedBox(width: 16),
+                      SizedBox(width: 10),
                       Expanded(
                         child: TextField(
                           controller: vm.phoneController,
                           keyboardType: TextInputType.phone,
                           style: TextStyle(fontSize: FontSizes.f16),
                           decoration: InputDecoration(
-                            hintText: '312 456 789',
-                            hintStyle: TextStyle(color: AppColors.black),
+                            hintText: 'xxxxxxxxxx',
+                            hintStyle: TextStyle(color: AppColors.grey2),
                             border: UnderlineInputBorder(
                               borderSide: BorderSide(color: AppColors.black),
                             ),
@@ -126,8 +139,19 @@ class PhoneNumberScreen extends StatelessWidget {
                   FRectangleButton(
                     text: 'Next',
                     color: AppColors.blue3,
-                    onPressed: () => Nav.push(context, BirthDateScreen()),
+                    onPressed: () async {
+                      try {
+                        await vm
+                            .savePhoneNumber(); // Save phone number to Firestore
+                        Nav.push(context, BirthDateScreen()); // Go to next page
+                      } catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(e.toString())));
+                      }
+                    },
                   ),
+
                   SizedBox(height: 16.h),
                 ],
               ),

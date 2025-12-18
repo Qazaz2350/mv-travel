@@ -6,6 +6,7 @@ import 'package:mvtravel/commen/full_size_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/auth/sign_in_view_model.dart';
 import 'package:mvtravel/views/auth/signup.dart';
+import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:mvtravel/views/onboarding/number_verification.dart';
 // import 'sign_in_view_model.dart';
 import 'package:provider/provider.dart';
@@ -142,7 +143,7 @@ class SignInScreen extends StatelessWidget {
                           controller: vm.passwordController,
                           obscureText: !vm.isPasswordVisible,
                           hintText: 'Enter your password',
-                          validator: vm.validatePassword,
+                          // validator: vm.validatePassword,
                           suffixIcon: IconButton(
                             icon: Icon(
                               vm.isPasswordVisible
@@ -173,19 +174,32 @@ class SignInScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 140.h),
                         FRectangleButton(
-                          text: 'Sign In',
+                          text: vm.isLoading ? 'Signing in...' : 'Sign In',
+                          color: AppColors.blue3,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.r),
                           ),
-                          color: AppColors.blue3,
                           onPressed: () {
                             if (_formKey.currentState?.validate() ?? false) {
-                              vm.signIn(() {
-                                // navigate or show success
-                              });
+                              vm.signIn(
+                                () {
+                                  // ✅ Success → navigate to Home or Dashboard
+                                  Nav.push(
+                                    context,
+                                    PhoneNumberScreen(),
+                                  ); // replace HomeScreen() with your main screen
+                                },
+                                onError: (err) {
+                                  // ✅ Show Firebase error
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).showSnackBar(SnackBar(content: Text(err)));
+                                },
+                              );
                             }
                           },
                         ),
+
                         // After the FRectangleButton in SignInScreen
                         SizedBox(height: 20.h),
                         Row(

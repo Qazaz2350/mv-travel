@@ -41,6 +41,9 @@ dependencies:
   image_picker:
   dotted_border:
   lottie: 
+  firebase_core:
+  firebase_auth:
+  cloud_firestore:
 
 dev_dependencies:
   flutter_test:

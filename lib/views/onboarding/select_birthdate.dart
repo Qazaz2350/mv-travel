@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
@@ -90,8 +92,17 @@ class BirthDateScreen extends StatelessWidget {
                   FRectangleButton(
                     text: 'Next',
                     color: AppColors.blue3,
-                    onPressed: () =>
-                        Nav.push(context, NationalityResidenceScreen()),
+                    onPressed: () async {
+                      final vm = context.read<BirthDateViewModel>();
+                      final user = FirebaseAuth.instance.currentUser;
+
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(user!.uid)
+                          .set(vm.toMap(), SetOptions(merge: true));
+
+                      Nav.push(context, NationalityResidenceScreen());
+                    },
                   ),
                   SizedBox(height: 16.h),
                 ],

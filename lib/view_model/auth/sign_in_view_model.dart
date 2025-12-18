@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mvtravel/services/firebase_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInViewModel extends ChangeNotifier {
+  final FirebaseService _firebaseService = FirebaseService();
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isPasswordVisible = false;
+  bool isLoading = false;
 
   void togglePasswordVisibility() {
     isPasswordVisible = !isPasswordVisible;
@@ -31,13 +36,35 @@ class SignInViewModel extends ChangeNotifier {
     return null;
   }
 
-  void signIn(VoidCallback onSuccess) {
-    // Example: Call your API here
-    onSuccess();
+  // ✅ Connect signIn to Firebase
+  Future<void> signIn(
+    VoidCallback onSuccess, {
+    Function(String)? onError,
+  }) async {
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      User? user = await _firebaseService.signIn(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      if (user != null) {
+        onSuccess();
+      }
+    } catch (e) {
+      if (onError != null) onError(e.toString());
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
-  void disposeControllers() {
+  @override
+  void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    super.dispose();
   }
 }

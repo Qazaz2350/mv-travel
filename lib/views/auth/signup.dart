@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mvtravel/services/firebase_service.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/commen/full_size_button.dart';
@@ -14,6 +15,9 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final FirebaseService _firebaseService = FirebaseService();
+  bool _isLoading = false;
+
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -303,12 +307,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 15.h),
 
                   FRectangleButton(
-                    text: 'Create Account',
+                    text: _isLoading ? 'Creating...' : 'Create Account',
                     color: AppColors.blue3,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.r),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (!_agreeToTerms) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -319,11 +323,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
 
                       if (_formKey.currentState!.validate()) {
-                        // SUCCESS → API / Navigation
-                        print('Form Valid');
+                        setState(() => _isLoading = true);
+
+                        try {
+                          final user = await _firebaseService.signUp(
+                            fullName: _fullNameController.text.trim(),
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+
+                          if (user != null) {
+                            // Navigate to next screen or show success
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Account created successfully!'),
+                              ),
+                            );
+                            Nav.push(context, SignInScreen());
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.toString())));
+                        } finally {
+                          setState(() => _isLoading = false);
+                        }
                       }
                     },
                   ),
+
                   SizedBox(height: 20.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
