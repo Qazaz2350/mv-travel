@@ -104,11 +104,9 @@ class DetailViewModel extends ChangeNotifier {
       lastDate: DateTime.now(),
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.blue ?? Colors.blue,
-            ),
-          ),
+          data: Theme.of(
+            context,
+          ).copyWith(colorScheme: ColorScheme.light(primary: AppColors.blue)),
           child: child!,
         );
       },

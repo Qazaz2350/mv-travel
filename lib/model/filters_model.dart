@@ -1,5 +1,4 @@
 // lib/model/filters_model.dart
-import 'package:flutter/foundation.dart';
 
 class FiltersModel {
   String selectedVisaType;

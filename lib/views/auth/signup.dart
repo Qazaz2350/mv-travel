@@ -58,6 +58,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
+
+          // ✅ VALIDATION ADDED
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return '$label is required';
+            }
+
+            if (label == 'Email Address') {
+              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+              if (!emailRegex.hasMatch(value)) {
+                return 'Enter a valid email address';
+              }
+            }
+
+            if (label == 'Password') {
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+              }
+            }
+
+            if (label == 'Confirm Password') {
+              if (value != _passwordController.text) {
+                return 'Passwords do not match';
+              }
+            }
+
+            return null;
+          },
+
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(
@@ -108,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         style: OutlinedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: 14.h),
+          padding: EdgeInsets.symmetric(vertical: 10.h),
           side: BorderSide(color: Colors.grey[300]!),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40.r),
@@ -124,13 +153,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       backgroundColor: AppColors.grey,
       appBar: AppBar(
-        backgroundColor: AppColors.grey,
+        backgroundColor: AppColors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black87, size: 26.sp),
           onPressed: () => Navigator.pop(context),
         ),
         title: Padding(
-          padding: EdgeInsets.only(left: 80.w),
+          padding: EdgeInsets.only(left: 70.w),
           child: Text(
             "Create Account",
             style: TextStyle(
@@ -151,98 +180,97 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: EdgeInsets.all(18.w),
           child: Form(
             key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Get Started',
-                  style: TextStyle(
-                    fontSize: FontSizes.f20.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Get Started',
+                    style: TextStyle(
+                      fontSize: FontSizes.f20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  'Sign up to begin your visa application process.',
-                  style: TextStyle(
-                    fontSize: FontSizes.f14.sp,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                SizedBox(height: 32.h),
-
-                _buildTextField(
-                  label: 'Full Name',
-                  controller: _fullNameController,
-                  hintText: 'Enter your full name',
-                ),
-                SizedBox(height: 20.h),
-                _buildTextField(
-                  label: 'Email Address',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  hintText: 'you@example.com',
-                ),
-                SizedBox(height: 20.h),
-                _buildTextField(
-                  label: 'Password',
-                  controller: _passwordController,
-                  obscureText: !_isPasswordVisible,
-                  hintText: 'Create a password',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
+                  SizedBox(height: 4.h),
+                  Text(
+                    'Sign up to begin your visa application process.',
+                    style: TextStyle(
+                      fontSize: FontSizes.f14.sp,
                       color: Colors.grey[600],
                     ),
-                    onPressed: () => setState(
-                      () => _isPasswordVisible = !_isPasswordVisible,
-                    ),
                   ),
-                ),
-                SizedBox(height: 20.h),
-                _buildTextField(
-                  label: 'Confirm Password',
-                  controller: _confirmPasswordController,
-                  obscureText: !_isConfirmPasswordVisible,
-                  hintText: 'Confirm your password',
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isConfirmPasswordVisible
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                      color: Colors.grey[600],
-                    ),
-                    onPressed: () => setState(
-                      () => _isConfirmPasswordVisible =
-                          !_isConfirmPasswordVisible,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.h),
+                  SizedBox(height: 16.h),
 
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 24.w,
-                      height: 24.h,
-                      child: Checkbox(
-                        value: _agreeToTerms,
-                        onChanged: (value) =>
-                            setState(() => _agreeToTerms = value ?? false),
-                        activeColor: AppColors.blue2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
+                  _buildTextField(
+                    label: 'Full Name',
+                    controller: _fullNameController,
+                    hintText: 'Enter your full name',
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildTextField(
+                    label: 'Email Address',
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    hintText: 'you@example.com',
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildTextField(
+                    label: 'Password',
+                    controller: _passwordController,
+                    obscureText: !_isPasswordVisible,
+                    hintText: 'Create a password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: Colors.grey[600],
+                      ),
+                      onPressed: () => setState(
+                        () => _isPasswordVisible = !_isPasswordVisible,
                       ),
                     ),
-                    SizedBox(width: 8.w),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 4.h),
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildTextField(
+                    label: 'Confirm Password',
+                    controller: _confirmPasswordController,
+                    obscureText: !_isConfirmPasswordVisible,
+                    hintText: 'Confirm your password',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isConfirmPasswordVisible
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: Colors.grey[600],
+                      ),
+                      onPressed: () => setState(
+                        () => _isConfirmPasswordVisible =
+                            !_isConfirmPasswordVisible,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 24.w,
+                        height: 24.h,
+                        child: Checkbox(
+                          value: _agreeToTerms,
+                          onChanged: (value) =>
+                              setState(() => _agreeToTerms = value ?? false),
+                          activeColor: AppColors.blue2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Expanded(
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
@@ -270,64 +298,110 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 15.h),
+                    ],
+                  ),
+                  SizedBox(height: 15.h),
 
-                FRectangleButton(
-                  text: 'Create Account',
-                  color: AppColors.blue3,
-                  onPressed: () {},
-                ),
-                SizedBox(height: 24.h),
+                  FRectangleButton(
+                    text: 'Create Account',
+                    color: AppColors.blue3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    onPressed: () {
+                      if (!_agreeToTerms) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please accept terms & conditions'),
+                          ),
+                        );
+                        return;
+                      }
 
-                Row(
-                  children: [
-                    _buildSocialButton(
-                      text: 'Google',
-                      icon: Image.network(
-                        'https://www.google.com/favicon.ico',
-                        width: 20.w,
-                        height: 20.h,
+                      if (_formKey.currentState!.validate()) {
+                        // SUCCESS → API / Navigation
+                        print('Form Valid');
+                      }
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 20.h),
+                      Text(
+                        "_______________",
+                        style: TextStyle(color: AppColors.grey1),
                       ),
-                      onPressed: () {},
-                    ),
-                    SizedBox(width: 12.w),
-                    _buildSocialButton(
-                      text: 'Apple',
-                      icon: Icon(Icons.apple, color: Colors.black, size: 24.sp),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-                SizedBox(height: 24.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Already have an account  ',
-                      style: TextStyle(
-                        fontSize: FontSizes.f14.sp,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Nav.push(context, SignInScreen());
-                      },
-                      child: Text(
-                        'Sign in',
+                      Text(
+                        "  OR Signup With ",
                         style: TextStyle(
-                          fontSize: FontSizes.f14.sp,
-                          color: AppColors.blue2,
-                          fontWeight: FontWeight.w600,
+                          color: AppColors.black,
+                          fontSize: FontSizes.f12,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Text(
+                        "_______________",
+                        style: TextStyle(color: AppColors.grey1),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  Row(
+                    children: [
+                      _buildSocialButton(
+                        text: 'Google',
+                        icon: Image.network(
+                          'https://www.google.com/favicon.ico',
+                          width: 20.w,
+                          height: 20.h,
+                        ),
+                        onPressed: () {},
+                      ),
+                      SizedBox(width: 12.w),
+                      _buildSocialButton(
+                        text: 'Apple',
+                        icon: Icon(
+                          Icons.apple,
+                          color: Colors.black,
+                          size: 24.sp,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Already have an account ?  ',
+                        style: TextStyle(
+                          fontSize: FontSizes.f14.sp,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Nav.push(context, SignInScreen());
+                        },
+                        child: Text(
+                          'Sign in',
+                          style: TextStyle(
+                            fontSize: FontSizes.f14.sp,
+                            color: AppColors.blue2,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

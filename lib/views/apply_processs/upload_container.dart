@@ -46,12 +46,11 @@ class UploadFieldWidget extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 16.w),
           decoration: BoxDecoration(
-            color: file != null
-                ? AppColors.blue?.withOpacity(0.05)
-                : AppColors.white,
+            color: file != null ? AppColors.blue : AppColors.white,
             border: Border.all(
               color: file != null
-                  ? (AppColors.blue ?? Colors.blue)
+                  ? (AppColors.blue)
+                  // ignore: deprecated_member_use
                   : AppColors.grey2.withOpacity(0.3),
               width: 1.5,
             ),
@@ -107,7 +106,7 @@ class UploadFieldWidget extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.check_circle,
-                      color: AppColors.blue ?? Colors.blue,
+                      color: AppColors.blue,
                       size: 24.sp,
                     ),
                     SizedBox(width: 12.w),
