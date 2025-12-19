@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-import 'package:mvtravel/model/onboarding/investment_details_model.dart';
-
 import 'package:file_picker/file_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mvtravel/model/onboarding/investment_details_model.dart';
 
 class InvestmentDetailsViewModel extends ChangeNotifier {
   final amountController = TextEditingController();
@@ -11,6 +11,7 @@ class InvestmentDetailsViewModel extends ChangeNotifier {
   bool isPickingFile = false;
   String? errorMessage;
 
+  // ---------------- Pick document (UNCHANGED) ----------------
   Future<void> pickDocument() async {
     isPickingFile = true;
     notifyListeners();
@@ -44,20 +45,46 @@ class InvestmentDetailsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ---------------- SAVE TO FIREBASE ----------------
   Future<bool> saveInvestmentDetails() async {
     isLoading = true;
     notifyListeners();
 
-    await Future.delayed(Duration(seconds: 2)); // Simulate API call
+    // Bind amount
+    investmentData.amount =
+        double.tryParse(amountController.text.replaceAll(',', '')) ?? 0;
 
-    isLoading = false;
-    notifyListeners();
+    // if ((investmentData.amount ?? 0) <= 0 ||
+    //     investmentData.investmentType == null) {
+    //   errorMessage = "Please fill all required fields.";
+    //   isLoading = false;
+    //   notifyListeners();
+    //   return false;
+    // }
 
-    if (investmentData.amount != null &&
-        investmentData.investmentType != null) {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception("User not logged in");
+
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+        {
+          'investmentDetails': {
+            'amount': investmentData.amount,
+            'investmentType': investmentData.investmentType?.name,
+            'createdAt': FieldValue.serverTimestamp(), // ✅ TIMESTAMP
+          },
+        },
+        SetOptions(merge: true), // keep previous data
+      );
+
+      errorMessage = null;
+      isLoading = false;
+      notifyListeners();
       return true;
-    } else {
-      errorMessage = "Please fill all required fields.";
+    } catch (e) {
+      errorMessage = e.toString();
+      isLoading = false;
+      notifyListeners();
       return false;
     }
   }

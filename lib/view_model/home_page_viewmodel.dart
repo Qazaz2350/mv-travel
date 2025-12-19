@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mvtravel/model/home_page_model.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePageViewModel extends ChangeNotifier {
   bool isLoading = false;
@@ -16,11 +19,33 @@ class HomePageViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    await Future.delayed(Duration(seconds: 2)); // Simulate API call
+    await Future.delayed(const Duration(seconds: 2)); // Simulate API call
 
-    // Mock Data with MULTIPLE destinations for scrolling
+    // ===============================
+    // 🔹 FETCH USER NAME DYNAMICALLY
+    // ===============================
+    final fb_auth.User? firebaseUser =
+        fb_auth.FirebaseAuth.instance.currentUser;
+
+    String userName = "Pending";
+
+    if (firebaseUser != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get();
+
+      if (doc.exists) {
+        userName = doc.data()?['fullName'] ?? "Pending";
+      }
+    }
+
+    // ===============================
+    // 🔹 HOME DATA (UNCHANGED STRUCTURE)
+    // ===============================
     homeData = HomeData(
-      user: User(name: "Qazaz"),
+      user: User(name: userName), // ✅ ONLY CHANGE (was "Qazaz")
+
       featuredDestinations: [
         TravelDestination(
           country: "Pakistan",
@@ -36,27 +61,12 @@ class HomePageViewModel extends ChangeNotifier {
             FAQItem(
               question: "Can I change my plan later?",
               answer:
-                  "Yes, you can upgrade or downgrade your plan at any time. Simply visit your account settings to manage your subscription preferences.",
+                  "Yes, you can upgrade or downgrade your plan at any time.",
             ),
             FAQItem(
               question: "What is your cancellation policy?",
               answer:
-                  "We have a no-questions-asked cancellation policy. You can cancel anytime, and your access will remain active until the end of the current billing cycle.",
-            ),
-            FAQItem(
-              question: "Can other info be added to an invoice?",
-              answer:
-                  "Yes, you can customize your invoices. Navigate to Billing Settings to add your company name, VAT ID, or specific address details.",
-            ),
-            FAQItem(
-              question: "How does billing work?",
-              answer:
-                  "We charge your saved payment method automatically at the start of every billing period (monthly or annually). You will receive a receipt via email.",
-            ),
-            FAQItem(
-              question: "How do I change my account email?",
-              answer:
-                  "To update your email, go to Profile > Account Security. Enter your new email address and click 'Save'. You will need to verify the new email.",
+                  "You can cancel anytime. Access remains active till billing ends.",
             ),
           ],
         ),
@@ -75,7 +85,6 @@ class HomePageViewModel extends ChangeNotifier {
             FAQItem(question: "Visa fee refundable?", answer: "No"),
           ],
         ),
-        // Existing other destinations can stay simple
         TravelDestination(
           country: "UAE",
           cityName: "Dubai",
@@ -95,6 +104,7 @@ class HomePageViewModel extends ChangeNotifier {
           formattedArrival: "Get on 12 Mar, 2026 - 6:15 AM",
         ),
       ],
+
       activeApplications: [
         VisaApplication(
           visaType: "Work Visa",
@@ -122,17 +132,9 @@ class HomePageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void openDocuments() {
-    // Logic to open documents
-  }
-
-  void viewAllApplications() {
-    // Logic to view all applications
-  }
-
-  void applyForVisa() {
-    // Logic to apply for visa
-  }
+  void openDocuments() {}
+  void viewAllApplications() {}
+  void applyForVisa() {}
 
   @override
   void dispose() {

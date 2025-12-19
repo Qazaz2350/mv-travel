@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mvtravel/views/apply_processs/CHECKOUT.dart';
-import 'package:mvtravel/views/apply_processs/bottom_botton.dart';
-import 'package:mvtravel/views/apply_processs/personal_details.dart';
-import 'package:mvtravel/views/apply_processs/upload_card.dart';
+import 'package:mvtravel/views/apply_for_visa/CHECKOUT.dart';
+import 'package:mvtravel/views/apply_for_visa/bottom_botton.dart';
+import 'package:mvtravel/views/apply_for_visa/personal_details.dart';
+import 'package:mvtravel/views/apply_for_visa/upload_card.dart';
 import 'package:provider/provider.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
@@ -39,7 +39,7 @@ class _ApplyProcessView extends StatelessWidget {
           onPressed: () => Nav.pop(context),
         ),
         title: Text(
-          'Apply to Germany',
+          'Apply For Visa',
           style: TextStyle(
             color: AppColors.black,
             fontSize: FontSizes.f20,

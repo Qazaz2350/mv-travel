@@ -86,10 +86,13 @@ class NationalityResidenceScreen extends StatelessWidget {
                         ),
                         value: vm.selectedNationality,
                         icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
+                        dropdownColor: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
                         items: vm.countries
                             .map(
                               (country) => DropdownMenuItem<String>(
                                 value: country['name'],
+
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 12.w,
@@ -109,7 +112,7 @@ class NationalityResidenceScreen extends StatelessWidget {
                                         ),
                                         child: Text(
                                           country['flag']!,
-                                          style: TextStyle(fontSize: 18.sp),
+                                          style: TextStyle(fontSize: 14.sp),
                                         ),
                                       ),
                                       SizedBox(width: 12.w),
@@ -169,6 +172,8 @@ class NationalityResidenceScreen extends StatelessWidget {
                         ),
                         value: vm.selectedResidence,
                         icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
+                        dropdownColor: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
                         items: vm.countries
                             .map(
                               (country) => DropdownMenuItem<String>(
@@ -194,7 +199,7 @@ class NationalityResidenceScreen extends StatelessWidget {
                                         ),
                                         child: Text(
                                           country['flag']!,
-                                          style: TextStyle(fontSize: 18.sp),
+                                          style: TextStyle(fontSize: 13.sp),
                                         ),
                                       ),
                                       SizedBox(width: 12.w),

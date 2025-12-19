@@ -160,7 +160,7 @@ class SignInScreen extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTap: () {
-                              Nav.push(context, PhoneNumberScreen());
+                              // Nav.push(context, PhoneNumberScreen());
                             },
                             child: Text(
                               "Forgot Password?",
@@ -186,7 +186,7 @@ class SignInScreen extends StatelessWidget {
                                   // ✅ Success → navigate to Home or Dashboard
                                   Nav.push(
                                     context,
-                                    PhoneNumberScreen(),
+                                    HomePageView(),
                                   ); // replace HomeScreen() with your main screen
                                 },
                                 onError: (err) {

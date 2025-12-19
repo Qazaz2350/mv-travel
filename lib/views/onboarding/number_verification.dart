@@ -82,6 +82,8 @@ class PhoneNumberScreen extends StatelessWidget {
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             value: vm.selectedCountryCode,
+                            dropdownColor: Colors.white,
+                            borderRadius: BorderRadius.circular(12.r),
                             items: vm.countryCodes
                                 .map(
                                   (country) => DropdownMenuItem(

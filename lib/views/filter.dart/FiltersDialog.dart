@@ -79,10 +79,16 @@ class _FiltersDialogState extends State<FiltersDialog> {
     return Dialog(
       backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
-      insetPadding: EdgeInsets.symmetric(vertical: 24.h),
+      insetPadding: EdgeInsets.only(
+        top: 50.h, // space from top
+        // left: 16.w,
+        // right: 16.w,
+        bottom: 0, // stretch to bottom
+      ),
       child: Container(
         width: double.infinity,
-        constraints: BoxConstraints(maxHeight: 740.h),
+        height: MediaQuery.of(context).size.height - 50.h, // full bottom height
+
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -245,13 +251,7 @@ class _FiltersDialogState extends State<FiltersDialog> {
             // Bottom Buttons
             Container(
               padding: EdgeInsets.all(20.w),
-              decoration: BoxDecoration(
-                color: AppColors.grey,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(17.r),
-                  bottomRight: Radius.circular(17.r),
-                ),
-              ),
+              decoration: BoxDecoration(color: AppColors.grey),
               child: Row(
                 children: [
                   Expanded(

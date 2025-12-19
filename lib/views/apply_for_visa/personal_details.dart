@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/commen/app_date_field.dart';
 import 'package:mvtravel/commen/app_text_field.dart';
-import 'package:mvtravel/views/apply_processs/app_lists.dart';
+import 'package:mvtravel/views/apply_for_visa/app_lists.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
-import 'package:mvtravel/views/apply_processs/upload_container.dart';
+import 'package:mvtravel/views/apply_for_visa/upload_container.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 

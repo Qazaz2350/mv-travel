@@ -25,7 +25,7 @@ class InternationalStudentsView extends StatelessWidget {
                 icon: Icon(Icons.arrow_back, color: AppColors.black),
                 onPressed: () => Nav.pop(context),
               ),
-              title: Padding(
+              title: Padding( 
                 padding: EdgeInsets.only(left: 70.w),
                 child: Text(
                   "Student Details",
@@ -138,23 +138,34 @@ class InternationalStudentsView extends StatelessWidget {
                     ),
                     child: DropdownButton<String>(
                       value: vm.model.studyLevel,
+                      dropdownColor: Colors.white,
+                      borderRadius: BorderRadius.circular(
+                        12.r,
+                      ), // current selected value
+                      hint: Text(
+                        "Select your study level",
+                        style: TextStyle(
+                          fontSize: FontSizes.f14,
+                          color: AppColors.grey2,
+                        ),
+                      ),
                       underline: SizedBox(),
                       isExpanded: true,
-                      items: ["Undergraduate", "Graduate", "PhD", "Post Doc"]
-                          .map((e) {
-                            return DropdownMenuItem(
-                              value: e,
-                              child: Text(
-                                e,
-                                style: TextStyle(
-                                  fontSize: FontSizes.f14,
-                                  color: AppColors.grey2,
-                                ),
-                              ),
-                            );
-                          })
-                          .toList(),
-                      onChanged: vm.setStudyLevel,
+                      items: vm.studyLevels.map((e) {
+                        // map over the list of options, not the selected value
+                        return DropdownMenuItem<String>(
+                          value: e,
+
+                          child: Text(
+                            e,
+                            style: TextStyle(
+                              fontSize: FontSizes.f14,
+                              color: AppColors.grey2,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: vm.setStudyLevel, // update ViewModel
                     ),
                   ),
                   // SizedBox(height: 40.h), SizedBox(height: 35.h),
@@ -163,11 +174,13 @@ class InternationalStudentsView extends StatelessWidget {
                   FRectangleButton(
                     text: "Next",
                     color: AppColors.blue3,
-                    onPressed: () {
-                      // Navigate to the next screen
+                    onPressed: () async {
+                      final vm = context.read<InternationalStudentsViewModel>();
+                      await vm.saveToFirebase(); // Save data to Firebase
                       Nav.push(context, WorkApplicationDetailsView());
                     },
                   ),
+
                   SizedBox(height: 20.h),
                 ],
               ),

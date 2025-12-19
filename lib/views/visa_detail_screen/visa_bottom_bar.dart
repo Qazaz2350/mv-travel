@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/model/home_page_model.dart';
 import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/utilis/nav.dart';
+import 'package:mvtravel/views/apply_for_visa/apply_process.dart';
 
 class BottomBar extends StatelessWidget {
   final TravelDestination destination;
@@ -52,7 +54,9 @@ class BottomBar extends StatelessWidget {
             SizedBox(width: 16.w),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Nav.push(context, ApplyProcess());
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.blue2,
                   foregroundColor: AppColors.white,

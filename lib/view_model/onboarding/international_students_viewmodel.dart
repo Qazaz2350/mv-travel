@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mvtravel/model/onboarding/international_students_model.dart';
 
 class InternationalStudentsViewModel extends ChangeNotifier {
   final InternationalStudentsModel model = InternationalStudentsModel();
 
+  List<String> studyLevels = ["Undergraduate", "Graduate", "Postgraduate"];
+
+  // ----------------- Setters -----------------
   void setUniversityName(String value) {
     model.universityName = value;
     notifyListeners();
@@ -20,11 +25,26 @@ class InternationalStudentsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void save() {
-    // You can connect API later
-    print("SAVED:");
-    print(model.universityName);
-    print(model.admissionStatus);
-    print(model.studyLevel);
+  // ----------------- Map for Firestore -----------------
+  Map<String, dynamic> toMap() {
+    return {
+      'universityName': model.universityName ?? '',
+      'admissionStatus': model.admissionStatus ?? '',
+      'studyLevel': model.studyLevel ?? '',
+    };
+  }
+
+  // ----------------- Save to Firebase -----------------
+  Future<void> saveToFirebase() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'internationalStudent': toMap(),
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      debugPrint('Error saving international student info: $e');
+    }
   }
 }

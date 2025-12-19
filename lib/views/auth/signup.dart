@@ -6,6 +6,7 @@ import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/commen/full_size_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/views/auth/signin.dart';
+import 'package:mvtravel/views/onboarding/number_verification.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -339,7 +340,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 content: Text('Account created successfully!'),
                               ),
                             );
-                            Nav.push(context, SignInScreen());
+                            Nav.push(context, PhoneNumberScreen());
                           }
                         } catch (e) {
                           ScaffoldMessenger.of(

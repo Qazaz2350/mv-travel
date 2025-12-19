@@ -78,8 +78,11 @@ class SearchBarWidget extends StatelessWidget {
               alignment: Alignment.center, // center the icon
               child: GestureDetector(
                 onTap: () {
-                  showDialog(
+                  showModalBottomSheet(
                     context: context,
+                    isScrollControlled: true, // allows full screen
+                    backgroundColor:
+                        Colors.transparent, // keep your rounded corners visible
                     builder: (context) => FiltersDialog(),
                   );
                 },

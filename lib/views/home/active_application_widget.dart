@@ -34,14 +34,47 @@ class ActiveApplicationWidget extends StatelessWidget {
                   color: AppColors.black,
                 ),
               ),
-              Text(
-                'See all',
-                style: TextStyle(
-                  fontSize: FontSizes.f14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.blue1,
+              GestureDetector(
+                onTap: () {
+                  Nav.push(
+                    context,
+                    ChangeNotifierProvider(
+                      create: (_) => VisaTrackingViewModel(),
+                      child: const VisaTracking(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'See all',
+                  style: TextStyle(
+                    fontSize: FontSizes.f14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.blue1,
+                  ),
                 ),
               ),
+
+              // GestureDetector(
+              //   onTap: () {
+              //     Nav.push(
+              //       context,
+              //       ChangeNotifierProvider(
+              //         create: (_) => VisaTrackingViewModel(),
+              //         child: const VisaTracking(),
+              //       ),
+              //     );
+              //   },
+              //   child: ApplicationCardWidget(viewModel: ApplicationViewModel()),
+              // ),
+
+              // Text(
+              //   'See all',
+              //   style: TextStyle(
+              //     fontSize: FontSizes.f14,
+              //     fontWeight: FontWeight.w600,
+              //     color: AppColors.blue1,
+              //   ),
+              // ),
             ],
           ),
           SizedBox(height: 16.h),
@@ -49,18 +82,7 @@ class ActiveApplicationWidget extends StatelessWidget {
           // ...viewModel.homeData.activeApplications
           //     .map((app) => ApplicationCardWidget(application: app))
           //     .toList(),
-          GestureDetector(
-            onTap: () {
-              Nav.push(
-                context,
-                ChangeNotifierProvider(
-                  create: (_) => VisaTrackingViewModel(),
-                  child: const VisaTracking(),
-                ),
-              );
-            },
-            child: ApplicationCardWidget(viewModel: ApplicationViewModel()),
-          ),
+          ApplicationCardWidget(viewModel: ApplicationViewModel()),
         ],
       ),
     );

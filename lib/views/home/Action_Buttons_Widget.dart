@@ -4,6 +4,7 @@ import 'package:mvtravel/commen/half_button.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
+import 'package:mvtravel/views/apply_for_visa/apply_process.dart';
 import 'package:mvtravel/views/visa_application_screen/visa_application_view.dart';
 
 class ActionButtonsWidget extends StatelessWidget {
@@ -34,7 +35,9 @@ class ActionButtonsWidget extends StatelessWidget {
               textColor: AppColors.white,
               text: "Apply for Visa",
               bgColor: AppColors.blue3,
-              onTap: () {},
+              onTap: () {
+                Nav.push(context, ApplyProcess());
+              },
             ),
           ),
         ],

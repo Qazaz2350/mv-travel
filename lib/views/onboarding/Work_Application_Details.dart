@@ -146,8 +146,19 @@ class _WorkApplicationDetailsViewState
                     FRectangleButton(
                       text: 'Next',
                       color: AppColors.blue3,
-                      onPressed: () {
-                        Nav.push(context, const InvestmentDetailsView());
+                      onPressed: () async {
+                        final success = await _viewModel.saveWorkDetails();
+
+                        if (success && mounted) {
+                          Nav.push(context, const InvestmentDetailsView());
+                        } else if (_viewModel.errorMessage != null && mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(_viewModel.errorMessage!),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
                       },
                     ),
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/commen/half_button.dart';
+import 'package:mvtravel/utilis/Nav.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
+import 'package:mvtravel/views/home/home_dashboard.dart';
 
 class BottomButtons extends StatelessWidget {
   final ApplyProcessViewModel vm;
@@ -24,7 +26,7 @@ class BottomButtons extends StatelessWidget {
       }
     }
 
-    return _defaultButtons();
+    return _defaultButtons(context);
   }
 
   // ===== Third Step: Only Confirm Button =====
@@ -108,7 +110,7 @@ class BottomButtons extends StatelessWidget {
     );
   }
 
-  Widget _defaultButtons() {
+  Widget _defaultButtons(BuildContext context) {
     if (vm.currentStep == 3) {
       // 4th page: only one full-width button (Submit)
       return Container(
@@ -121,7 +123,10 @@ class BottomButtons extends StatelessWidget {
             text: ' Confirm Your Apply',
             bgColor: AppColors.blue1,
             textColor: AppColors.white,
-            onTap: vm.nextStep, // or your final submit function
+            onTap: () => Nav.push(
+              context,
+              HomePageView(),
+            ), // or your final submit function
           ),
         ),
       );

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mvtravel/model/onboarding/loading_screen_model.dart';
 import 'package:mvtravel/view_model/onboarding/loading_screen_viewmodel.dart';
+import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:provider/provider.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
@@ -18,7 +19,10 @@ class LoadingScreenView extends StatelessWidget {
       create: (_) => LoadingScreenViewModel()
         ..startLoading(() {
           // Navigation after loading
-          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => YourNextScreen()));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => HomePageView()),
+          );
         }),
       child: Scaffold(
         backgroundColor: Colors.white,

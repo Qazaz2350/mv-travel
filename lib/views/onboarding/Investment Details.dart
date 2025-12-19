@@ -91,10 +91,24 @@ class InvestmentDetailsView extends StatelessWidget {
                           FRectangleButton(
                             text: 'Next',
                             color: AppColors.blue3,
-                            onPressed: () {
-                              Nav.push(context, LoadingScreenView());
+                            onPressed: () async {
+                              final success = await viewModel
+                                  .saveInvestmentDetails();
+
+                              if (success && context.mounted) {
+                                Nav.push(context, LoadingScreenView());
+                              } else if (viewModel.errorMessage != null &&
+                                  context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(viewModel.errorMessage!),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             },
                           ),
+
                           SizedBox(height: 20.h),
                         ],
                       ),
@@ -189,9 +203,13 @@ class InvestmentDetailsView extends StatelessWidget {
             icon: Icon(Icons.keyboard_arrow_down, color: AppColors.black),
             style: TextStyle(fontSize: FontSizes.f14, color: AppColors.black),
             dropdownColor: Colors.white,
+            borderRadius: BorderRadius.circular(12.r),
+            
+            // padding: ,
             items: InvestmentType.values.map((type) {
               return DropdownMenuItem<InvestmentType>(
                 value: type,
+
                 child: Text(type.displayName),
               );
             }).toList(),
