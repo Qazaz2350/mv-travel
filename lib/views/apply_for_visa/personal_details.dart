@@ -90,12 +90,13 @@ class DetailStepView extends StatelessWidget {
                   SizedBox(height: 16.h),
 
                   /// Date of Birth
-                  AppDateField(
-                    label: 'Date of Birth',
-                    hint: 'mm / dd / yyyy',
-                    controller: vm.dobController,
-                    onTap: () => vm.selectDate(context),
-                  ),
+                 AppDateField(
+              label: 'Date of Birth',
+              hint: 'MM / DD / YYYY',
+              controller: vm.dobController,
+              onTap: () => vm.selectDate(context), // <-- opens calendar
+            ),
+
                   SizedBox(height: 16.h),
 
                   /// Phone
@@ -176,6 +177,9 @@ class DetailStepView extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         DropdownButtonFormField<String>(
+          dropdownColor: AppColors.white,
+          borderRadius: BorderRadius.circular(8.r),
+
           value: value,
           hint: Text(
             hint,
@@ -194,7 +198,7 @@ class DetailStepView extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.blue),
+              borderSide: BorderSide(color: AppColors.grey1),
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
@@ -202,7 +206,12 @@ class DetailStepView extends StatelessWidget {
             ),
           ),
           items: items
-              .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+              .map(
+                (item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(item, style: TextStyle(fontSize: FontSizes.f14)),
+                ),
+              )
               .toList(),
           onChanged: onChanged,
         ),
@@ -236,8 +245,22 @@ class DetailStepView extends StatelessWidget {
                 vertical: 14.h,
               ),
             ),
+            dropdownColor: AppColors.white,
+            borderRadius: BorderRadius.circular(8.r),
             items: ['+92', '+91', '+1', '+44', '+971', '+86', '+81']
-                .map((code) => DropdownMenuItem(value: code, child: Text(code)))
+                .map(
+                  (code) => DropdownMenuItem(
+                    value: code,
+
+                    child: Text(
+                      code,
+                      style: TextStyle(
+                        fontSize: FontSizes.f14,
+                        color: AppColors.grey2,
+                      ),
+                    ),
+                  ),
+                )
                 .toList(),
             onChanged: (value) {
               vm.selectedCountryCode = value!;

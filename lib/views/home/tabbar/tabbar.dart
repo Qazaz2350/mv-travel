@@ -1,9 +1,13 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/model/home_page_model.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
+import 'package:mvtravel/views/home/Action_Buttons_Widget.dart';
+import 'package:mvtravel/views/home/active_application_widget.dart';
 import 'package:mvtravel/views/home/featured_destinations_widget.dart';
 import 'package:mvtravel/views/home/featured_destinations_widget.dart';
 
@@ -72,15 +76,33 @@ class _HomeTabbarState extends State<HomeTabbar> {
             ),
           ),
 
-          SizedBox(height: 20.h),
+          SizedBox(height: 14.h),
           SizedBox(
-            height: 300.h, // fixed height, adjust as needed
+            height: 700.h, // fixed height, adjust as needed
             child: TabBarView(
               children: [
-                // SizedBox(height: 10.h),
-                FeaturedDestinationsWidget(
-                  destinations: widget.viewModel.homeData.featuredDestinations,
+                Column(
+                  children: [
+                    FeaturedDestinationsWidget(
+                      destinations:
+                          widget.viewModel.homeData.featuredDestinations,
+                    ),
+                    SizedBox(height: 15.h),
+                    GestureDetector(
+                      onTap: () {},
+
+                      child: ActiveApplicationWidget(
+                        viewModel: widget.viewModel,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+
+                    ActionButtonsWidget(viewModel: widget.viewModel),
+                    SizedBox(height: 40.h),
+                  ],
                 ),
+
+                // SizedBox(height: 10.h),
                 Center(
                   child: Text(
                     'Student',
