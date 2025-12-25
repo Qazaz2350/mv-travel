@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/commen/full_size_button.dart';
 import 'package:mvtravel/commen/progress_indicator.dart';
 import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
-// import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/view_model/onboarding/phone_number_viewmodel.dart';
 import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:mvtravel/views/onboarding/select_birthdate.dart';
@@ -27,7 +27,7 @@ class PhoneNumberScreen extends StatelessWidget {
               backgroundColor: AppColors.grey,
               elevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.black),
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () => Nav.pop(context),
               ),
               actions: [
@@ -46,8 +46,8 @@ class PhoneNumberScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StepIndicator(totalSteps: 9, currentStep: 1),
-                  SizedBox(height: 32),
+                  const StepIndicator(totalSteps: 9, currentStep: 1),
+                  const SizedBox(height: 32),
                   Text(
                     'What is your phone number?',
                     style: TextStyle(
@@ -56,7 +56,7 @@ class PhoneNumberScreen extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'We need your phone number to provide status updates on your visa',
                     style: TextStyle(
@@ -64,7 +64,9 @@ class PhoneNumberScreen extends StatelessWidget {
                       color: Colors.grey[600],
                     ),
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
+
+                  /// 🔽 COUNTRY CODE + PHONE FIELD
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -80,30 +82,48 @@ class PhoneNumberScreen extends StatelessWidget {
                           ),
                         ),
                         child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
                             value: vm.selectedCountryCode,
-                            dropdownColor: Colors.white,
-                            borderRadius: BorderRadius.circular(12.r),
-                            items: vm.countryCodes
-                                .map(
-                                  (country) => DropdownMenuItem(
-                                    value: country['code'],
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          country['flag']!,
-                                          style: TextStyle(fontSize: 13),
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          country['code']!,
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                      ],
+
+                            /// ✅ DROPDOWN OPENS BELOW
+                            dropdownStyleData: DropdownStyleData(
+                              direction: DropdownDirection.left,
+                              width: 120,
+                              maxHeight: 500,
+                              offset: const Offset(0, 5),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+
+                            buttonStyleData: ButtonStyleData(
+                              height: 49,
+                              width: 110,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                            ),
+
+                            items: vm.countryCodes.map((country) {
+                              return DropdownMenuItem<String>(
+                                value: country['code'],
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      country['flag']!,
+                                      style: const TextStyle(fontSize: 13),
                                     ),
-                                  ),
-                                )
-                                .toList(),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      country['code']!,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
 
                             onChanged: (value) {
                               vm.changeCountry(value!);
@@ -111,7 +131,9 @@ class PhoneNumberScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
+
+                      /// 📱 PHONE NUMBER FIELD
                       Expanded(
                         child: TextField(
                           controller: vm.phoneController,
@@ -120,9 +142,7 @@ class PhoneNumberScreen extends StatelessWidget {
                           decoration: InputDecoration(
                             hintText: 'xxxxxxxxxx',
                             hintStyle: TextStyle(color: AppColors.grey2),
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.black),
-                            ),
+                            border: const UnderlineInputBorder(),
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey[500]!),
                             ),
@@ -137,15 +157,17 @@ class PhoneNumberScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Spacer(),
+
+                  const Spacer(),
+
+                  /// ▶ NEXT BUTTON
                   FRectangleButton(
                     text: 'Next',
                     color: AppColors.blue3,
                     onPressed: () async {
                       try {
-                        await vm
-                            .savePhoneNumber(); // Save phone number to Firestore
-                        Nav.push(context, BirthDateScreen()); // Go to next page
+                        await vm.savePhoneNumber();
+                        Nav.push(context, BirthDateScreen());
                       } catch (e) {
                         ScaffoldMessenger.of(
                           context,
@@ -153,7 +175,6 @@ class PhoneNumberScreen extends StatelessWidget {
                       }
                     },
                   ),
-
                   SizedBox(height: 16.h),
                 ],
               ),

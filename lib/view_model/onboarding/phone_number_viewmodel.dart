@@ -216,25 +216,39 @@ class PhoneNumberViewModel extends ChangeNotifier {
   }
 
   /// Save phone number to Firestore under the current user's document
+  /// Save phone number to Firestore under the current user's document
   Future<void> savePhoneNumber() async {
     try {
-      // Get currently signed-in user
       User? user = FirebaseAuth.instance.currentUser;
 
-      if (user != null) {
-        // Combine country code with phone number
-        String fullPhone = '$selectedCountryCode${phoneController.text.trim()}';
-
-        // Update the existing user document
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid) // UID ensures we update the correct user
-            .update({'phoneNumber': fullPhone});
-      } else {
+      if (user == null) {
         throw 'User not signed in';
       }
+
+      final String phone = phoneController.text.trim();
+
+      // 🔴 Validation
+      if (phone.isEmpty) {
+        throw 'Please enter phone number';
+      }
+
+      if (!RegExp(r'^[0-9]+$').hasMatch(phone)) {
+        throw 'Phone number must contain digits only';
+      }
+
+      if (phone.length < 7 || phone.length > 15) {
+        throw 'Enter a valid phone number';
+      }
+
+      // Combine country code with phone number
+      String fullPhone = '$selectedCountryCode$phone';
+
+      // Save to Firestore
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(
+        {'phoneNumber': fullPhone},
+      );
     } catch (e) {
-      throw 'Failed to save phone number: $e';
+      throw e.toString();
     }
   }
 

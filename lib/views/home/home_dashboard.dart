@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/views/home/Action_Buttons_Widget.dart';
-import 'package:mvtravel/views/home/CategoryTabs_Widget.dart';
+import 'package:mvtravel/views/home/tabbar/tabbar.dart';
 import 'package:mvtravel/views/home/active_application_widget.dart';
 import 'package:mvtravel/views/home/featured_destinations_widget.dart';
 import 'package:mvtravel/views/home/floating_buttons_widget.dart';
 import 'package:mvtravel/views/home/home_header_widget.dart';
 import 'package:mvtravel/views/home/searchtab.dart';
+import 'package:mvtravel/widgets/shimmer.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({Key? key}) : super(key: key);
@@ -42,7 +42,7 @@ class _HomePageViewState extends State<HomePageView> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: _viewModel.isLoading
-            ? Center(child: CircularProgressIndicator(color: AppColors.blue1))
+            ? const HomeShimmer()
             : RefreshIndicator(
                 onRefresh: _viewModel.refreshData,
                 child: SingleChildScrollView(
@@ -56,24 +56,23 @@ class _HomePageViewState extends State<HomePageView> {
                       SearchBarWidget(viewModel: _viewModel),
                       SizedBox(height: 20.h),
 
-                      CategoryTabsWidget(viewModel: _viewModel),
-                      SizedBox(height: 40.h),
+                      HomeTabbar(viewModel: _viewModel),
 
-                      FeaturedDestinationsWidget(
-                        destinations: _viewModel.homeData.featuredDestinations,
-                      ),
+                      // FeaturedDestinationsWidget(
+                      //   destinations: _viewModel.homeData.featuredDestinations,
+                      // ),
 
-                      SizedBox(height: 24.h),
-                      //
-                      GestureDetector(
-                        onTap: () {},
+                      // SizedBox(height: 24.h),
+                      // //
+                      // GestureDetector(
+                      //   onTap: () {},
 
-                        child: ActiveApplicationWidget(viewModel: _viewModel),
-                      ),
-                      SizedBox(height: 20.h),
+                      //   child: ActiveApplicationWidget(viewModel: _viewModel),
+                      // ),
+                      // SizedBox(height: 20.h),
 
-                      ActionButtonsWidget(viewModel: _viewModel),
-                      SizedBox(height: 40.h),
+                      // ActionButtonsWidget(viewModel: _viewModel),
+                      // SizedBox(height: 40.h),
                     ],
                   ),
                 ),

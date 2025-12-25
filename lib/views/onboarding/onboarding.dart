@@ -33,69 +33,69 @@ class OnboardingScreen extends StatelessWidget {
                 ),
 
                 // Top Bar (Back and Skip)
-                SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 10.h,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (vm.currentPage > 0)
-                          GestureDetector(
-                            onTap: vm.previousPage,
-                            child: Container(
-                              padding: EdgeInsets.all(8.w),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.3),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                            ),
-                          )
-                        else
-                          SizedBox(width: 40.w),
+                // SafeArea(
+                //   child: Padding(
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 16.w,
+                //       vertical: 10.h,
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         if (vm.currentPage > 0)
+                //           GestureDetector(
+                //             onTap: vm.previousPage,
+                //             child: Container(
+                //               padding: EdgeInsets.all(8.w),
+                //               decoration: BoxDecoration(
+                //                 color: Colors.white.withOpacity(0.3),
+                //                 shape: BoxShape.circle,
+                //               ),
+                //               child: Icon(
+                //                 Icons.arrow_back,
+                //                 color: Colors.white,
+                //                 size: 24,
+                //               ),
+                //             ),
+                //           )
+                //         else
+                //           SizedBox(width: 40.w),
 
-                        if (vm.currentPage < vm.pages.length - 1)
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const SignUpScreen(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                                vertical: 10.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.blue1,
-                                borderRadius: BorderRadius.circular(20.r),
-                              ),
-                              child: Text(
-                                'Skip',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: FontSizes.f14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          )
-                        else
-                          SizedBox(width: 80.w),
-                      ],
-                    ),
-                  ),
-                ),
+                //         if (vm.currentPage < vm.pages.length - 1)
+                //           GestureDetector(
+                //             onTap: () {
+                //               Navigator.push(
+                //                 context,
+                //                 MaterialPageRoute(
+                //                   builder: (_) => const SignUpScreen(),
+                //                 ),
+                //               );
+                //             },
+                //             child: Container(
+                //               padding: EdgeInsets.symmetric(
+                //                 horizontal: 20.w,
+                //                 vertical: 10.h,
+                //               ),
+                //               decoration: BoxDecoration(
+                //                 color: AppColors.blue1,
+                //                 borderRadius: BorderRadius.circular(20.r),
+                //               ),
+                //               child: Text(
+                //                 'Skip',
+                //                 style: TextStyle(
+                //                   color: Colors.white,
+                //                   fontSize: FontSizes.f14,
+                //                   fontWeight: FontWeight.w600,
+                //                 ),
+                //               ),
+                //             ),
+                //           )
+                //         else
+                //           SizedBox(width: 80.w),
+                //       ],
+                //     ),
+                //   ),
+                // ),
 
                 // Bottom Content
                 Positioned(

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/onboarding/splash_view_model.dart';
 import 'package:mvtravel/views/onboarding/onboarding.dart';
 import 'package:mvtravel/views/onboarding/splash_screen.dart';
@@ -31,6 +32,13 @@ class MyApp extends StatelessWidget {
             home: child,
             debugShowCheckedModeBanner: false,
             routes: {'/onboarding': (context) => const OnboardingScreen()},
+            theme: ThemeData(
+              textSelectionTheme: const TextSelectionThemeData(
+                cursorColor: Colors.blue, // Cursor color
+                selectionColor: AppColors.blue, // Highlighted text
+                selectionHandleColor: Colors.blue, // Drag handle color
+              ),
+            ),
           );
         },
         child: const SplashScreen(),

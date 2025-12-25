@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/commen/full_size_button.dart';
@@ -40,10 +41,10 @@ class NationalityResidenceScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StepIndicator(totalSteps: 9, currentStep: 3),
+                  const StepIndicator(totalSteps: 9, currentStep: 3),
                   SizedBox(height: 32.h),
 
-                  /// Title
+                  /// TITLE
                   Text(
                     'Nationality & Residence',
                     style: TextStyle(
@@ -70,12 +71,11 @@ class NationalityResidenceScreen extends StatelessWidget {
                       vertical: 2.h,
                     ),
                     decoration: BoxDecoration(
-                      // border: Border.all(color: AppColors.grey2),
                       borderRadius: BorderRadius.circular(12.r),
                       color: Colors.white,
                     ),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
+                      child: DropdownButton2<String>(
                         isExpanded: true,
                         hint: Text(
                           'Select your nationality',
@@ -85,59 +85,59 @@ class NationalityResidenceScreen extends StatelessWidget {
                           ),
                         ),
                         value: vm.selectedNationality,
-                        icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
-                        dropdownColor: Colors.white,
-                        borderRadius: BorderRadius.circular(12.r),
-                        items: vm.countries
-                            .map(
-                              (country) => DropdownMenuItem<String>(
-                                value: country['name'],
+                        iconStyleData: IconStyleData(
+                          icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
+                        ),
 
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                    vertical: 8.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12.r),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      // Flag Circle
-                                      Container(
-                                        padding: EdgeInsets.all(4.w),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          // color: Colors.grey.shade100,
-                                        ),
-                                        child: Text(
-                                          country['flag']!,
-                                          style: TextStyle(fontSize: 14.sp),
-                                        ),
-                                      ),
-                                      SizedBox(width: 12.w),
-                                      // Country Name
-                                      Expanded(
-                                        child: Text(
-                                          country['name']!,
-                                          style: TextStyle(
-                                            fontSize: FontSizes.f14,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black87,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                        /// ✅ dropdown opens below
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 440,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          offset: const Offset(0, 4),
+                        ),
+
+                        items: vm.countries.map((country) {
+                          return DropdownMenuItem<String>(
+                            value: country['name'],
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                // horizontal: 12.w,
+                                vertical: 8.h,
                               ),
-                            )
-                            .toList(),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(4.w),
+                                    child: Text(
+                                      country['flag']!,
+                                      style: TextStyle(fontSize: 14.sp),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  Expanded(
+                                    child: Text(
+                                      country['name']!,
+                                      style: TextStyle(
+                                        fontSize: FontSizes.f14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
 
                         onChanged: vm.setNationality,
                       ),
                     ),
                   ),
+
                   SizedBox(height: 24.h),
 
                   /// ---------------- RESIDENCE ----------------
@@ -157,11 +157,10 @@ class NationalityResidenceScreen extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      // border: Border.all(color: AppColors.grey2),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
+                      child: DropdownButton2<String>(
                         isExpanded: true,
                         hint: Text(
                           'Select your country of residence',
@@ -171,62 +170,60 @@ class NationalityResidenceScreen extends StatelessWidget {
                           ),
                         ),
                         value: vm.selectedResidence,
-                        icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
-                        dropdownColor: Colors.white,
-                        borderRadius: BorderRadius.circular(12.r),
-                        items: vm.countries
-                            .map(
-                              (country) => DropdownMenuItem<String>(
-                                value: country['name'],
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                    vertical: 8.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12.r),
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      // Flag Circle
-                                      Container(
-                                        padding: EdgeInsets.all(4.w),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          // color: Colors.grey.shade100,
-                                        ),
-                                        child: Text(
-                                          country['flag']!,
-                                          style: TextStyle(fontSize: 13.sp),
-                                        ),
-                                      ),
-                                      SizedBox(width: 12.w),
-                                      // Country Name
-                                      Expanded(
-                                        child: Text(
-                                          country['name']!,
-                                          style: TextStyle(
-                                            fontSize: FontSizes.f14,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black87,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                        iconStyleData: IconStyleData(
+                          icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
+                        ),
+
+                        /// ✅ dropdown opens below
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 400,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          offset: const Offset(0, 4),
+                        ),
+
+                        items: vm.countries.map((country) {
+                          return DropdownMenuItem<String>(
+                            value: country['name'],
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 0.w,
+                                // vertical: 8.h,
                               ),
-                            )
-                            .toList(),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(4.w),
+                                    child: Text(
+                                      country['flag']!,
+                                      style: TextStyle(fontSize: 13.sp),
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  Expanded(
+                                    child: Text(
+                                      country['name']!,
+                                      style: TextStyle(
+                                        fontSize: FontSizes.f14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
 
                         onChanged: vm.setResidence,
                       ),
                     ),
                   ),
 
-                  Spacer(),
+                  const Spacer(),
 
                   /// NEXT BUTTON
                   FRectangleButton(
@@ -234,7 +231,7 @@ class NationalityResidenceScreen extends StatelessWidget {
                     color: AppColors.blue3,
                     onPressed: () async {
                       final vm = context.read<NationalityResidenceViewModel>();
-                      await vm.saveToFirebase(); // Save values to Firebase
+                      await vm.saveToFirebase();
                       Nav.push(context, VisitPurposeView());
                     },
                   ),

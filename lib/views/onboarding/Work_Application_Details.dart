@@ -238,13 +238,13 @@ class _WorkApplicationDetailsViewState
         ),
         SizedBox(height: 12.h),
         Container(
-          height: 52.h,
+          // height: 52.h,
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(6.0),
             child: Row(
               children: [
                 Expanded(

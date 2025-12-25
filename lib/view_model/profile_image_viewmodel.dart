@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mvtravel/commen/profile_image_model.dart';
+import 'package:mvtravel/model/profile_image_model.dart';
 
 class ProfileImageViewModel extends ChangeNotifier {
   ProfileImageModel _model = ProfileImageModel();

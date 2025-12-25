@@ -204,7 +204,7 @@ class InvestmentDetailsView extends StatelessWidget {
             style: TextStyle(fontSize: FontSizes.f14, color: AppColors.black),
             dropdownColor: Colors.white,
             borderRadius: BorderRadius.circular(12.r),
-            
+
             // padding: ,
             items: InvestmentType.values.map((type) {
               return DropdownMenuItem<InvestmentType>(

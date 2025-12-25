@@ -1,66 +1,66 @@
-// lib/view_model/filters_viewmodel.dart
 import 'package:flutter/material.dart';
-import '../model/filters_model.dart';
+import 'package:mvtravel/model/filters_model.dart';
 
-class FiltersViewModel extends ChangeNotifier {
-  final FiltersModel _model = FiltersModel();
+class JobFilterViewModel extends ChangeNotifier {
+  final JobFilterModel _filter = JobFilterModel();
+
+  // Text Controllers
+  final TextEditingController keywordsController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController salaryMinController = TextEditingController();
+  final TextEditingController salaryMaxController = TextEditingController();
+
+  // Options
+  final List<String> distanceOptions = [
+    '5 miles',
+    '10 miles',
+    '15 miles',
+    '25 miles',
+    '50 miles',
+  ];
+
+  final List<String> salaryTypeOptions = [
+    'Annual',
+    'Monthly',
+    'Weekly',
+    'Daily',
+    'Hourly',
+  ];
+
+  final List<String> jobTypeOptions = [
+    'Full Time',
+    'Part Time',
+    'Contract',
+    'Temporary',
+    'Internship',
+  ];
 
   // Getters
-  String get selectedVisaType => _model.selectedVisaType;
-  String get selectedCountry => _model.selectedCountry;
-  String get selectedRegion => _model.selectedRegion;
-  String get selectedRegion2 => _model.selectedRegion2;
-  DateTime? get fromDate => _model.fromDate;
-  DateTime? get toDate => _model.toDate;
-  Set<String> get selectedStatuses => _model.selectedStatuses;
+  String get selectedDistance => _filter.selectedDistance;
+  String get selectedSalaryType => _filter.selectedSalaryType;
+  String get selectedJobType => _filter.selectedJobType;
 
-  List<String> get countries => _model.countries;
-  List<String> get regions => _model.regions;
-
-  // Actions
-  void selectVisaType(String type) {
-    _model.selectedVisaType = type;
+  // Setters
+  void setDistance(String value) {
+    _filter.selectedDistance = value;
     notifyListeners();
   }
 
-  void setCountry(String country) {
-    _model.selectedCountry = country;
+  void setSalaryType(String value) {
+    _filter.selectedSalaryType = value;
     notifyListeners();
   }
 
-  void setRegion({required bool isFirst, required String region}) {
-    if (isFirst) {
-      _model.selectedRegion = region;
-    } else {
-      _model.selectedRegion2 = region;
-    }
+  void setJobType(String value) {
+    _filter.selectedJobType = value;
     notifyListeners();
   }
 
-  void setFromDate(DateTime? date) {
-    _model.fromDate = date;
-    notifyListeners();
+  // Dispose
+  void disposeControllers() {
+    keywordsController.dispose();
+    locationController.dispose();
+    salaryMinController.dispose();
+    salaryMaxController.dispose();
   }
-
-  void setToDate(DateTime? date) {
-    _model.toDate = date;
-    notifyListeners();
-  }
-
-  void toggleStatus(String status) {
-    if (_model.selectedStatuses.contains(status)) {
-      _model.selectedStatuses.remove(status);
-    } else {
-      _model.selectedStatuses.add(status);
-    }
-    notifyListeners();
-  }
-
-  void clearFilters() {
-    _model.reset();
-    notifyListeners();
-  }
-
-  // For debugging / external use
-  FiltersModel snapshot() => _model.copy();
 }
