@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mvtravel/views/apply_for_visa/CHECKOUT.dart';
+import 'package:mvtravel/views/apply_for_visa/payment_view.dart';
 import 'package:mvtravel/views/apply_for_visa/bottom_botton.dart';
 import 'package:mvtravel/views/apply_for_visa/personal_details.dart';
 import 'package:mvtravel/views/apply_for_visa/upload_card.dart';

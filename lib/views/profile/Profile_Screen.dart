@@ -325,7 +325,7 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right, color: AppColors.grey2, size: 24.sp),
+              // Icon(Icons.chevron_right, color: AppColors.grey2, size: 24.sp),
             ],
           ),
         ),

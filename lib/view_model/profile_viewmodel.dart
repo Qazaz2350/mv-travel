@@ -52,8 +52,10 @@ class UserProfileViewModel extends ChangeNotifier {
       fullName = data['fullName'] ?? "Pending";
       email = data['email'] ?? "Pending";
       nationality = data['nationality'] ?? "Pending";
+      visaType = data['visaType'] ?? "Pending";
+
       phoneNumber = data['phoneNumber'] ?? "Pending";
-      passportNumber = data['passportNumber'] ?? "Pending";
+      passportNumber = data['visaPassportNumber'] ?? "Pending";
 
       // -------- BIRTH DATE (number → string) --------
       if (data['birthDate'] != null && data['birthDate'] is int) {
@@ -61,20 +63,28 @@ class UserProfileViewModel extends ChangeNotifier {
         birthDate = DateFormat('dd MMM yyyy').format(date);
       }
 
-      // -------- TRAVEL VISA MAP --------
+      // -------- TRAVEL VISA --------
       final travelVisa = data['travelVisa'];
       if (travelVisa != null) {
-        purposeOfTravel = travelVisa['reason'] ?? "Pending";
-        visaType = travelVisa['visaType'] ?? "Pending";
+        purposeOfTravel = travelVisa['reason'] ?? purposeOfTravel;
+
+        // Only override visaType if it exists, otherwise keep data['visaType'] or "Pending"
+        if (travelVisa['visaType'] != null &&
+            travelVisa['visaType'].toString().isNotEmpty) {
+          visaType = travelVisa['visaType'];
+        }
 
         final start = travelVisa['startDate'];
         final end = travelVisa['endDate'];
-
         if (start is Timestamp && end is Timestamp) {
           final s = DateFormat('dd MMM yyyy').format(start.toDate());
           final e = DateFormat('dd MMM yyyy').format(end.toDate());
           travelDates = "$s - $e";
         }
+      } else {
+        // If no travelVisa map exists, fallback to basic data
+        visaType = data['visaType'] ?? visaType;
+        purposeOfTravel = data['purposeOfTravel'] ?? purposeOfTravel;
       }
 
       // -------- DOCUMENTS --------

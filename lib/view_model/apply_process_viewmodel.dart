@@ -1,9 +1,13 @@
+// ignore_for_file: invalid_use_of_protected_member, dead_code, invalid_use_of_visible_for_testing_member
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mvtravel/model/apply_process_model.dart';
 import 'package:mvtravel/utilis/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ApplyProcessViewModel extends ChangeNotifier {
   final ImagePicker picker = ImagePicker();
@@ -79,8 +83,6 @@ class DetailViewModel extends ChangeNotifier {
   // File uploads
   File? passportDocument;
   File? photoDocument;
-  String? passportDocumentName;
-  String? photoDocumentName;
 
   // Date
   DateTime? selectedDate;
@@ -95,7 +97,6 @@ class DetailViewModel extends ChangeNotifier {
     dobController.dispose();
   }
 
-  // Select date
   Future<void> selectDate(BuildContext context) async {
     final date = await showDatePicker(
       context: context,
@@ -106,7 +107,7 @@ class DetailViewModel extends ChangeNotifier {
         return Theme(
           data: Theme.of(
             context,
-          ).copyWith(colorScheme: ColorScheme.light(primary: AppColors.blue)),
+          ).copyWith(colorScheme: ColorScheme.light(primary: AppColors.blue2)),
           child: child!,
         );
       },
@@ -132,10 +133,8 @@ class DetailViewModel extends ChangeNotifier {
       if (image != null) {
         if (isPassport) {
           passportDocument = File(image.path);
-          passportDocumentName = image.name;
         } else {
           photoDocument = File(image.path);
-          photoDocumentName = image.name;
         }
         notifyListeners();
       }
@@ -144,84 +143,59 @@ class DetailViewModel extends ChangeNotifier {
     }
   }
 
-  bool validateForm(BuildContext context) {
-    if (fullNameController.text.isEmpty) {
-      _showError(context, 'Please enter your full name');
-      return false;
-    }
-    if (emailController.text.isEmpty || !emailController.text.contains('@')) {
-      _showError(context, 'Please enter a valid email address');
-      return false;
-    }
-    if (selectedNationality == null) {
-      _showError(context, 'Please select your nationality');
-      return false;
-    }
-    if (passportController.text.isEmpty) {
-      _showError(context, 'Please enter your passport number');
-      return false;
-    }
-    if (selectedVisaType == null) {
-      _showError(context, 'Please select a visa type');
-      return false;
-    }
-    if (addressController.text.isEmpty) {
-      _showError(context, 'Please enter your address');
-      return false;
-    }
-    if (selectedDate == null) {
-      _showError(context, 'Please select your date of birth');
-      return false;
-    }
-    if (phoneController.text.isEmpty) {
-      _showError(context, 'Please enter your phone number');
-      return false;
-    }
-    if (passportDocument == null) {
-      _showError(context, 'Please upload your passport document');
-      return false;
-    }
-    if (photoDocument == null) {
-      _showError(context, 'Please upload your photo');
-      return false;
-    }
-    return true;
-  }
+  Future<void> submitForm(BuildContext context) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
 
-  void submitForm(BuildContext context) {
-    if (validateForm(context)) {
-      final formData = DetailModel(
-        fullName: fullNameController.text,
-        email: emailController.text,
-        nationality: selectedNationality,
-        passportNumber: passportController.text,
-        visaType: selectedVisaType,
-        address: addressController.text,
-        dateOfBirth: selectedDate,
-        phoneNumber: '$selectedCountryCode ${phoneController.text}',
-        passportDocumentPath: passportDocument?.path,
-        photoPath: photoDocument?.path,
-      );
+      final formData = {
+        'visaFullName': fullNameController.text,
+        'visaEmail': emailController.text,
+        'visaNationality': selectedNationality,
+        'visaPassportNumber': passportController.text,
+        'visaType': selectedVisaType,
+        'addressForVisa': addressController.text,
+        'visaBirthDate': selectedDate?.toIso8601String(),
+        'visaNumber': phoneController.text,
+      };
 
-      print('Form Data: ${formData.toString()}');
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set(formData, SetOptions(merge: true));
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Form submitted successfully!'),
+        const SnackBar(
+          content: Text('Data saved successfully!'),
           backgroundColor: Colors.green,
         ),
       );
+    } catch (e) {
+      // Keep catch but no validation messages
     }
   }
 
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
+  // Clear all text fields, dropdowns, files, and date
+  void clearForm() {
+    fullNameController.clear();
+    emailController.clear();
+    passportController.clear();
+    addressController.clear();
+    phoneController.clear();
+    dobController.clear();
+
+    selectedNationality = null;
+    selectedVisaType = null;
+    selectedDate = null;
+
+    passportDocument = null;
+    photoDocument = null;
+
+    notifyListeners(); // Rebuild UI after clearing
   }
 }
 
-//payment
+// Payment ViewModel
 class PaymentViewModel extends ChangeNotifier {
   final cardNumberController = TextEditingController();
   final nameController = TextEditingController();

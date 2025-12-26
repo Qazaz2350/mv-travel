@@ -1,10 +1,13 @@
-// ignore_for_file: invalid_use_of_protected_member, dead_code, invalid_use_of_visible_for_testing_member
+// ignore_for_file: invalid_use_of_protected_member, dead_code, invalid_use_of_visible_for_testing_member, prefer_null_aware_operators
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mvtravel/commen/app_date_field.dart';
+
 import 'package:mvtravel/commen/app_text_field.dart';
 import 'package:mvtravel/views/apply_for_visa/app_lists.dart';
+import 'package:mvtravel/widgets/calender.dart';
 import 'package:provider/provider.dart';
+
 
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 import 'package:mvtravel/views/apply_for_visa/upload_container.dart';
@@ -16,128 +19,143 @@ class DetailStepView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => DetailViewModel(),
-      child: Consumer<DetailViewModel>(
-        builder: (context, vm, child) {
-          return _card(
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// Full Name
-                  AppTextField(
-                    label: 'Full Name',
-                    hint: 'Enter your full name',
-                    controller: vm.fullNameController,
-                  ),
-                  SizedBox(height: 16.h),
+    final vm = context.watch<DetailViewModel>(); // use shared instance
 
-                  /// Email
-                  AppTextField(
-                    label: 'Email Address',
-                    hint: 'you@example.com',
-                    controller: vm.emailController,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  SizedBox(height: 16.h),
+    return _card(
+      SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Full Name
+            AppTextField(
+              label: 'Full Name',
+              hint: 'Enter your full name',
+              controller: vm.fullNameController,
+            ),
+            SizedBox(height: 16.h),
 
-                  /// Nationality
-                  _dropdownField(
-                    context,
-                    'Nationality',
-                    'Select your nationality',
-                    vm.selectedNationality,
-                    AppLists.nationalities,
+            /// Email
+            AppTextField(
+              label: 'Email Address',
+              hint: 'you@example.com',
+              controller: vm.emailController,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            SizedBox(height: 16.h),
 
-                    (value) {
-                      vm.selectedNationality = value;
-                      vm.notifyListeners();
-                    },
-                  ),
-                  SizedBox(height: 16.h),
+            /// Nationality
+            _dropdownField(
+              context,
+              'Nationality',
+              'Select your nationality',
+              vm.selectedNationality,
+              AppLists.nationalities,
+              (value) {
+                vm.selectedNationality = value;
+                vm.notifyListeners();
+              },
+            ),
+            SizedBox(height: 16.h),
 
-                  /// Passport Number
-                  AppTextField(
-                    label: 'Passport Number',
-                    hint: '**** **** **** ****',
-                    controller: vm.passportController,
-                  ),
-                  SizedBox(height: 16.h),
+            /// Passport Number
+            AppTextField(
+              label: 'Passport Number',
+              hint: '**** **** **** ****',
+              controller: vm.passportController,
+            ),
+            SizedBox(height: 16.h),
 
-                  /// Visa Type
-                  _dropdownField(
-                    context,
-                    'Visa Type',
-                    'Travel, student, work, investment',
-                    vm.selectedVisaType,
-                    AppLists.visaTypes,
+            /// Visa Type
+            _dropdownField(
+              context,
+              'Visa Type',
+              'Travel, student, work, investment',
+              vm.selectedVisaType,
+              AppLists.visaTypes,
+              (value) {
+                vm.selectedVisaType = value;
+                vm.notifyListeners();
+              },
+            ),
+            SizedBox(height: 16.h),
 
-                    (value) {
-                      vm.selectedVisaType = value;
-                      vm.notifyListeners();
-                    },
-                  ),
-                  SizedBox(height: 16.h),
+            /// Address
+            AppTextField(
+              label: 'Address',
+              hint: 'address home town',
+              controller: vm.addressController,
+              maxLines: 3,
+            ),
+            SizedBox(height: 16.h),
 
-                  /// Address
-                  AppTextField(
-                    label: 'Address',
-                    hint: 'address home town',
-                    controller: vm.addressController,
-                    maxLines: 3,
-                  ),
-                  SizedBox(height: 16.h),
-
-                  /// Date of Birth
-                 AppDateField(
-              label: 'Date of Birth',
-              hint: 'MM / DD / YYYY',
+            /// Date of Birth
+            AppDateField(
+              label: 'Birth Date',
+              hint: 'Select your birth date',
               controller: vm.dobController,
-              onTap: () => vm.selectDate(context), // <-- opens calendar
+              onTap: () => vm.selectDate(context),
             ),
+            SizedBox(height: 16.h),
 
-                  SizedBox(height: 16.h),
+            /// Phone
+            _phoneField(vm),
+            SizedBox(height: 16.h),
 
-                  /// Phone
-                  _phoneField(vm),
-                  SizedBox(height: 16.h),
-
-                  /// Passport Upload
-                  UploadFieldWidget(
-                    label: 'Upload Passport Document',
-                    acceptedFormats: 'Accept formats JPG, PNG',
-                    file: vm.passportDocument,
-                    fileName: vm.passportDocumentName,
-                    onTap: () => vm.pickImage(true),
-                    onRemove: () {
-                      vm.passportDocument = null;
-                      vm.passportDocumentName = null;
-                      vm.notifyListeners();
-                    },
-                  ),
-                  SizedBox(height: 16.h),
-
-                  /// Photo Upload
-                  UploadFieldWidget(
-                    label: 'Photo',
-                    acceptedFormats: 'Accept formats JPG, PNG',
-                    file: vm.photoDocument,
-                    fileName: vm.photoDocumentName,
-                    onTap: () => vm.pickImage(false),
-                    onRemove: () {
-                      vm.photoDocument = null;
-                      vm.photoDocumentName = null;
-                      vm.notifyListeners();
-                    },
-                  ),
-
-                  SizedBox(height: 24.h),
-                ],
-              ),
+            /// Passport Upload
+            UploadFieldWidget(
+              label: 'Upload Passport Document',
+              acceptedFormats: 'Accept formats JPG, PNG',
+              file: vm.passportDocument,
+              fileName: vm.passportDocument != null
+                  ? vm.passportDocument!.path.split('/').last
+                  : null,
+              onTap: () => vm.pickImage(true),
+              onRemove: () {
+                vm.passportDocument = null;
+                vm.notifyListeners();
+              },
             ),
-          );
-        },
+            SizedBox(height: 16.h),
+
+            /// Photo Upload
+            UploadFieldWidget(
+              label: 'Photo',
+              acceptedFormats: 'Accept formats JPG, PNG',
+              file: vm.photoDocument,
+              fileName: vm.photoDocument != null
+                  ? vm.photoDocument!.path.split('/').last
+                  : null,
+              onTap: () => vm.pickImage(false),
+              onRemove: () {
+                vm.photoDocument = null;
+                vm.notifyListeners();
+              },
+            ),
+            SizedBox(height: 24.h),
+
+            /// Confirm Button
+            // Center(
+            //   child: SizedBox(
+            //     width: double.infinity,
+            //     height: 35.h,
+            //     child: ElevatedButton(
+            //       onPressed: () => vm.submitForm(context),
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: AppColors.blue2,
+            //         foregroundColor: Colors.white,
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(20.r),
+            //         ),
+            //       ),
+            //       child: const Text(
+            //         'save ',
+            //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }
@@ -179,7 +197,6 @@ class DetailStepView extends StatelessWidget {
         DropdownButtonFormField<String>(
           dropdownColor: AppColors.white,
           borderRadius: BorderRadius.circular(8.r),
-
           value: value,
           hint: Text(
             hint,
@@ -251,7 +268,6 @@ class DetailStepView extends StatelessWidget {
                 .map(
                   (code) => DropdownMenuItem(
                     value: code,
-
                     child: Text(
                       code,
                       style: TextStyle(
@@ -275,7 +291,7 @@ class DetailStepView extends StatelessWidget {
             controller: vm.phoneController,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
-              hintText: '312 456 789',
+              hintText: 'xxx-xxx-xxxx',
               hintStyle: TextStyle(
                 color: AppColors.grey2,
                 fontSize: FontSizes.f14,

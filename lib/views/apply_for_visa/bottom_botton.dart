@@ -5,6 +5,7 @@ import 'package:mvtravel/utilis/Nav.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 import 'package:mvtravel/views/home/home_dashboard.dart';
+import 'package:provider/provider.dart';
 
 class BottomButtons extends StatelessWidget {
   final ApplyProcessViewModel vm;
@@ -15,7 +16,7 @@ class BottomButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     // Step index starts from 0, so 3rd step = index 2
     if (vm.currentStep == 2) {
-      return _thirdStepConfirm();
+      return _thirdStepConfirm(context);
     }
 
     if (vm.currentStep == 0) {
@@ -29,21 +30,21 @@ class BottomButtons extends StatelessWidget {
     return _defaultButtons(context);
   }
 
-  // ===== Third Step: Only Confirm Button =====
-  Widget _thirdStepConfirm() {
+  Widget _thirdStepConfirm(BuildContext context) {
+    final vmdetail = context.read<ApplyProcessViewModel>();
+
     return Container(
       width: double.infinity,
-      color: AppColors.white,
       padding: EdgeInsets.all(16.w),
-      child: SizedBox(
-        width: double.infinity,
-        child: ActionButton(
-          text: 'Continue',
-          bgColor: AppColors.blue2,
-          textColor: AppColors.white,
-          // icon: Icons.check,
-          onTap: vm.nextStep, // Navigate to next page
-        ),
+      child: ActionButton(
+        text: 'Continue',
+        bgColor: AppColors.blue2,
+        textColor: AppColors.white,
+        onTap: () async {
+          context.read<ApplyProcessViewModel>().nextStep();
+          await context.read<DetailViewModel>().submitForm(context);
+          context.read<DetailViewModel>().clearForm();
+        },
       ),
     );
   }
@@ -121,7 +122,7 @@ class BottomButtons extends StatelessWidget {
           width: double.infinity,
           child: ActionButton(
             text: ' Confirm Your Apply',
-            bgColor: AppColors.blue1,
+            bgColor: AppColors.blue2,
             textColor: AppColors.white,
             onTap: () => Nav.push(
               context,
