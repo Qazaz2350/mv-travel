@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
+import 'package:mvtravel/view_model/onboarding/Purpose_of_visit_ViewModel.dart';
 import 'package:mvtravel/view_model/onboarding/splash_view_model.dart';
 import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:mvtravel/views/onboarding/onboarding.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
             providers: [
               ChangeNotifierProvider(create: (_) => ApplyProcessViewModel()),
               ChangeNotifierProvider(create: (_) => DetailViewModel()),
+              ChangeNotifierProvider(create: (_) => VisitPurposeViewModel()),
             ],
             child: MaterialApp(
               home: child,

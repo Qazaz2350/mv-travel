@@ -27,3 +27,12 @@ class FeaturedDestinationsViewModel extends ChangeNotifier {
     }
   }
 }
+
+class DestinationViewModel extends ChangeNotifier {
+  String? todestination;
+
+  void setDestination(String value) {
+    todestination = value;
+    notifyListeners();
+  }
+}

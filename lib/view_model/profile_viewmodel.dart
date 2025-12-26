@@ -52,7 +52,7 @@ class UserProfileViewModel extends ChangeNotifier {
       fullName = data['fullName'] ?? "Pending";
       email = data['email'] ?? "Pending";
       nationality = data['nationality'] ?? "Pending";
-      visaType = data['visaType'] ?? "Pending";
+      visaType = data['selectedPurpose'] ?? "Pending";
 
       phoneNumber = data['phoneNumber'] ?? "Pending";
       passportNumber = data['visaPassportNumber'] ?? "Pending";
@@ -83,7 +83,7 @@ class UserProfileViewModel extends ChangeNotifier {
         }
       } else {
         // If no travelVisa map exists, fallback to basic data
-        visaType = data['visaType'] ?? visaType;
+        visaType = data['selectedPurpose'] ?? visaType;
         purposeOfTravel = data['purposeOfTravel'] ?? purposeOfTravel;
       }
 

@@ -36,7 +36,7 @@ class ActionButtonsWidget extends StatelessWidget {
               text: "Apply for Visa",
               bgColor: AppColors.blue3,
               onTap: () {
-                Nav.push(context, ApplyProcess());
+                Nav.push(context, ApplyProcess(country: '', city: '',));
               },
             ),
           ),

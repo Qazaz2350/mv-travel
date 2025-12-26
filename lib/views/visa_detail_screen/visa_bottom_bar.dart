@@ -7,7 +7,16 @@ import 'package:mvtravel/views/apply_for_visa/apply_process.dart';
 
 class BottomBar extends StatelessWidget {
   final TravelDestination destination;
-  const BottomBar({required this.destination});
+  final String country;
+  final String city;
+
+  const BottomBar({
+    super.key,
+    required this.destination,
+    required this.country,
+    required this.city,
+  });
+
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +64,7 @@ class BottomBar extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Nav.push(context, ApplyProcess());
+                  Nav.push(context, ApplyProcess(country: country, city:city ,));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.blue2,

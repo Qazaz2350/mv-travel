@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mvtravel/model/onboarding/purpose_of_visit_model.dart';
 
@@ -8,12 +10,10 @@ class VisitPurposeViewModel extends ChangeNotifier {
 
   final List<VisitPurpose> purposes = [
     VisitPurpose(
-      
       id: 'travel',
       imagePath: 'assets/icon_images/plane.png',
       title: 'Travel Visa',
       description: 'For tourism, family visits, or short-term leisure.',
-      
     ),
     VisitPurpose(
       id: 'student',
@@ -46,4 +46,19 @@ class VisitPurposeViewModel extends ChangeNotifier {
   }
 
   bool get canProceed => _selectedPurposeId != null;
+
+  /// Save the selected purpose to Firebase under current user's uid
+  Future<void> saveSelectedPurpose() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null || _selectedPurposeId == null) return;
+
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+        {'selectedPurpose': _selectedPurposeId},
+        SetOptions(merge: true), // keeps other data intact
+      );
+    } catch (e) {
+      print('Error saving purpose: $e');
+    }
+  }
 }

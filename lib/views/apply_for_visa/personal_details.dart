@@ -8,24 +8,78 @@ import 'package:mvtravel/views/apply_for_visa/app_lists.dart';
 import 'package:mvtravel/widgets/calender.dart';
 import 'package:provider/provider.dart';
 
-
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 import 'package:mvtravel/views/apply_for_visa/upload_container.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 
 class DetailStepView extends StatelessWidget {
-  const DetailStepView({super.key});
+  final String country;
+  final String city;
+
+  const DetailStepView({super.key, required this.country, required this.city});
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<DetailViewModel>(); // use shared instance
+    final vm = context.watch<DetailViewModel>(); // shared instance
 
     return _card(
       SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Selected country: ",
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontSize: FontSizes.f12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.blue2.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    // border: Border.all(color: AppColors.blue2, width: 1),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.green.withOpacity(0.5),
+                              blurRadius: 4,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        "$country, $city",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: FontSizes.f12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+
             /// Full Name
             AppTextField(
               label: 'Full Name',

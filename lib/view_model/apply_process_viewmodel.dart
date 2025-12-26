@@ -159,10 +159,12 @@ class DetailViewModel extends ChangeNotifier {
         'visaNumber': phoneController.text,
       };
 
+      // Create a new document under a "visas" subcollection
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
-          .set(formData, SetOptions(merge: true));
+          .collection('visas')
+          .add(formData);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

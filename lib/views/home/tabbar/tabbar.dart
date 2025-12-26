@@ -1,4 +1,4 @@
-import 'dart:ffi';
+// import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +9,7 @@ import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/views/home/Action_Buttons_Widget.dart';
 import 'package:mvtravel/views/home/active_application_widget.dart';
 import 'package:mvtravel/views/home/featured_destinations_widget.dart';
-import 'package:mvtravel/views/home/featured_destinations_widget.dart';
+// import 'package:mvtravel/views/home/featured_destinations_widget.dart';
 
 class HomeTabbar extends StatefulWidget {
   final HomePageViewModel viewModel;

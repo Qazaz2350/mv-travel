@@ -116,17 +116,9 @@ class _VisitPurposeContent extends StatelessWidget {
                     purpose: purpose,
                     isSelected: viewModel.isPurposeSelected(purpose.id),
                     onTap: () {
-                      viewModel.selectPurpose(purpose.id);
-
-                      if (purpose.id == 'travel') {
-                        Nav.push(context, const TravelVisaView());
-                      } else if (purpose.id == 'student') {
-                        Nav.push(context, const InternationalStudentsView());
-                      } else if (purpose.id == 'work') {
-                        Nav.push(context, const WorkApplicationDetailsView());
-                      } else if (purpose.id == 'investment') {
-                        Nav.push(context, const InvestmentDetailsView());
-                      }
+                      viewModel.selectPurpose(
+                        purpose.id,
+                      ); // just select, don't navigate
                     },
                   );
                 },
@@ -136,8 +128,27 @@ class _VisitPurposeContent extends StatelessWidget {
             FRectangleButton(
               text: 'Next',
               color: AppColors.blue3,
-              onPressed: () => Nav.push(context, TravelVisaView()),
+              onPressed: () async {
+                final selectedId = viewModel.selectedPurposeId;
+                if (selectedId == null) {
+                  // Optionally show a warning
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please select a purpose to proceed.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
+                // Save the selected purpose to Firebase
+                await viewModel.saveSelectedPurpose();
+
+                // Navigate based on selection
+                Nav.push(context, TravelVisaView());
+              },
             ),
+
             SizedBox(height: 24.h),
           ],
         ),

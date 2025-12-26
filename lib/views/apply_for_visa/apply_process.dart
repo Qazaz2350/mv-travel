@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/views/apply_for_visa/payment_view.dart';
@@ -11,19 +13,27 @@ import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 
 class ApplyProcess extends StatelessWidget {
-  const ApplyProcess({Key? key}) : super(key: key);
+  final String country;
+  final String city;
 
+  const ApplyProcess({super.key, required this.country, required this.city});
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ApplyProcessViewModel(),
-      child: const _ApplyProcessView(),
+      child: _ApplyProcessView(country: country, city: city),
     );
   }
 }
 
 class _ApplyProcessView extends StatelessWidget {
-  const _ApplyProcessView();
+  final String country;
+  final String city;
+  const _ApplyProcessView({
+    super.key,
+    required this.country,
+    required this.city,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +71,7 @@ class _ApplyProcessView extends StatelessWidget {
               ),
             ),
           ),
+          // Text('${country}${city}', style: TextStyle(fontSize: FontSizes.f16)),
           SizedBox(height: 16.h),
           Expanded(child: _buildStepContent(vm, context)),
           BottomButtons(vm: vm),
@@ -155,7 +166,10 @@ class _ApplyProcessView extends StatelessWidget {
         );
 
       case 2:
-        return const DetailStepView(); // 👈 use your saved DetailStep widget here
+        return DetailStepView(
+          country: country, // from ApplyProcess or wherever you have it
+          city: city, // from ApplyProcess
+        );
 
       case 3:
         return Paymentdetails();
