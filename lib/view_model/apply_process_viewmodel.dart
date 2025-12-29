@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member, dead_code, invalid_use_of_visible_for_testing_member
 
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -143,6 +144,21 @@ class DetailViewModel extends ChangeNotifier {
     }
   }
 
+  String generateRandomId() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    final random = Random();
+
+    // Two random letters
+    String letterPart =
+        letters[random.nextInt(letters.length)] +
+        letters[random.nextInt(letters.length)];
+
+    // 8-digit random number
+    String numberPart = (10000000 + random.nextInt(90000000)).toString();
+
+    return '$letterPart-$numberPart';
+  }
+
   Future<void> submitForm(
     BuildContext context, {
     required String country,
@@ -164,6 +180,7 @@ class DetailViewModel extends ChangeNotifier {
         'visaCountry': country,
         'visaCity': city,
         'createdAt': FieldValue.serverTimestamp(), // <-- add this
+        'applicationId': generateRandomId(), // <-- added
       };
 
       await FirebaseFirestore.instance

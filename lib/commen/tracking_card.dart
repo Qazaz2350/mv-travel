@@ -2,40 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/utilis/nav.dart';
+import 'package:mvtravel/views/visa_application_screen/APPLICATION_SCREEN.dart';
+
 import '../../model/visa_tracking_model.dart';
 
-class VisaTrackingCard extends StatelessWidget {
+class VisaTrackingPage extends StatelessWidget {
   final VisaTrackingModel data;
 
-  const VisaTrackingCard({Key? key, required this.data}) : super(key: key);
+  const VisaTrackingPage({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _header(),
-          SizedBox(height: 16.h),
-          _countrySection(),
-          SizedBox(height: 20.h),
-          _progressTracker(),
-          SizedBox(height: 16.h),
-          _footer(),
-        ],
+    return GestureDetector(
+      onTap: () {
+        Nav.push(context, ApplicationStatusScreen(visaTracking: data));
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16.h),
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(  
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _header(),
+            SizedBox(height: 16.h),
+            _countrySection(),
+            SizedBox(height: 20.h),
+            _progressTracker(),
+            SizedBox(height: 16.h),
+            _footer(),
+          ],
+        ),
       ),
     );
   }
@@ -45,7 +53,7 @@ class VisaTrackingCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          data.type,
+          data.visaType,
           style: TextStyle(
             color: AppColors.blue2,
             fontSize: FontSizes.f20,
@@ -75,7 +83,6 @@ class VisaTrackingCard extends StatelessWidget {
         SizedBox(height: 8.h),
         Row(
           children: [
-            // Use a flag dynamically if you have a mapping of country -> asset
             SizedBox(
               width: 28.w,
               height: 28.w,
@@ -95,9 +102,7 @@ class VisaTrackingCard extends StatelessWidget {
             SizedBox(
               width: 28.w,
               height: 28.w,
-              child: Image.asset(
-                "assets/home/berlin_flag.png",
-              ), // destination flag
+              child: Image.asset("assets/home/berlin_flag.png"),
             ),
           ],
         ),
@@ -119,7 +124,6 @@ class VisaTrackingCard extends StatelessWidget {
             style: TextStyle(fontSize: FontSizes.f12),
           ),
           Text(
-            // Format createdAt to readable string
             'pending',
             style: TextStyle(
               color: AppColors.grey2,
@@ -147,10 +151,8 @@ class VisaTrackingCard extends StatelessWidget {
         Row(
           children: List.generate(steps.length * 2 - 1, (index) {
             if (index.isOdd) {
-              // Lines between circles
               int stepIndex = index ~/ 2;
               bool done = stepIndex < data.currentStep;
-              // Make line blue only if country is not empty
               return Expanded(
                 child: Container(
                   height: 2.h,
@@ -161,8 +163,8 @@ class VisaTrackingCard extends StatelessWidget {
 
             int stepIndex = index ~/ 2;
             bool done = stepIndex == 0
-                ? isActive // First step blue if country is not empty
-                : stepIndex < data.currentStep; // others based on currentStep
+                ? isActive
+                : stepIndex < data.currentStep;
 
             return Container(
               width: 12.w,

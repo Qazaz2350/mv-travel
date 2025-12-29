@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
             ),
           );
         },
-        child: const SplashScreen(),
+        child: const HomePageView(),
       ),
     );
   }

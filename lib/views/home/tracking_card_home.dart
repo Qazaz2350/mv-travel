@@ -1,49 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/model/visa_tracking_model.dart';
-import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
+import 'package:mvtravel/utilis/nav.dart';
+// import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/views/visa_application_screen/APPLICATION_SCREEN.dart';
 // import '../model/visa_tracking_model.dart';
 
 class ApplicationCardWidget extends StatelessWidget {
-  final VisaTrackingViewModel viewModel;
+  final List<VisaTrackingModel> applicationList; // ✅ FIX
 
-  const ApplicationCardWidget({super.key, required this.viewModel});
+  const ApplicationCardWidget({super.key, required this.applicationList});
 
   @override
   Widget build(BuildContext context) {
-    if (viewModel.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (viewModel.applications.isEmpty) {
-      return Center(
-        child: Text(
-          'No active applications',
-          style: TextStyle(fontSize: FontSizes.f14),
-        ),
-      );
-    }
-
     return SizedBox(
       height: 225.h,
       child: PageView.builder(
         controller: PageController(viewportFraction: 0.96),
-        itemCount: viewModel.applications.length,
+        itemCount: applicationList.length, // ✅ FIX
         itemBuilder: (context, index) {
-          final app = viewModel.applications[index];
+          final app = applicationList[index]; // ✅ FIX
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w),
-            child: _buildCard(app), // ✅ Pass the app model
+            child: _buildCard(app, context),
           );
         },
       ),
     );
   }
 
-  // Changed type to VisaTrackingModel
-  Widget _buildCard(VisaTrackingModel app) {
+  Widget _buildCard(VisaTrackingModel app, BuildContext context) {
     return Container(
       height: 320.h,
       width: 320.w,
@@ -63,13 +51,12 @@ class ApplicationCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Header - Title and Status
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Text(
-                  app.type, // Using VisaTrackingModel's field
+                  app.visaType,
                   style: TextStyle(
                     fontSize: FontSizes.f20,
                     fontWeight: FontWeight.w600,
@@ -79,100 +66,94 @@ class ApplicationCardWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 8.w),
-              _statusChip(app.status, AppColors.green1), // ✅ Show status
+              _statusChip(app.status, AppColors.green1),
             ],
           ),
           SizedBox(height: 12.h),
-
-          /// Country Section
           _countrySection(app),
           SizedBox(height: 12.h),
-
-          /// Steps Section
           _progressTracker(app.currentStep, country: app.country),
           const Spacer(),
-
-          /// Footer
           _footer(app),
         ],
       ),
     );
   }
+}
 
-  Widget _statusChip(String status, Color color) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.r)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 6.w,
-            height: 6.h,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          SizedBox(width: 6.w),
-          Text(
-            status, // ✅ Show actual status
-            style: TextStyle(
-              fontSize: FontSizes.f12,
-              fontWeight: FontWeight.w500,
-              color: AppColors.blue3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _countrySection(VisaTrackingModel app) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+Widget _statusChip(String status, Color color) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.r)),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'Country',
-          style: TextStyle(
-            fontSize: FontSizes.f14,
-            color: AppColors.black,
-            fontWeight: FontWeight.w500,
-          ),
+        Container(
+          width: 6.w,
+          height: 6.h,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(width: 6.w),
         Text(
-          app.country, // ✅ Use VisaTrackingModel's country
+          status, // ✅ Show actual status
           style: TextStyle(
             fontSize: FontSizes.f12,
             fontWeight: FontWeight.w500,
-            color: AppColors.black,
+            color: AppColors.blue3,
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
-  Widget _footer(VisaTrackingModel app) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'Applied Date : ${app.formattedCreatedAt}', // ✅ Use formatted date
-          style: TextStyle(
-            fontSize: FontSizes.f10,
-            color: AppColors.black,
-            fontWeight: FontWeight.w400,
-          ),
+Widget _countrySection(VisaTrackingModel app) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Country',
+        style: TextStyle(
+          fontSize: FontSizes.f14,
+          color: AppColors.black,
+          fontWeight: FontWeight.w500,
         ),
-        Text(
-          'Fee Status: ${app.feeStatus}',
-          style: TextStyle(
-            fontSize: FontSizes.f10,
-            color: AppColors.grey2,
-            fontWeight: FontWeight.w400,
-          ),
+      ),
+      SizedBox(height: 8.h),
+      Text(
+        app.country, // ✅ Use VisaTrackingModel's country
+        style: TextStyle(
+          fontSize: FontSizes.f12,
+          fontWeight: FontWeight.w500,
+          color: AppColors.black,
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+
+Widget _footer(VisaTrackingModel app) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        'Applied Date : ${app.formattedCreatedAt}', // ✅ Use formatted date
+        style: TextStyle(
+          fontSize: FontSizes.f10,
+          color: AppColors.black,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      Text(
+        'Fee Status: ${app.feeStatus}',
+        style: TextStyle(
+          fontSize: FontSizes.f10,
+          color: AppColors.grey2,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    ],
+  );
 }
 
 // Updated _progressTracker to accept dynamic step

@@ -4,8 +4,7 @@ import 'package:mvtravel/commen/half_button.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
-import 'package:mvtravel/views/apply_for_visa/apply_process.dart';
-import 'package:mvtravel/views/visa_application_screen/visa_application_view.dart';
+import 'package:mvtravel/views/visa_application_screen/APPLICATION_SCREEN.dart';
 
 class ActionButtonsWidget extends StatelessWidget {
   final HomePageViewModel viewModel;
@@ -19,16 +18,6 @@ class ActionButtonsWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
         children: [
-          Expanded(
-            child: ActionButton(
-              textColor: AppColors.white,
-              text: "All Applications",
-              bgColor: AppColors.blue2,
-              onTap: () {
-                Nav.push(context, ApplicationsStatusScreen());
-              },
-            ),
-          ),
           SizedBox(width: 12.w),
           // Expanded(
           //   child: ActionButton(

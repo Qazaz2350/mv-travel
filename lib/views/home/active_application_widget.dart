@@ -1,6 +1,7 @@
 // ActiveApplicationWidget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mvtravel/model/visa_tracking_model.dart';
 import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
@@ -54,8 +55,8 @@ class ActiveApplicationWidget extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // Pass the whole viewModel to ApplicationCardWidget
-          ApplicationCardWidget(viewModel: visaVM),
+          /// ✅ Correct data passed
+          ApplicationCardWidget(applicationList: visaVM.applications),
         ],
       ),
     );

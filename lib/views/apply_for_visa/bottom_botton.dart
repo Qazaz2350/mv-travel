@@ -4,6 +4,7 @@ import 'package:mvtravel/commen/half_button.dart';
 import 'package:mvtravel/utilis/Nav.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
+import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
 import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:provider/provider.dart';
 
@@ -49,11 +50,12 @@ class BottomButtons extends StatelessWidget {
         textColor: AppColors.white,
         onTap: () async {
           context.read<ApplyProcessViewModel>().nextStep();
-          await context.read<DetailViewModel>().submitForm(
-            context,
-            country: country,
-            city: city,
-          );
+          await context
+              .read<DetailViewModel>()
+              .submitForm(context, country: country, city: city)
+              .then((_) {
+                context.watch<VisaTrackingViewModel>().fetchVisas();
+              });
           context.read<DetailViewModel>().clearForm();
         },
       ),
@@ -135,10 +137,12 @@ class BottomButtons extends StatelessWidget {
             text: ' Confirm Your Apply',
             bgColor: AppColors.blue2,
             textColor: AppColors.white,
-            onTap: () => Nav.push(
+            onTap: () => Navigator.pushAndRemoveUntil(
               context,
-              HomePageView(),
-            ), // or your final submit function
+              MaterialPageRoute(builder: (_) => HomePageView()),
+              (route) => false, // purani routes remove ho jaayengi
+            ),
+            // or your final submit function
           ),
         ),
       );
