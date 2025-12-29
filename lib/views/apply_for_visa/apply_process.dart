@@ -74,7 +74,7 @@ class _ApplyProcessView extends StatelessWidget {
           // Text('${country}${city}', style: TextStyle(fontSize: FontSizes.f16)),
           SizedBox(height: 16.h),
           Expanded(child: _buildStepContent(vm, context)),
-          BottomButtons(vm: vm),
+          BottomButtons(vm: vm, country: country, city: city),
         ],
       ),
     );

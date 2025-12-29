@@ -5,6 +5,7 @@ import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 import 'package:mvtravel/view_model/onboarding/Purpose_of_visit_ViewModel.dart';
 import 'package:mvtravel/view_model/onboarding/splash_view_model.dart';
+import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
 import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:mvtravel/views/onboarding/onboarding.dart';
 import 'package:mvtravel/views/onboarding/splash_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (_) => ApplyProcessViewModel()),
               ChangeNotifierProvider(create: (_) => DetailViewModel()),
               ChangeNotifierProvider(create: (_) => VisitPurposeViewModel()),
+              ChangeNotifierProvider(create: (_) => VisaTrackingViewModel()),
             ],
             child: MaterialApp(
               home: child,

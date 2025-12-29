@@ -143,7 +143,11 @@ class DetailViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> submitForm(BuildContext context) async {
+  Future<void> submitForm(
+    BuildContext context, {
+    required String country,
+    required String city,
+  }) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
@@ -157,9 +161,11 @@ class DetailViewModel extends ChangeNotifier {
         'addressForVisa': addressController.text,
         'visaBirthDate': selectedDate?.toIso8601String(),
         'visaNumber': phoneController.text,
+        'visaCountry': country,
+        'visaCity': city,
+        'createdAt': FieldValue.serverTimestamp(), // <-- add this
       };
 
-      // Create a new document under a "visas" subcollection
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -173,7 +179,7 @@ class DetailViewModel extends ChangeNotifier {
         ),
       );
     } catch (e) {
-      // Keep catch but no validation messages
+      // Handle errors if needed
     }
   }
 

@@ -21,7 +21,7 @@ class VisaTrackingCard extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -52,22 +52,9 @@ class VisaTrackingCard extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        Row(
-          children: [
-            Container(
-              width: 3.w,
-              height: 8.w,
-              decoration: BoxDecoration(
-                color: AppColors.grey2,
-                shape: BoxShape.circle,
-              ),
-            ),
-            SizedBox(width: 6.w),
-            Text(
-              data.status,
-              style: TextStyle(color: AppColors.grey2, fontSize: FontSizes.f14),
-            ),
-          ],
+        Text(
+          data.status,
+          style: TextStyle(color: AppColors.grey2, fontSize: FontSizes.f14),
         ),
       ],
     );
@@ -88,6 +75,7 @@ class VisaTrackingCard extends StatelessWidget {
         SizedBox(height: 8.h),
         Row(
           children: [
+            // Use a flag dynamically if you have a mapping of country -> asset
             SizedBox(
               width: 28.w,
               height: 28.w,
@@ -96,7 +84,7 @@ class VisaTrackingCard extends StatelessWidget {
             Expanded(
               child: Center(
                 child: Text(
-                  data.country,
+                  "Pakistan to ${data.country}, ${data.visaCity}",
                   style: TextStyle(
                     color: AppColors.black,
                     fontSize: FontSizes.f12,
@@ -107,7 +95,9 @@ class VisaTrackingCard extends StatelessWidget {
             SizedBox(
               width: 28.w,
               height: 28.w,
-              child: Image.asset("assets/home/berlin_flag.png"),
+              child: Image.asset(
+                "assets/home/berlin_flag.png",
+              ), // destination flag
             ),
           ],
         ),
@@ -125,13 +115,14 @@ class VisaTrackingCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Applied Date: ${data.appliedDate}',
+            'Applied Date: ${data.formattedCreatedAt}',
             style: TextStyle(fontSize: FontSizes.f12),
           ),
           Text(
-            data.feeStatus,
+            // Format createdAt to readable string
+            'pending',
             style: TextStyle(
-              color: AppColors.green2,
+              color: AppColors.grey2,
               fontSize: FontSizes.f12,
               fontWeight: FontWeight.w600,
             ),
@@ -146,23 +137,33 @@ class VisaTrackingCard extends StatelessWidget {
       'Application\nSubmitted',
       'Documents\nVerified',
       'Payment\nConfirmation',
-      '     Decision',
+      'Decision',
     ];
+
+    final isActive = data.country.isNotEmpty;
 
     return Column(
       children: [
         Row(
           children: List.generate(steps.length * 2 - 1, (index) {
             if (index.isOdd) {
-              bool done = index ~/ 2 < data.currentStep;
+              // Lines between circles
+              int stepIndex = index ~/ 2;
+              bool done = stepIndex < data.currentStep;
+              // Make line blue only if country is not empty
               return Expanded(
                 child: Container(
                   height: 2.h,
-                  color: done ? AppColors.blue3 : AppColors.grey1,
+                  color: isActive && done ? AppColors.blue3 : AppColors.grey1,
                 ),
               );
             }
-            bool done = index ~/ 2 < data.currentStep;
+
+            int stepIndex = index ~/ 2;
+            bool done = stepIndex == 0
+                ? isActive // First step blue if country is not empty
+                : stepIndex < data.currentStep; // others based on currentStep
+
             return Container(
               width: 12.w,
               height: 12.w,
@@ -181,7 +182,10 @@ class VisaTrackingCard extends StatelessWidget {
                   child: Text(
                     e,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: FontSizes.f10),
+                    style: TextStyle(
+                      fontSize: FontSizes.f10,
+                      color: isActive ? AppColors.black : AppColors.grey2,
+                    ),
                   ),
                 ),
               )

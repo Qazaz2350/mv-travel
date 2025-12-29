@@ -30,16 +30,16 @@ class ActionButtonsWidget extends StatelessWidget {
             ),
           ),
           SizedBox(width: 12.w),
-          Expanded(
-            child: ActionButton(
-              textColor: AppColors.white,
-              text: "Apply for Visa",
-              bgColor: AppColors.blue3,
-              onTap: () {
-                Nav.push(context, ApplyProcess(country: '', city: '',));
-              },
-            ),
-          ),
+          // Expanded(
+          //   child: ActionButton(
+          //     textColor: AppColors.white,
+          //     text: "Apply for Visa",
+          //     bgColor: AppColors.blue3,
+          //     onTap: () {
+          //       Nav.push(context, ApplyProcess(country: '', city: '',));
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );

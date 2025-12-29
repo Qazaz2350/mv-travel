@@ -1,37 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mvtravel/model/onboarding/application_model.dart';
+import 'package:mvtravel/model/visa_tracking_model.dart';
+import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
-import 'package:mvtravel/view_model/onboarding/application_view_model.dart';
+// import '../model/visa_tracking_model.dart';
 
 class ApplicationCardWidget extends StatelessWidget {
-  final ApplicationViewModel viewModel;
+  final VisaTrackingViewModel viewModel;
 
   const ApplicationCardWidget({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
+    if (viewModel.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (viewModel.applications.isEmpty) {
+      return Center(
+        child: Text(
+          'No active applications',
+          style: TextStyle(fontSize: FontSizes.f14),
+        ),
+      );
+    }
+
     return SizedBox(
       height: 225.h,
       child: PageView.builder(
-        controller: PageController(
-          viewportFraction: 0.96, // card spacing like ListView
-        ),
+        controller: PageController(viewportFraction: 0.96),
         itemCount: viewModel.applications.length,
         itemBuilder: (context, index) {
+          final app = viewModel.applications[index];
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w),
-            child: _buildCard(viewModel.applications[index]),
+            child: _buildCard(app), // ✅ Pass the app model
           );
         },
       ),
     );
   }
 
-  Widget _buildCard(ApplicationModel app) {
-    final statusColor = viewModel.getStatusColor(app.status);
-
+  // Changed type to VisaTrackingModel
+  Widget _buildCard(VisaTrackingModel app) {
     return Container(
       height: 320.h,
       width: 320.w,
@@ -57,7 +69,7 @@ class ApplicationCardWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  app.title,
+                  app.type, // Using VisaTrackingModel's field
                   style: TextStyle(
                     fontSize: FontSizes.f20,
                     fontWeight: FontWeight.w600,
@@ -67,10 +79,9 @@ class ApplicationCardWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 8.w),
-              _statusChip(app.status, statusColor),
+              _statusChip(app.status, AppColors.green1), // ✅ Show status
             ],
           ),
-
           SizedBox(height: 12.h),
 
           /// Country Section
@@ -78,8 +89,7 @@ class ApplicationCardWidget extends StatelessWidget {
           SizedBox(height: 12.h),
 
           /// Steps Section
-          _progressTracker(),
-
+          _progressTracker(app.currentStep, country: app.country),
           const Spacer(),
 
           /// Footer
@@ -103,7 +113,7 @@ class ApplicationCardWidget extends StatelessWidget {
           ),
           SizedBox(width: 6.w),
           Text(
-            status,
+            status, // ✅ Show actual status
             style: TextStyle(
               fontSize: FontSizes.f12,
               fontWeight: FontWeight.w500,
@@ -115,7 +125,7 @@ class ApplicationCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _countrySection(ApplicationModel app) {
+  Widget _countrySection(VisaTrackingModel app) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -128,118 +138,64 @@ class ApplicationCardWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Image.asset(app.fromFlag, width: 20.w, height: 20.h),
-            // SizedBox(width: 8.w),
-            Text(
-              '${app.fromCountry} to ${app.toCountry}',
-              style: TextStyle(
-                fontSize: FontSizes.f12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.black,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-            // SizedBox(width: 8.w),
-            Image.asset(app.toFlag, width: 20.w, height: 20.h),
-          ],
+        Text(
+          app.country, // ✅ Use VisaTrackingModel's country
+          style: TextStyle(
+            fontSize: FontSizes.f12,
+            fontWeight: FontWeight.w500,
+            color: AppColors.black,
+          ),
         ),
       ],
     );
   }
 
-  // Widget _buildStep(String label, bool isActive) {
-  //   return Column(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: [
-  //       Container(
-  //         width: 12.w,
-  //         height: 12.h,
-  //         decoration: BoxDecoration(
-  //           color: isActive ? AppColors.blue2 : AppColors.white,
-  //           shape: BoxShape.circle,
-  //           border: Border.all(
-  //             color: isActive ? AppColors.blue2 : AppColors.grey1,
-  //             width: 2.w,
-  //           ),
-  //         ),
-  //       ),
-  //       SizedBox(height: 6.h),
-  //       SizedBox(
-  //         width: 65.w,
-  //         child: Text(
-  //           label,
-  //           textAlign: TextAlign.center,
-  //           style: TextStyle(
-  //             fontSize: FontSizes.f10,
-  //             fontWeight: FontWeight.w400,
-  //             color: isActive ? AppColors.black : AppColors.grey2,
-  //             height: 1.2,
-  //           ),
-  //           maxLines: 2,
-  //           overflow: TextOverflow.ellipsis,
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  Widget _footer(ApplicationModel app) {
+  Widget _footer(VisaTrackingModel app) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Applied Date :${app.appliedDate}',
+          'Applied Date : ${app.formattedCreatedAt}', // ✅ Use formatted date
           style: TextStyle(
             fontSize: FontSizes.f10,
             color: AppColors.black,
             fontWeight: FontWeight.w400,
           ),
         ),
-
-        // SizedBox(height: 4.h),
         Text(
-          'Fee Status',
+          'Fee Status: ${app.feeStatus}',
           style: TextStyle(
             fontSize: FontSizes.f10,
             color: AppColors.grey2,
             fontWeight: FontWeight.w400,
           ),
         ),
-
-        // SizedBox(height: 4.h),
-        // Text(
-        //   app.feeStatus,
-        //   style: TextStyle(
-        //     fontSize: FontSizes.f12,
-        //     fontWeight: FontWeight.w600,
-        //     color: app.feeStatus == 'Paid' ? AppColors.green1 : AppColors.blue2,
-        //   ),
-        // ),
       ],
     );
   }
 }
 
-Widget _progressTracker() {
+// Updated _progressTracker to accept dynamic step
+Widget _progressTracker(int currentStep, {required String country}) {
   final steps = [
     'Application\nSubmitted',
     'Documents\nVerified',
     'Payment\nConfirmation',
-    '     Decision',
+    'Decision',
   ];
 
-  // Static current step (e.g., step 2 is active)
-  final int currentStep = 2;
+  final isFirstStepActive = country.isNotEmpty;
 
   return Column(
     children: [
       Row(
         children: List.generate(steps.length * 2 - 1, (index) {
           if (index.isOdd) {
-            bool done = index ~/ 2 < currentStep;
+            // Line between circles
+            int stepIndex = index ~/ 2;
+            bool done = stepIndex == 0
+                ? isFirstStepActive
+                : stepIndex < currentStep;
             return Expanded(
               child: Container(
                 height: 2.h,
@@ -247,7 +203,12 @@ Widget _progressTracker() {
               ),
             );
           }
-          bool done = index ~/ 2 < currentStep;
+
+          int stepIndex = index ~/ 2;
+          bool done = stepIndex == 0
+              ? isFirstStepActive
+              : stepIndex < currentStep;
+
           return Container(
             width: 12.w,
             height: 12.w,
@@ -266,7 +227,12 @@ Widget _progressTracker() {
                 child: Text(
                   e,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: FontSizes.f10),
+                  style: TextStyle(
+                    fontSize: FontSizes.f10,
+                    color: currentStep > 0 || isFirstStepActive
+                        ? AppColors.black
+                        : AppColors.grey2,
+                  ),
                 ),
               ),
             )

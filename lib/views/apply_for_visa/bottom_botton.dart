@@ -9,8 +9,15 @@ import 'package:provider/provider.dart';
 
 class BottomButtons extends StatelessWidget {
   final ApplyProcessViewModel vm;
+  final String country;
+  final String city;
 
-  const BottomButtons({super.key, required this.vm});
+  const BottomButtons({
+    super.key,
+    required this.vm,
+    required this.country,
+    required this.city,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +38,7 @@ class BottomButtons extends StatelessWidget {
   }
 
   Widget _thirdStepConfirm(BuildContext context) {
-    final vmdetail = context.read<ApplyProcessViewModel>();
+    // final vmdetail = context.read<ApplyProcessViewModel>();
 
     return Container(
       width: double.infinity,
@@ -42,7 +49,11 @@ class BottomButtons extends StatelessWidget {
         textColor: AppColors.white,
         onTap: () async {
           context.read<ApplyProcessViewModel>().nextStep();
-          await context.read<DetailViewModel>().submitForm(context);
+          await context.read<DetailViewModel>().submitForm(
+            context,
+            country: country,
+            city: city,
+          );
           context.read<DetailViewModel>().clearForm();
         },
       ),
