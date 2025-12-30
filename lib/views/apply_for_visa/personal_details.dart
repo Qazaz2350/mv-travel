@@ -255,9 +255,9 @@ class DetailStepView extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.h),
-        DropdownButtonFormField<String>(
-          dropdownColor: AppColors.white,
-          borderRadius: BorderRadius.circular(8.r),
+        DropdownButtonFormField2<String>(
+          isExpanded: true,
+
           value: value,
           hint: Text(
             hint,
@@ -279,8 +279,8 @@ class DetailStepView extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.grey1),
             ),
             contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 14.h,
+              // horizontal: 16.w,
+              // vertical: 14.h,
             ),
           ),
           items: items
@@ -292,6 +292,14 @@ class DetailStepView extends StatelessWidget {
               )
               .toList(),
           onChanged: onChanged,
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 300.h, // adjust height here
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.r),
+              color: AppColors.white,
+            ),
+            offset: Offset(0, 0), // opens below the field
+          ),
         ),
       ],
     );
