@@ -25,7 +25,7 @@ class VisaTrackingPage extends StatelessWidget {
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
-            BoxShadow(  
+            BoxShadow(
               color: Colors.black.withOpacity(0.05),
               blurRadius: 4,
               offset: const Offset(0, 2),

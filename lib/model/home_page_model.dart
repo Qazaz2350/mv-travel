@@ -22,6 +22,7 @@ class TravelDestination {
   final String country;
   final String cityName;
   final String imageUrl;
+  final String flag;
   final String formattedArrival;
 
   // Detail Page (OPTIONAL)
@@ -33,6 +34,7 @@ class TravelDestination {
   final double? price;
 
   TravelDestination({
+    required this.flag,
     required this.country,
     required this.cityName,
     required this.imageUrl,

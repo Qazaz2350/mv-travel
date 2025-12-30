@@ -53,6 +53,7 @@ class MyApp extends StatelessWidget {
             ),
           );
         },
+        // child: const OnboardingScreen(),
         child: const HomePageView(),
       ),
     );

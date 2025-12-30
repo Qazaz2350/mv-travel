@@ -56,22 +56,6 @@ class _HomePageViewState extends State<HomePageView> {
                       SizedBox(height: 20.h),
 
                       HomeTabbar(viewModel: _viewModel),
-
-                      // FeaturedDestinationsWidget(
-                      //   destinations: _viewModel.homeData.featuredDestinations,
-                      // ),
-
-                      // SizedBox(height: 24.h),
-                      // //
-                      // GestureDetector(
-                      //   onTap: () {},
-
-                      //   child: ActiveApplicationWidget(viewModel: _viewModel),
-                      // ),
-                      // SizedBox(height: 20.h),
-
-                      // ActionButtonsWidget(viewModel: _viewModel),
-                      // SizedBox(height: 40.h),
                     ],
                   ),
                 ),

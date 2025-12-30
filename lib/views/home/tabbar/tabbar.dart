@@ -92,7 +92,7 @@ class _HomeTabbarState extends State<HomeTabbar> {
                       onTap: () {},
 
                       child: ActiveApplicationWidget(
-                        // viewModel: .viewModel,
+                        // viewModel: widget.viewModel,
                       ),
                     ),
                     SizedBox(height: 20.h),

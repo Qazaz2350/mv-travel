@@ -24,7 +24,7 @@ class VisaTracking extends StatelessWidget {
           onPressed: () => Nav.pop(context),
         ),
         title: Text(
-          'Active Applrications',
+          'Active Applications',
           style: TextStyle(
             color: AppColors.black,
             fontSize: FontSizes.f20,

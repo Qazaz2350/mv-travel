@@ -14,26 +14,29 @@ class VisaTrackingViewModel extends ChangeNotifier {
 
   // Constructor
   VisaTrackingViewModel() {
-    fetchVisas();
+    fetchVisas(); // constructor ka call same rakha
   }
 
   Future<void> fetchVisas() async {
     isLoading = true;
     notifyListeners();
 
+    // Clear existing data
     applications.clear();
 
-    final visaDocs = await _firestore
+    // Firestore snapshots stream se listen karein
+    _firestore
         .collection('users')
         .doc(uid)
-        .collection('visas') // <-- directly fetch the same collection
-        .get();
+        .collection('visas')
+        .snapshots()
+        .listen((snapshot) {
+          applications = snapshot.docs
+              .map((doc) => VisaTrackingModel.fromFirestore(doc.data()))
+              .toList();
 
-    for (var doc in visaDocs.docs) {
-      applications.add(VisaTrackingModel.fromFirestore(doc.data()));
-    }
-
-    isLoading = false;
-    notifyListeners();
+          isLoading = false;
+          notifyListeners();
+        });
   }
 }

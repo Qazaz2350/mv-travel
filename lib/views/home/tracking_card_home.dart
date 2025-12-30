@@ -16,13 +16,18 @@ class ApplicationCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      key: ValueKey(DateTime.now().millisecondsSinceEpoch),
       height: 225.h,
       child: PageView.builder(
         controller: PageController(viewportFraction: 0.96),
-        itemCount: applicationList.length, // ✅ FIX
+        itemCount: applicationList.length,
         itemBuilder: (context, index) {
-          final app = applicationList[index]; // ✅ FIX
+          final app = applicationList[index];
           return Padding(
+            // ────────────────────────────────────────────────
+            //           This is the KEY line you need
+            key: ValueKey(app.applicationId), // ← Perfect!
+            // ────────────────────────────────────────────────
             padding: EdgeInsets.symmetric(horizontal: 6.w),
             child: _buildCard(app, context),
           );
