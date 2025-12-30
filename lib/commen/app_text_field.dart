@@ -36,7 +36,7 @@ class AppTextField extends StatelessWidget {
         TextField(
           controller: controller,
           keyboardType: keyboardType,
-          maxLines: maxLines,
+          maxLines: 1,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(

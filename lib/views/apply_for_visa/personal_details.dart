@@ -193,27 +193,7 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            /// Confirm Button
-            // Center(
-            //   child: SizedBox(
-            //     width: double.infinity,
-            //     height: 35.h,
-            //     child: ElevatedButton(
-            //       onPressed: () => vm.submitForm(context),
-            //       style: ElevatedButton.styleFrom(
-            //         backgroundColor: AppColors.blue2,
-            //         foregroundColor: Colors.white,
-            //         shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(20.r),
-            //         ),
-            //       ),
-            //       child: const Text(
-            //         'save ',
-            //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+         
           ],
         ),
       ),

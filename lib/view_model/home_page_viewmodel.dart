@@ -48,7 +48,7 @@ class HomePageViewModel extends ChangeNotifier {
       TravelDestination(
         country: "Pakistan",
         cityName: "Islamabad",
-        imageUrl: "assets/home/islamabad_home.png",
+        imageUrl: "assets/home/islamabad.jpg",
         formattedArrival: "Get on 28 Nov, 2025 - 5:55 PM",
         visaType: "Tourist Visa",
         entry: "Single Entry",
@@ -87,21 +87,21 @@ class HomePageViewModel extends ChangeNotifier {
       TravelDestination(
         country: "UAE",
         cityName: "Dubai",
-        imageUrl: "assets/images/dubai.jpg",
+        imageUrl: "assets/home/uae.jpg",
         formattedArrival: "Get on 20 Jan, 2026 - 11:45 AM",
         flag: "🇦🇪",
       ),
       TravelDestination(
         country: "Turkey",
         cityName: "Istanbul",
-        imageUrl: "assets/images/istanbul.jpg",
+        imageUrl: "assets/home/turkey.jpg",
         formattedArrival: "Get on 5 Feb, 2026 - 8:20 PM",
         flag: "🇹🇷",
       ),
       TravelDestination(
         country: "UK",
         cityName: "London",
-        imageUrl: "assets/images/london.jpg",
+        imageUrl: "assets/home/uk.jpg",
         formattedArrival: "Get on 12 Mar, 2026 - 6:15 AM",
         flag: "🇬🇧",
       ),
@@ -109,7 +109,7 @@ class HomePageViewModel extends ChangeNotifier {
       TravelDestination(
         country: "Japan",
         cityName: "Tokyo",
-        imageUrl: "assets/images/tokyo.jpg",
+        imageUrl: "assets/home/japan.jpg",
         formattedArrival: "Get on 22 Apr, 2026 - 10:00 AM",
         visaType: "Tourist Visa",
         entry: "Single Entry",
@@ -120,7 +120,7 @@ class HomePageViewModel extends ChangeNotifier {
       TravelDestination(
         country: "Australia",
         cityName: "Sydney",
-        imageUrl: "assets/images/sydney.jpg",
+        imageUrl: "assets/home/austrlia.jpg",
         formattedArrival: "Get on 10 May, 2026 - 9:30 AM",
         visaType: "Tourist Visa",
         entry: "Multiple Entry",
@@ -131,7 +131,7 @@ class HomePageViewModel extends ChangeNotifier {
       TravelDestination(
         country: "Canada",
         cityName: "Toronto",
-        imageUrl: "assets/images/toronto.jpg",
+        imageUrl: "assets/home/canada.jpg",
         formattedArrival: "Get on 18 Jun, 2026 - 1:45 PM",
         visaType: "Tourist Visa",
         entry: "Multiple Entry",
@@ -142,7 +142,7 @@ class HomePageViewModel extends ChangeNotifier {
       TravelDestination(
         country: "Germany",
         cityName: "Berlin",
-        imageUrl: "assets/images/berlin.jpg",
+        imageUrl: "assets/home/germany.jpg",
         formattedArrival: "Get on 30 Jul, 2026 - 8:00 AM",
         visaType: "Tourist Visa",
         entry: "Single Entry",
