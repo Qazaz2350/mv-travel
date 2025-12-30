@@ -172,6 +172,7 @@ class _ApplyProcessView extends StatelessWidget {
           onRemove: vm.removePassport,
           onCamera: () => vm.pickFromCamera(false),
           onGallery: () => vm.pickFromGallery(false),
+          
         );
 
       case 2:

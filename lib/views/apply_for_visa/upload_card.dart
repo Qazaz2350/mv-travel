@@ -11,6 +11,7 @@ class UploadCard extends StatelessWidget {
   final VoidCallback onCamera;
   final VoidCallback onGallery;
   final VoidCallback onRemove;
+  final String? errorText; // <-- Added for validation message
 
   const UploadCard({
     super.key,
@@ -20,6 +21,7 @@ class UploadCard extends StatelessWidget {
     required this.onCamera,
     required this.onGallery,
     required this.onRemove,
+    this.errorText,
   });
 
   @override
@@ -30,6 +32,14 @@ class UploadCard extends StatelessWidget {
         children: [
           _title(title),
           _desc(description),
+          if (errorText != null)
+            Padding(
+              padding: EdgeInsets.only(top: 4.h),
+              child: Text(
+                errorText!,
+                style: TextStyle(color: Colors.red, fontSize: 12.sp),
+              ),
+            ),
           SizedBox(height: 16.h),
           file == null
               ? GestureDetector(
@@ -75,17 +85,36 @@ class UploadCard extends StatelessWidget {
   }
 
   Widget _filePreview(File file, VoidCallback onRemove) {
-    return Container(
-      width: double.infinity,
-      height: 300.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.grey2),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.r),
-        child: Image.file(file, fit: BoxFit.cover),
-      ),
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 300.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: AppColors.grey2),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: Image.file(file, fit: BoxFit.cover),
+          ),
+        ),
+        Positioned(
+          top: 8.h,
+          right: 8.w,
+          child: GestureDetector(
+            onTap: onRemove,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                shape: BoxShape.circle,
+              ),
+              padding: EdgeInsets.all(4.w),
+              child: Icon(Icons.close, color: Colors.white, size: 20.sp),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -9,6 +9,7 @@ import 'package:mvtravel/model/apply_process_model.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mvtravel/views/apply_for_visa/app_lists.dart';
 
 class ApplyProcessViewModel extends ChangeNotifier {
   final ImagePicker picker = ImagePicker();
@@ -18,7 +19,31 @@ class ApplyProcessViewModel extends ChangeNotifier {
   File? get photoFile => model.photoFile;
   File? get passportFile => model.passportFile;
 
-  void nextStep() {
+  /// ✅ Updated nextStep to validate files
+  void nextStep(BuildContext context) {
+    // Step 0 requires photo
+    if (model.currentStep == 0 && model.photoFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please upload your photo before proceeding'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Step 1 requires passport
+    if (model.currentStep == 1 && model.passportFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please upload your passport before proceeding'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Move to next step
     if (model.currentStep < 3) {
       model.currentStep++;
       notifyListeners();
@@ -67,8 +92,9 @@ class ApplyProcessViewModel extends ChangeNotifier {
   }
 }
 
+// ------------------- The rest of your code stays exactly the same -------------------
+
 class DetailViewModel extends ChangeNotifier {
-  // Controllers
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final passportController = TextEditingController();
@@ -76,19 +102,15 @@ class DetailViewModel extends ChangeNotifier {
   final phoneController = TextEditingController();
   final dobController = TextEditingController();
 
-  // Dropdown values
   String? selectedNationality;
   String? selectedVisaType;
-  String selectedCountryCode = '+92';
+  String selectedCountryCode = AppLists.countries.first['code']!;
 
-  // File uploads
   File? passportDocument;
   File? photoDocument;
 
-  // Date
   DateTime? selectedDate;
 
-  // Dispose all controllers
   void disposeControllers() {
     fullNameController.dispose();
     emailController.dispose();
@@ -96,6 +118,74 @@ class DetailViewModel extends ChangeNotifier {
     addressController.dispose();
     phoneController.dispose();
     dobController.dispose();
+  }
+
+  String? validateFullName() =>
+      fullNameController.text.trim().isEmpty ? 'Full name is required' : null;
+
+  String? validateEmail() =>
+      emailController.text.trim().isEmpty ? 'Email is required' : null;
+
+  String? validatePassport() => passportController.text.trim().isEmpty
+      ? 'Passport number is required'
+      : null;
+
+  String? validateAddress() =>
+      addressController.text.trim().isEmpty ? 'Address is required' : null;
+
+  String? validatePhone() =>
+      phoneController.text.trim().isEmpty ? 'Phone number is required' : null;
+
+  String? validateDOB() =>
+      selectedDate == null ? 'Date of birth is required' : null;
+
+  String? validateNationality() =>
+      selectedNationality == null || selectedNationality!.isEmpty
+      ? 'Select nationality'
+      : null;
+
+  String? validateVisaType() =>
+      selectedVisaType == null || selectedVisaType!.isEmpty
+      ? 'Select visa type'
+      : null;
+
+  String? validatePhoto() => photoDocument == null ? 'Upload your photo' : null;
+
+  String? validatePassportDocument() =>
+      passportDocument == null ? 'Upload your passport' : null;
+
+  bool validateForm() {
+    final validators = [
+      validateFullName(),
+      validateEmail(),
+      validatePassport(),
+      validateAddress(),
+      validatePhone(),
+      validateDOB(),
+      validateNationality(),
+      validateVisaType(),
+      validatePhoto(),
+      validatePassportDocument(),
+    ];
+    return !validators.any((e) => e != null);
+  }
+
+  Future<void> submitFormWithValidation(
+    BuildContext context, {
+    required String country,
+    required String city,
+    required String flag,
+  }) async {
+    if (!validateForm()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all required fields and upload documents'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    await submitForm(context, country: country, city: city, flag: flag);
   }
 
   Future<void> selectDate(BuildContext context) async {
@@ -122,7 +212,6 @@ class DetailViewModel extends ChangeNotifier {
     }
   }
 
-  // Pick image
   Future<void> pickImage(bool isPassport) async {
     try {
       final picker = ImagePicker();
@@ -147,22 +236,16 @@ class DetailViewModel extends ChangeNotifier {
   String generateRandomId() {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     final random = Random();
-
-    // Two random letters
     String letterPart =
         letters[random.nextInt(letters.length)] +
         letters[random.nextInt(letters.length)];
-
-    // 8-digit random number
     String numberPart = (10000000 + random.nextInt(90000000)).toString();
-
     return '$letterPart-$numberPart';
   }
 
   Future<void> submitForm(
     BuildContext context, {
     required String country,
-
     required String city,
     required String flag,
   }) async {
@@ -181,8 +264,8 @@ class DetailViewModel extends ChangeNotifier {
         'visaNumber': phoneController.text,
         'visaCountry': country,
         'visaCity': city,
-        'createdAt': FieldValue.serverTimestamp(), // <-- add this
-        'applicationId': generateRandomId(), // <-- added
+        'createdAt': FieldValue.serverTimestamp(),
+        'applicationId': generateRandomId(),
         'visaFlag': flag,
       };
 
@@ -203,7 +286,6 @@ class DetailViewModel extends ChangeNotifier {
     }
   }
 
-  // Clear all text fields, dropdowns, files, and date
   void clearForm() {
     fullNameController.clear();
     emailController.clear();
@@ -219,11 +301,10 @@ class DetailViewModel extends ChangeNotifier {
     passportDocument = null;
     photoDocument = null;
 
-    notifyListeners(); // Rebuild UI after clearing
+    notifyListeners();
   }
 }
 
-// Payment ViewModel
 class PaymentViewModel extends ChangeNotifier {
   final cardNumberController = TextEditingController();
   final nameController = TextEditingController();
@@ -245,7 +326,6 @@ class PaymentViewModel extends ChangeNotifier {
   }
 }
 
-// Formatter for card number
 class CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -266,7 +346,6 @@ class CardNumberFormatter extends TextInputFormatter {
   }
 }
 
-// Formatter for expiry date
 class ExpiryDateFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

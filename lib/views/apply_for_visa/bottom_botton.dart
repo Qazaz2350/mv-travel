@@ -24,7 +24,6 @@ class BottomButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Step index starts from 0, so 3rd step = index 2
     if (vm.currentStep == 2) {
       return _thirdStepConfirm(context);
     }
@@ -33,7 +32,7 @@ class BottomButtons extends StatelessWidget {
       if (vm.photoFile == null) {
         return _uploadButtons();
       } else {
-        return _confirmButtons();
+        return _confirmButtons(context);
       }
     }
 
@@ -41,8 +40,6 @@ class BottomButtons extends StatelessWidget {
   }
 
   Widget _thirdStepConfirm(BuildContext context) {
-    // final vmdetail = context.read<ApplyProcessViewModel>();
-
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -51,8 +48,8 @@ class BottomButtons extends StatelessWidget {
         bgColor: AppColors.blue2,
         textColor: AppColors.white,
         onTap: () async {
-          // Move to next step
-          context.read<ApplyProcessViewModel>().nextStep();
+          // Move to next step with validation
+          vm.nextStep(context);
 
           // Submit the form
           await context.read<DetailViewModel>().submitForm(
@@ -103,7 +100,7 @@ class BottomButtons extends StatelessWidget {
     );
   }
 
-  Widget _confirmButtons() {
+  Widget _confirmButtons(BuildContext context) {
     return Container(
       color: AppColors.white,
       padding: EdgeInsets.all(16.w),
@@ -126,7 +123,7 @@ class BottomButtons extends StatelessWidget {
               bgColor: AppColors.blue2,
               textColor: AppColors.white,
               icon: Icons.check,
-              onTap: vm.nextStep,
+              onTap: () => vm.nextStep(context),
             ),
           ),
         ],
@@ -136,7 +133,6 @@ class BottomButtons extends StatelessWidget {
 
   Widget _defaultButtons(BuildContext context) {
     if (vm.currentStep == 3) {
-      // 4th page: only one full-width button (Submit)
       return Container(
         width: double.infinity,
         color: AppColors.white,
@@ -147,18 +143,24 @@ class BottomButtons extends StatelessWidget {
             text: ' Confirm Your Apply',
             bgColor: AppColors.blue2,
             textColor: AppColors.white,
-            onTap: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (_) => HomePageView()),
-              (route) => false, // purani routes remove ho jaayengi
-            ),
-            // or your final submit function
+            onTap: () {
+              if ((vm.photoFile != null || vm.passportFile != null)) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => HomePageView()),
+                  (route) => false,
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please upload the file first')),
+                );
+              }
+            },
           ),
         ),
       );
     }
 
-    // Default two-button layout for other steps
     return Container(
       width: double.infinity,
       color: AppColors.white,
@@ -173,7 +175,18 @@ class BottomButtons extends StatelessWidget {
               bgColor: AppColors.blue1,
               textColor: AppColors.white,
               imageIconColor: AppColors.blue2,
-              onTap: vm.nextStep,
+              onTap: () {
+                if ((vm.currentStep == 0 && vm.photoFile != null) ||
+                    (vm.currentStep == 1 && vm.passportFile != null)) {
+                  vm.nextStep(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please upload the file first'),
+                    ),
+                  );
+                }
+              },
             ),
           ),
           SizedBox(height: 12.h),

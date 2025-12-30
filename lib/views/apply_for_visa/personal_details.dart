@@ -1,5 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member, dead_code, invalid_use_of_visible_for_testing_member, prefer_null_aware_operators
 import 'dart:io';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -72,7 +73,7 @@ class DetailStepView extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        "$country, $city, $flag",
+                        "$country, $city",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: FontSizes.f12,
@@ -193,7 +194,27 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-         
+            /// Confirm Button
+            // Center(
+            //   child: SizedBox(
+            //     width: double.infinity,
+            //     height: 35.h,
+            //     child: ElevatedButton(
+            //       onPressed: () => vm.submitForm(context),
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: AppColors.blue2,
+            //         foregroundColor: Colors.white,
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(20.r),
+            //         ),
+            //       ),
+            //       child: const Text(
+            //         'save ',
+            //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -277,12 +298,21 @@ class DetailStepView extends StatelessWidget {
   }
 
   Widget _phoneField(DetailViewModel vm) {
+    // Find the DropdownMenuItem that matches selectedCountryCode
+    final selectedItem = AppLists.countries.firstWhere(
+      (c) => c['code'] == vm.selectedCountryCode,
+      orElse: () => AppLists.countries.first,
+    );
+
     return Row(
       children: [
         Expanded(
-          flex: 2,
-          child: DropdownButtonFormField<String>(
-            value: vm.selectedCountryCode,
+          flex: 3,
+          child: DropdownButtonFormField2<String>(
+            isExpanded: true,
+            value:
+                "${selectedItem['flag']} ${selectedItem['code']}", // show flag + code
+
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.white,
@@ -298,18 +328,23 @@ class DetailStepView extends StatelessWidget {
                 borderSide: BorderSide(color: AppColors.blue),
               ),
               contentPadding: EdgeInsets.symmetric(
-                horizontal: 12.w,
+                horizontal: 2.w,
                 vertical: 14.h,
               ),
             ),
-            dropdownColor: AppColors.white,
-            borderRadius: BorderRadius.circular(8.r),
-            items: ['+92', '+91', '+1', '+44', '+971', '+86', '+81']
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: 250.h,
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+            ),
+            items: AppLists.countries
                 .map(
-                  (code) => DropdownMenuItem(
-                    value: code,
+                  (country) => DropdownMenuItem(
+                    value: "${country['flag']} ${country['code']}",
                     child: Text(
-                      code,
+                      "${country['flag']} (${country['code']})",
                       style: TextStyle(
                         fontSize: FontSizes.f14,
                         color: AppColors.grey2,
@@ -319,8 +354,11 @@ class DetailStepView extends StatelessWidget {
                 )
                 .toList(),
             onChanged: (value) {
-              vm.selectedCountryCode = value!;
-              vm.notifyListeners();
+              if (value != null) {
+                // store only the code
+                vm.selectedCountryCode = value.split(' ').last;
+                vm.notifyListeners();
+              }
             },
           ),
         ),
