@@ -15,13 +15,19 @@ import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 class ApplyProcess extends StatelessWidget {
   final String country;
   final String city;
+  final String flag;
 
-  const ApplyProcess({super.key, required this.country, required this.city});
+  const ApplyProcess({
+    super.key,
+    required this.country,
+    required this.city,
+    required this.flag,
+  });
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ApplyProcessViewModel(),
-      child: _ApplyProcessView(country: country, city: city),
+      child: _ApplyProcessView(country: country, city: city, flag: flag),
     );
   }
 }
@@ -29,10 +35,13 @@ class ApplyProcess extends StatelessWidget {
 class _ApplyProcessView extends StatelessWidget {
   final String country;
   final String city;
+  final String flag;
+
   const _ApplyProcessView({
     super.key,
     required this.country,
     required this.city,
+    required this.flag,
   });
 
   @override
@@ -74,7 +83,7 @@ class _ApplyProcessView extends StatelessWidget {
           // Text('${country}${city}', style: TextStyle(fontSize: FontSizes.f16)),
           SizedBox(height: 16.h),
           Expanded(child: _buildStepContent(vm, context)),
-          BottomButtons(vm: vm, country: country, city: city),
+          BottomButtons(vm: vm, country: country, city: city, flag: flag),
         ],
       ),
     );
@@ -168,7 +177,8 @@ class _ApplyProcessView extends StatelessWidget {
       case 2:
         return DetailStepView(
           country: country, // from ApplyProcess or wherever you have it
-          city: city, // from ApplyProcess
+          city: city, // from ApplyProcess or wherever you have it
+          flag: flag,
         );
 
       case 3:

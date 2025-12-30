@@ -171,7 +171,7 @@ class ActiveApplicationWidget extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      "${data.country}, ${data.visaCity}",
+                                      "${data.country}, ${data.visaCity},",
                                       style: TextStyle(
                                         fontSize: FontSizes.f14,
                                         fontWeight: FontWeight.w600,

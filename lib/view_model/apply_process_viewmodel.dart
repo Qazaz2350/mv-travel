@@ -162,7 +162,9 @@ class DetailViewModel extends ChangeNotifier {
   Future<void> submitForm(
     BuildContext context, {
     required String country,
+
     required String city,
+    required String flag,
   }) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -181,6 +183,7 @@ class DetailViewModel extends ChangeNotifier {
         'visaCity': city,
         'createdAt': FieldValue.serverTimestamp(), // <-- add this
         'applicationId': generateRandomId(), // <-- added
+        'visaFlag': flag,
       };
 
       await FirebaseFirestore.instance

@@ -8,6 +8,7 @@ class VisaTrackingModel {
   final DateTime createdAt;
   final String feeStatus;
   final int currentStep;
+  final String? visaFlag;
 
   final String? visaFullName;
   final String? visaEmail;
@@ -29,6 +30,7 @@ class VisaTrackingModel {
   final bool travelVisaRequired;
 
   VisaTrackingModel({
+    required this.visaFlag,
     required this.visaType,
     required this.processingTime,
     required this.submissionId,
@@ -58,6 +60,7 @@ class VisaTrackingModel {
     final timestamp = json['createdAt'] as Timestamp?;
 
     return VisaTrackingModel(
+      visaFlag: json['visaFlag'] ?? null,
       visaType: json['visaType'] ?? 'Pending',
       processingTime: json['processingTime'] ?? 'Pending',
       submissionId: json['submissionId'] ?? 'Pending',

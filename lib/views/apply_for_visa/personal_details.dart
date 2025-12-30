@@ -16,8 +16,14 @@ import 'package:mvtravel/utilis/colors.dart';
 class DetailStepView extends StatelessWidget {
   final String country;
   final String city;
+  final String flag;
 
-  const DetailStepView({super.key, required this.country, required this.city});
+  const DetailStepView({
+    super.key,
+    required this.country,
+    required this.city,
+    required this.flag,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +72,7 @@ class DetailStepView extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        "$country, $city",
+                        "$country, $city, $flag",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: FontSizes.f12,

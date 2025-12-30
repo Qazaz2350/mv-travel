@@ -66,7 +66,12 @@ class VisaDetailScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomSheet: BottomBar(destination: destination, country: destination.country, city: destination.cityName,),
+        bottomSheet: BottomBar(
+          destination: destination,
+          country: destination.country,
+          city: destination.cityName,
+          flag: destination.flag,
+        ),
       ),
     );
   }

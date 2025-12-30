@@ -9,14 +9,15 @@ class BottomBar extends StatelessWidget {
   final TravelDestination destination;
   final String country;
   final String city;
+  final String flag;
 
   const BottomBar({
     super.key,
     required this.destination,
     required this.country,
     required this.city,
+    required this.flag,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,10 @@ class BottomBar extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Nav.push(context, ApplyProcess(country: country, city:city ,));
+                  Nav.push(
+                    context,
+                    ApplyProcess(country: country, city: city, flag: flag),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.blue2,

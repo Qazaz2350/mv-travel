@@ -12,12 +12,14 @@ class BottomButtons extends StatelessWidget {
   final ApplyProcessViewModel vm;
   final String country;
   final String city;
+  final String flag;
 
   const BottomButtons({
     super.key,
     required this.vm,
     required this.country,
     required this.city,
+    required this.flag,
   });
 
   @override
@@ -52,7 +54,7 @@ class BottomButtons extends StatelessWidget {
           context.read<ApplyProcessViewModel>().nextStep();
           await context
               .read<DetailViewModel>()
-              .submitForm(context, country: country, city: city)
+              .submitForm(context, country: country, city: city, flag: flag)
               .then((_) {
                 context.watch<VisaTrackingViewModel>().fetchVisas();
               });
