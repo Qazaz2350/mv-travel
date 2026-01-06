@@ -313,16 +313,37 @@ class _WorkApplicationDetailsViewState
             padding: EdgeInsets.all(24.h),
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(
-                color: AppColors.grey1,
-                width: 2,
-                style: BorderStyle.solid,
-              ),
+              border: Border.all(color: AppColors.grey1, width: 2),
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: _viewModel.workData.offerLetterFileName.isNotEmpty
-                ? _buildUploadedFile()
-                : _buildUploadPlaceholder(),
+            // Show loading while picking/uploading
+            child: _viewModel.isPickingFile
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 24.h,
+                        width: 24.h,
+                        child: CircularProgressIndicator(
+                          color: AppColors.blue1,
+                          strokeWidth: 2.5,
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Text(
+                        'Uploading...',
+                        style: TextStyle(
+                          fontSize: FontSizes.f14,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ],
+                  )
+                // Show uploaded file preview if available
+                : (_viewModel.workData.offerLetterFileName.isNotEmpty
+                      ? _buildUploadedFile()
+                      : _buildUploadPlaceholder()),
           ),
         ),
       ],

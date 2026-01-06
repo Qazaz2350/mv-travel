@@ -1,7 +1,8 @@
 import 'dart:io';
 
 class ProfileImageModel {
-  File? profileImage;
+  File? profileImage; // Local file picked from gallery
+  String? profileImageUrl; // ✅ Firebase Storage download URL
 
-  ProfileImageModel({this.profileImage});
+  ProfileImageModel({this.profileImage, this.profileImageUrl});
 }

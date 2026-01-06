@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD_d5-OEhp5_rdR2q9zHqmey-gS95SJEuQ',
-    appId: '1:979472627330:android:eaf0f7dabf029d7919e69b',
-    messagingSenderId: '979472627330',
-    projectId: 'mbtravels-2d0bb',
-    storageBucket: 'mbtravels-2d0bb.firebasestorage.app',
+    apiKey: 'AIzaSyDsZOlQz4CrWNz9eeZG6FRYscNnfhnuX8s',
+    appId: '1:728852388978:android:b7dc906cbcf7f62594f6eb',
+    messagingSenderId: '728852388978',
+    projectId: 'mb-travels-cf82e',
+    storageBucket: 'mb-travels-cf82e.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAPnYh7IJTABnJbuC6bUF2ob2NIvjYC-VY',
-    appId: '1:979472627330:ios:7b45a3edb9c0918219e69b',
-    messagingSenderId: '979472627330',
-    projectId: 'mbtravels-2d0bb',
-    storageBucket: 'mbtravels-2d0bb.firebasestorage.app',
+    apiKey: 'AIzaSyA6l4d2U7tDRbtKO1f_2Med5_p_GTxDB3s',
+    appId: '1:728852388978:ios:bbf5a82919fd3bf594f6eb',
+    messagingSenderId: '728852388978',
+    projectId: 'mb-travels-cf82e',
+    storageBucket: 'mb-travels-cf82e.firebasestorage.app',
     iosBundleId: 'com.example.mvtravel',
   );
+
 }

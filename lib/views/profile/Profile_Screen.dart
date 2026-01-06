@@ -8,10 +8,23 @@ import 'package:mvtravel/view_model/profile_viewmodel.dart';
 import 'package:mvtravel/views/profile/profile_edit_page.dart';
 import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late UserProfileViewModel _viewModel;
+  @override
+  void initState() {
+    super.initState();
+    // Initialize ViewModel and fetch user profile once
+    _viewModel = UserProfileViewModel();
+    _viewModel.fetchUserProfile();
+  }
+
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => UserProfileViewModel()..fetchUserProfile(),
@@ -51,8 +64,8 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () {
                     Nav.push(
                       context,
-                      ChangeNotifierProvider(
-                        create: (_) => ProfileImageViewModel(),
+                      ChangeNotifierProvider.value(
+                        value: viewModel, // pass the same UserProfileViewModel
                         child: const ProfilePictureEditPage(),
                       ),
                     );
@@ -79,12 +92,35 @@ class ProfileScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 22.h),
                         child: Column(
                           children: [
-                            CircleAvatar(
-                              radius: 50.r,
-                              backgroundImage: AssetImage(
-                                'assets/home/profile.avif',
-                              ),
+                            Consumer<UserProfileViewModel>(
+                              builder: (context, viewModel, child) {
+                                return CircleAvatar(
+                                  radius: 50.r,
+                                  backgroundImage:
+                                      viewModel.profileImageFile != null
+                                      ? FileImage(viewModel.profileImageFile!)
+                                      : (viewModel.profileImageUrl != null
+                                            ? NetworkImage(
+                                                viewModel.profileImageUrl!,
+                                              )
+                                            : const AssetImage(
+                                                    'assets/home/profile.avif',
+                                                  )
+                                                  as ImageProvider),
+                                  child: viewModel.isLoading
+                                      ? SizedBox(
+                                          width: 30.r,
+                                          height: 30.r,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2.5,
+                                          ),
+                                        )
+                                      : null,
+                                );
+                              },
                             ),
+
                             SizedBox(height: 16.h),
                             Text(
                               viewModel.fullName,
@@ -190,21 +226,18 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           _buildSectionHeader('Uploaded Documents'),
-                          ...viewModel.uploadedDocs.isNotEmpty
-                              ? viewModel.uploadedDocs.map((doc) {
-                                  return _buildInfoTile(
-                                    icon: Icons.attach_file,
-                                    title: doc.toString(),
-                                    onTap: () {},
-                                  );
-                                }).toList()
-                              : [
-                                  _buildInfoTile(
-                                    icon: Icons.attach_file,
-                                    title: "Pending",
-                                    onTap: () {},
-                                  ),
-                                ],
+                          _buildInfoTile(
+                            icon: Icons.calendar_today_outlined,
+                            title: 'Offer Letter',
+                            subtitle: viewModel.offerLetterFileName,
+                            onTap: () {
+                              if (viewModel.offerLetterUrl != "Pending" &&
+                                  viewModel.offerLetterUrl.isNotEmpty) {
+                                // launch URL code here
+                              }
+                            },
+                          ),
+                          // Investment documents can be uncommented if needed
                         ],
                       ),
                     ),
@@ -244,6 +277,37 @@ class ProfileScreen extends StatelessWidget {
                                 : "Pending",
                             onTap: () {},
                           ),
+                          SizedBox(height: 24.h),
+                          SizedBox(
+                            width: 300.w, // Full width
+                            child: ElevatedButton(
+                              onPressed: () {
+                                viewModel.logout(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Colors.red, // Button background
+                                foregroundColor: AppColors.white, // Text color
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 12.h,
+                                ), // Height of button
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    12.r,
+                                  ), // Rounded corners
+                                ),
+                              ),
+                              child: Text(
+                                "Log out",
+                                style: TextStyle(
+                                  fontSize: FontSizes.f16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 24.h),
                         ],
                       ),
                     ),
@@ -282,6 +346,12 @@ class ProfileScreen extends StatelessWidget {
     String? subtitle,
     required VoidCallback onTap,
   }) {
+    // Set Pending = orange, all other data = green
+    Color getSubtitleColor(String text) {
+      if (text.toLowerCase() == "pending") return Colors.orange;
+      return Colors.green;
+    }
+
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.r)),
       child: InkWell(
@@ -318,14 +388,13 @@ class ProfileScreen extends StatelessWidget {
                         subtitle,
                         style: TextStyle(
                           fontSize: FontSizes.f12,
-                          color: AppColors.grey2,
+                          color: getSubtitleColor(subtitle),
                         ),
                       ),
                     ],
                   ],
                 ),
               ),
-              // Icon(Icons.chevron_right, color: AppColors.grey2, size: 24.sp),
             ],
           ),
         ),

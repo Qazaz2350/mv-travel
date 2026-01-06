@@ -6,6 +6,7 @@ class WorkApplicationDetailsModel {
   String experience;
   bool hasJobOffer;
   String offerLetterFileName;
+  String? offerLetterUrl; // ✅ Add this
   String salary;
 
   WorkApplicationDetailsModel({
@@ -13,6 +14,7 @@ class WorkApplicationDetailsModel {
     this.experience = "",
     this.hasJobOffer = false,
     this.offerLetterFileName = "",
+    this.offerLetterUrl, // optional
     this.salary = "",
   });
 }

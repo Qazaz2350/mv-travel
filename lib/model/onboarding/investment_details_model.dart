@@ -14,8 +14,9 @@ class InvestmentData {
 
 class UploadedDocument {
   final String fileName;
+  final String fileUrl;
 
-  UploadedDocument({required this.fileName});
+  UploadedDocument({required this.fileName, required this.fileUrl});
 }
 
 enum InvestmentType {

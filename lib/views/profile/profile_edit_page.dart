@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mvtravel/view_model/profile_image_viewmodel.dart';
+import 'package:mvtravel/view_model/profile_viewmodel.dart';
 import 'package:provider/provider.dart';
+// import 'package:mvtravel/view_model/user_profile_viewmodel.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 
@@ -29,7 +30,7 @@ class ProfilePictureEditPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Consumer<ProfileImageViewModel>(
+      body: Consumer<UserProfileViewModel>(
         builder: (context, vm, child) {
           return SingleChildScrollView(
             child: Column(
@@ -39,14 +40,12 @@ class ProfilePictureEditPage extends StatelessWidget {
                 SizedBox(height: 30.h),
                 _buildActionButtons(context, vm),
                 SizedBox(height: 40.h),
-                _buildInfoCard(),
-                SizedBox(height: 30.h),
               ],
             ),
           );
         },
       ),
-      bottomNavigationBar: Consumer<ProfileImageViewModel>(
+      bottomNavigationBar: Consumer<UserProfileViewModel>(
         builder: (context, vm, child) {
           return Container(
             padding: EdgeInsets.all(20.w),
@@ -62,7 +61,7 @@ class ProfilePictureEditPage extends StatelessWidget {
             ),
             child: SafeArea(
               child: ElevatedButton(
-                onPressed: vm.profileImage != null
+                onPressed: vm.profileImageFile != null
                     ? () => _saveProfilePicture(context)
                     : null,
                 style: ElevatedButton.styleFrom(
@@ -90,7 +89,7 @@ class ProfilePictureEditPage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfilePicture(BuildContext context, ProfileImageViewModel vm) {
+  Widget _buildProfilePicture(BuildContext context, UserProfileViewModel vm) {
     return Center(
       child: Stack(
         children: [
@@ -113,8 +112,14 @@ class ProfilePictureEditPage extends StatelessWidget {
               ],
             ),
             child: ClipOval(
-              child: vm.profileImage != null
-                  ? Image.file(vm.profileImage!, fit: BoxFit.cover)
+              child: vm.isUploading
+                  ? Center(
+                      child: CircularProgressIndicator(color: AppColors.white),
+                    )
+                  : vm.profileImageFile != null
+                  ? Image.file(vm.profileImageFile!, fit: BoxFit.cover)
+                  : vm.profileImageUrl != null
+                  ? Image.network(vm.profileImageUrl!, fit: BoxFit.cover)
                   : Container(
                       color: AppColors.blue,
                       child: Icon(
@@ -129,7 +134,7 @@ class ProfilePictureEditPage extends StatelessWidget {
             bottom: 5.h,
             right: 5.w,
             child: GestureDetector(
-              onTap: () => vm.pickImageFromGallery(),
+              onTap: () => vm.pickAndUploadProfileImage(),
               child: Container(
                 width: 50.w,
                 height: 50.w,
@@ -158,7 +163,7 @@ class ProfilePictureEditPage extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, ProfileImageViewModel vm) {
+  Widget _buildActionButtons(BuildContext context, UserProfileViewModel vm) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
@@ -168,13 +173,13 @@ class ProfilePictureEditPage extends StatelessWidget {
             icon: Icons.photo_library_rounded,
             title: 'Choose from Gallery',
             subtitle: 'Select a photo from your device',
-            onTap: () => vm.pickImageFromGallery(),
+            onTap: () => vm.pickAndUploadProfileImage(),
             gradient: LinearGradient(
               colors: [AppColors.blue1, AppColors.blue3],
             ),
           ),
           SizedBox(height: 16.h),
-          if (vm.profileImage != null)
+          if (vm.profileImageFile != null || vm.profileImageUrl != null)
             _buildActionButton(
               context,
               icon: Icons.delete_outline_rounded,
@@ -256,65 +261,7 @@ class ProfilePictureEditPage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 24.w),
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: AppColors.blue.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Icon(
-              Icons.info_outline,
-              color: AppColors.blue3,
-              size: 24.sp,
-            ),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'pending',
-                  style: TextStyle(
-                    color: Colors.redAccent,
-                    fontSize: FontSizes.f16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  'image upload nhi ho sakhti firestore pending hy',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: FontSizes.f14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showRemoveDialog(BuildContext context, ProfileImageViewModel vm) {
+  void _showRemoveDialog(BuildContext context, UserProfileViewModel vm) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -343,7 +290,7 @@ class ProfilePictureEditPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              vm.removeImage();
+              vm.removeProfileImage();
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(

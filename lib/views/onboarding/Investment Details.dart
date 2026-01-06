@@ -244,32 +244,55 @@ class InvestmentDetailsView extends StatelessWidget {
               border: Border.all(color: AppColors.grey1, width: 2),
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.cloud_upload_outlined,
-                  size: 48.sp,
-                  color: AppColors.grey2,
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  'Upload Document',
-                  style: TextStyle(
-                    fontSize: FontSizes.f14,
-                    color: AppColors.grey2,
-                    fontWeight: FontWeight.w500,
+            child: viewModel.isPickingFile
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 24.h,
+                        width: 24.h,
+                        child: CircularProgressIndicator(
+                          color: AppColors.blue1,
+                          strokeWidth: 2.5,
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Text(
+                        'Uploading...',
+                        style: TextStyle(
+                          fontSize: FontSizes.f14,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      Icon(
+                        Icons.cloud_upload_outlined,
+                        size: 48.sp,
+                        color: AppColors.grey2,
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'Upload Document',
+                        style: TextStyle(
+                          fontSize: FontSizes.f14,
+                          color: AppColors.grey2,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'PDF, DOCX (Max 5MB)',
+                        style: TextStyle(
+                          fontSize: FontSizes.f12,
+                          color: AppColors.grey2,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  'PDF, DOCX (Max 5MB)',
-                  style: TextStyle(
-                    fontSize: FontSizes.f12,
-                    color: AppColors.grey2,
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ],
