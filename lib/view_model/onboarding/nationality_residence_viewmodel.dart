@@ -65,6 +65,15 @@ class NationalityResidenceViewModel extends ChangeNotifier {
     return {'nationality': selectedNationality, 'residence': selectedResidence};
   }
 
+  /// ✅ Validation getters
+  bool get isNationalityValid =>
+      selectedNationality != null && selectedNationality!.isNotEmpty;
+  bool get isResidenceValid =>
+      selectedResidence != null && selectedResidence!.isNotEmpty;
+
+  /// ✅ Overall validation
+  bool get isValid => isNationalityValid && isResidenceValid;
+
   /// ✅ Save selected nationality & residence to Firebase
   Future<void> saveToFirebase() async {
     try {

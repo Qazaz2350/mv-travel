@@ -11,6 +11,9 @@ class BirthDateViewModel extends ChangeNotifier {
   /// 🔥 Firebase ke liye (TIMESTAMP)
   int? birthDateTimestamp;
 
+  /// ✅ Validation: check if date is selected
+  bool get isValid => selectedDate != null;
+
   Future<void> pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,

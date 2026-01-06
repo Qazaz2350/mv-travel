@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/view_model/auth/signup_viewmodel.dart';
+import 'package:mvtravel/widgets/message.dart';
 import 'package:provider/provider.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
@@ -174,38 +175,40 @@ class SignUpScreen extends StatelessWidget {
                         ),
                         onPressed: () async {
                           if (!vm.agreeToTerms) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Please accept terms & conditions',
-                                ),
-                              ),
+                            showCustomSnackBar(
+                              context,
+                              'Please accept terms & conditions',
                             );
                             return;
                           }
 
-                          if (vm.formKey.currentState!.validate()) {
-                            try {
-                              final success = await vm.signUp();
-                              if (success) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Account created successfully!',
-                                    ),
-                                  ),
-                                );
-                                Nav.push(context, PhoneNumberScreen());
-                              }
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())),
+                          if (!vm.agreeToTerms) {
+                            showCustomSnackBar(
+                              context,
+                              'Please accept terms & conditions',
+                              isError: true,
+                            );
+                            return;
+                          }
+
+                          try {
+                            final success = await vm.signUp();
+                            if (success) {
+                              showCustomSnackBar(
+                                context,
+                                'Account created successfully!',
                               );
+                              Nav.push(context, PhoneNumberScreen());
                             }
+                          } catch (e) {
+                            showCustomSnackBar(
+                              context,
+                              e.toString(),
+                              isError: true,
+                            );
                           }
                         },
                       ),
-
                       SizedBox(height: 20.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

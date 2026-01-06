@@ -10,6 +10,7 @@ import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/onboarding/phone_number_viewmodel.dart';
 import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:mvtravel/views/onboarding/select_birthdate.dart';
+import 'package:mvtravel/widgets/message.dart';
 import 'package:provider/provider.dart';
 
 class PhoneNumberScreen extends StatelessWidget {
@@ -35,7 +36,7 @@ class PhoneNumberScreen extends StatelessWidget {
                   padding: EdgeInsets.only(right: 16.w),
                   child: SkipButton(
                     onPressed: () {
-                      Nav.push(context, HomePageView());
+                      Nav.push(context, BirthDateScreen());
                     },
                   ),
                 ),
@@ -138,7 +139,11 @@ class PhoneNumberScreen extends StatelessWidget {
                         child: TextField(
                           controller: vm.phoneController,
                           keyboardType: TextInputType.phone,
-                          style: TextStyle(fontSize: FontSizes.f16),
+                          style: TextStyle(
+                            fontSize: FontSizes.f16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
                           decoration: InputDecoration(
                             hintText: 'xxxxxxxxxx',
                             hintStyle: TextStyle(color: AppColors.grey2),
@@ -167,14 +172,19 @@ class PhoneNumberScreen extends StatelessWidget {
                     onPressed: () async {
                       try {
                         await vm.savePhoneNumber();
+                        // Success message optional
+                        // showCustomSnackBar(context, 'Phone number saved successfully!');
                         Nav.push(context, BirthDateScreen());
                       } catch (e) {
-                        ScaffoldMessenger.of(
+                        showCustomSnackBar(
                           context,
-                        ).showSnackBar(SnackBar(content: Text(e.toString())));
+                          e.toString(),
+                          isError: true,
+                        );
                       }
                     },
                   ),
+
                   SizedBox(height: 16.h),
                 ],
               ),

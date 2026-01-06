@@ -9,6 +9,7 @@ import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/onboarding/nationality_residence_viewmodel.dart';
 import 'package:mvtravel/views/onboarding/purpose_of_visit.dart';
+import 'package:mvtravel/widgets/message.dart';
 import 'package:provider/provider.dart';
 
 class NationalityResidenceScreen extends StatelessWidget {
@@ -32,7 +33,11 @@ class NationalityResidenceScreen extends StatelessWidget {
               actions: [
                 Padding(
                   padding: EdgeInsets.only(right: 16.w),
-                  child: SkipButton(onPressed: () {}),
+                  child: SkipButton(
+                    onPressed: () {
+                      Nav.push(context, VisitPurposeView());
+                    },
+                  ),
                 ),
               ],
             ),
@@ -231,7 +236,30 @@ class NationalityResidenceScreen extends StatelessWidget {
                     color: AppColors.blue3,
                     onPressed: () async {
                       final vm = context.read<NationalityResidenceViewModel>();
+
+                      // ✅ Validation
+                      if (!vm.isNationalityValid) {
+                        showCustomSnackBar(
+                          context,
+                          'Please select your nationality',
+                          isError: true,
+                        );
+                        return;
+                      }
+
+                      if (!vm.isResidenceValid) {
+                        showCustomSnackBar(
+                          context,
+                          'Please select your residence',
+                          isError: true,
+                        );
+                        return;
+                      }
+
+                      // Save to Firebase
                       await vm.saveToFirebase();
+
+                      // Navigate to next screen
                       Nav.push(context, VisitPurposeView());
                     },
                   ),

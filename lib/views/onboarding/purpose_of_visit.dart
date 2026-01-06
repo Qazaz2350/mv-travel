@@ -10,9 +10,6 @@ import 'package:mvtravel/commen/progress_indicator.dart';
 import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/onboarding/Purpose_of_visit_ViewModel.dart';
-import 'package:mvtravel/views/onboarding/Investment%20Details.dart';
-import 'package:mvtravel/views/onboarding/Work_Application_Details.dart';
-import 'package:mvtravel/views/onboarding/international_students_view.dart';
 import 'package:mvtravel/views/onboarding/travel_visit_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -43,12 +40,6 @@ class _VisitPurposeContent extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 22.sp),
           onPressed: () => Nav.pop(context),
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 16.w),
-            child: SkipButton(onPressed: () {}),
-          ),
-        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(24.w),
@@ -59,7 +50,7 @@ class _VisitPurposeContent extends StatelessWidget {
             SizedBox(height: 32.h),
 
             // return Scaffold(
-            //   backgroundColor: AppColors.white,
+            //   backgroundColor: AppColors.white,A
             //   appBar: AppBar(
             //     backgroundColor: AppColors.white,
             //     elevation: 0,

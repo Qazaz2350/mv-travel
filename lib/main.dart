@@ -6,7 +6,6 @@ import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 import 'package:mvtravel/view_model/onboarding/Purpose_of_visit_ViewModel.dart';
 import 'package:mvtravel/view_model/onboarding/splash_view_model.dart';
 import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
-import 'package:mvtravel/views/apply_for_visa/personal_details.dart';
 import 'package:mvtravel/views/home/home_dashboard.dart';
 import 'package:mvtravel/views/onboarding/onboarding.dart';
 import 'package:mvtravel/views/onboarding/splash_screen.dart';
@@ -54,8 +53,8 @@ class MyApp extends StatelessWidget {
             ),
           );
         },
-        // child: const DetailStepView(),
-        child: const HomePageView(),
+        // child: const OnboardingScreen(),
+        child: const OnboardingScreen(),
       ),
     );
   }

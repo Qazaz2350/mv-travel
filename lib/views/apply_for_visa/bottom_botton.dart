@@ -48,22 +48,27 @@ class BottomButtons extends StatelessWidget {
         bgColor: AppColors.blue2,
         textColor: AppColors.white,
         onTap: () async {
-          // Move to next step with validation
-          vm.nextStep(context);
+          final detailVM = context.read<DetailViewModel>();
 
-          // Submit the form
-          await context.read<DetailViewModel>().submitForm(
+          // ✅ Submit form with validation
+          await detailVM.submitFormWithValidation(
             context,
             country: country,
             city: city,
             flag: flag,
           );
 
-          // Fetch visas after submission
-          context.read<VisaTrackingViewModel>().fetchVisas();
+          // Only move to next step and clear form if form is valid
+          if (detailVM.validateForm()) {
+            // Move to next step
+            vm.nextStep(context);
 
-          // Clear the form
-          context.read<DetailViewModel>().clearForm();
+            // Fetch visas after submission
+            context.read<VisaTrackingViewModel>().fetchVisas();
+
+            // Clear the form
+            detailVM.clearForm();
+          }
         },
       ),
     );

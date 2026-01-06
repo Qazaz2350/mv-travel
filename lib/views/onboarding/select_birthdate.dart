@@ -10,6 +10,7 @@ import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/onboarding/birthdate_viewmodel.dart';
 import 'package:mvtravel/views/onboarding/nationality_residence.dart';
+import 'package:mvtravel/widgets/message.dart';
 import 'package:provider/provider.dart';
 
 class BirthDateScreen extends StatelessWidget {
@@ -35,7 +36,7 @@ class BirthDateScreen extends StatelessWidget {
                   padding: EdgeInsets.only(right: 16.w),
                   child: SkipButton(
                     onPressed: () {
-                      NationalityResidenceScreen();
+                      Nav.push(context, NationalityResidenceScreen());
                     },
                   ),
                 ),
@@ -94,6 +95,17 @@ class BirthDateScreen extends StatelessWidget {
                     color: AppColors.blue3,
                     onPressed: () async {
                       final vm = context.read<BirthDateViewModel>();
+
+                      // ✅ Validation: check if birth date is selected
+                      if (!vm.isValid) {
+                        showCustomSnackBar(
+                          context,
+                          'Please select your birth date',
+                          isError: true,
+                        );
+                        return;
+                      }
+
                       final user = FirebaseAuth.instance.currentUser;
 
                       await FirebaseFirestore.instance
@@ -104,6 +116,7 @@ class BirthDateScreen extends StatelessWidget {
                       Nav.push(context, NationalityResidenceScreen());
                     },
                   ),
+
                   SizedBox(height: 16.h),
                 ],
               ),

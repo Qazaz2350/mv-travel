@@ -99,6 +99,7 @@ class DetailViewModel extends ChangeNotifier {
   final emailController = TextEditingController();
   final passportController = TextEditingController();
   final addressController = TextEditingController();
+  final phonecode = TextEditingController();
   final phoneController = TextEditingController();
   final dobController = TextEditingController();
 
@@ -118,6 +119,7 @@ class DetailViewModel extends ChangeNotifier {
     addressController.dispose();
     phoneController.dispose();
     dobController.dispose();
+    phonecode.dispose();
   }
 
   String? validateFullName() =>
@@ -267,6 +269,7 @@ class DetailViewModel extends ChangeNotifier {
         'createdAt': FieldValue.serverTimestamp(),
         'applicationId': generateRandomId(),
         'visaFlag': flag,
+        'visaPhoneCode': selectedCountryCode,
       };
 
       await FirebaseFirestore.instance

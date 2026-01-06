@@ -306,11 +306,13 @@ class DetailStepView extends StatelessWidget {
   }
 
   Widget _phoneField(DetailViewModel vm) {
-    // Find the DropdownMenuItem that matches selectedCountryCode
-    final selectedItem = AppLists.countries.firstWhere(
+    // Ensure selectedCountryCode exists in the list
+    final isValidCode = AppLists.countries.any(
       (c) => c['code'] == vm.selectedCountryCode,
-      orElse: () => AppLists.countries.first,
     );
+    if (!isValidCode) {
+      vm.selectedCountryCode = AppLists.countries.first['code']!;
+    }
 
     return Row(
       children: [
@@ -318,8 +320,7 @@ class DetailStepView extends StatelessWidget {
           flex: 3,
           child: DropdownButtonFormField2<String>(
             isExpanded: true,
-            value:
-                "${selectedItem['flag']} ${selectedItem['code']}", // show flag + code
+            value: vm.selectedCountryCode, // store only code
 
             decoration: InputDecoration(
               filled: true,
@@ -350,9 +351,9 @@ class DetailStepView extends StatelessWidget {
             items: AppLists.countries
                 .map(
                   (country) => DropdownMenuItem(
-                    value: "${country['flag']} ${country['code']}",
+                    value: country['code'], // only code is stored
                     child: Text(
-                      "${country['flag']} (${country['code']})",
+                      "${country['flag']} (${country['code']})", // UI shows flag
                       style: TextStyle(
                         fontSize: FontSizes.f14,
                         color: AppColors.grey2,
@@ -363,8 +364,7 @@ class DetailStepView extends StatelessWidget {
                 .toList(),
             onChanged: (value) {
               if (value != null) {
-                // store only the code
-                vm.selectedCountryCode = value.split(' ').last;
+                vm.selectedCountryCode = value; // update ViewModel directly
                 vm.notifyListeners();
               }
             },
