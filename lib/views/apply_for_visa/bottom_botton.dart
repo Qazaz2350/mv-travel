@@ -119,16 +119,22 @@ class BottomButtons extends StatelessWidget {
               text: 'Confirm',
               bgColor: AppColors.blue2,
               textColor: AppColors.white,
-              icon: Icons.check,
+              icon: vm.photoFile != null && vm.photoUrl == null
+                  ? null
+                  : Icons.check,
+              child: vm.photoFile != null && vm.photoUrl == null
+                  ? SizedBox(
+                      height: 24.h,
+                      width: 24.h,
+                      child: CircularProgressIndicator(
+                        color: AppColors.white,
+                        strokeWidth: 2.5,
+                      ),
+                    )
+                  : null,
               onTap: () {
-                if (vm.photoFile != null && vm.photoUrl == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Photo is still uploading, please wait...'),
-                    ),
-                  );
-                  return;
-                }
+                if (vm.photoFile != null && vm.photoUrl == null)
+                  return; // still uploading
                 vm.nextStep(context);
               },
             ),
@@ -139,7 +145,6 @@ class BottomButtons extends StatelessWidget {
   }
 
   Widget _defaultButtons(BuildContext context) {
-    // ✅ Step 3: Confirm Payment — NO Firestore write, only navigate
     if (vm.currentStep == 3) {
       return Container(
         width: double.infinity,
@@ -152,7 +157,6 @@ class BottomButtons extends StatelessWidget {
             bgColor: AppColors.blue2,
             textColor: AppColors.white,
             onTap: () {
-              // Simply navigate to Home
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => HomePageView()),
@@ -178,20 +182,42 @@ class BottomButtons extends StatelessWidget {
               bgColor: AppColors.blue1,
               textColor: AppColors.white,
               imageIconColor: AppColors.blue2,
+              icon:
+                  ((vm.currentStep == 0 &&
+                          vm.photoFile != null &&
+                          vm.photoUrl != null) ||
+                      (vm.currentStep == 1 &&
+                          vm.passportFile != null &&
+                          vm.passportUrl != null))
+                  ? Icons.check
+                  : null,
+              child:
+                  ((vm.currentStep == 0 &&
+                          vm.photoFile != null &&
+                          vm.photoUrl == null) ||
+                      (vm.currentStep == 1 &&
+                          vm.passportFile != null &&
+                          vm.passportUrl == null))
+                  ? SizedBox(
+                      height: 24.h,
+                      width: 24.h,
+                      child: CircularProgressIndicator(
+                        color: AppColors.white,
+                        strokeWidth: 2.5,
+                      ),
+                    )
+                  : null,
               onTap: () {
+                if ((vm.currentStep == 0 &&
+                        vm.photoFile != null &&
+                        vm.photoUrl == null) ||
+                    (vm.currentStep == 1 &&
+                        vm.passportFile != null &&
+                        vm.passportUrl == null)) {
+                  return; // still uploading
+                }
                 if ((vm.currentStep == 0 && vm.photoFile != null) ||
                     (vm.currentStep == 1 && vm.passportFile != null)) {
-                  if ((vm.currentStep == 0 && vm.photoUrl == null) ||
-                      (vm.currentStep == 1 && vm.passportUrl == null)) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'File is still uploading, please wait...',
-                        ),
-                      ),
-                    );
-                    return;
-                  }
                   vm.nextStep(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -213,9 +239,9 @@ class BottomButtons extends StatelessWidget {
               imageIcon: AssetImage('assets/home/applyphoto.png'),
               onTap: () {
                 if (vm.currentStep == 1) {
-                  vm.pickFromCamera(false); // passport
+                  vm.pickFromCamera(false);
                 } else if (vm.currentStep == 0) {
-                  vm.pickFromCamera(true); // photo
+                  vm.pickFromCamera(true);
                 }
               },
             ),

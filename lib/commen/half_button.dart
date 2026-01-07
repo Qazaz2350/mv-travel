@@ -15,8 +15,11 @@ class ActionButton extends StatelessWidget {
 
   // Optional image icon
   final ImageProvider? imageIcon;
-  final Color? imageIconColor; // new color for image icon
+  final Color? imageIconColor;
   final double? imageIconSize;
+
+  // Optional custom child (for loading spinner)
+  final Widget? child;
 
   const ActionButton({
     Key? key,
@@ -30,6 +33,7 @@ class ActionButton extends StatelessWidget {
     this.imageIcon,
     this.imageIconColor,
     this.imageIconSize,
+    this.child,
   }) : super(key: key);
 
   @override
@@ -44,37 +48,38 @@ class ActionButton extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // If IconData is provided
-          if (icon != null) ...[
-            Icon(icon, color: iconColor ?? textColor, size: iconSize ?? 20.sp),
-            SizedBox(width: 8.w),
-          ],
-
-          // If ImageIcon is provided
-          if (imageIcon != null) ...[
-            ImageIcon(
-              imageIcon!,
-              color: imageIconColor ?? textColor,
-              size: imageIconSize ?? 20.sp,
-            ),
-            SizedBox(width: 8.w),
-          ],
-
-          // Text always present
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: FontSizes.f14,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
+      child:
+          child ??
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (icon != null) ...[
+                Icon(
+                  icon,
+                  color: iconColor ?? textColor,
+                  size: iconSize ?? 20.sp,
+                ),
+                SizedBox(width: 8.w),
+              ],
+              if (imageIcon != null) ...[
+                ImageIcon(
+                  imageIcon!,
+                  color: imageIconColor ?? textColor,
+                  size: imageIconSize ?? 20.sp,
+                ),
+                SizedBox(width: 8.w),
+              ],
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: FontSizes.f14,
+                  fontWeight: FontWeight.w600,
+                  color: textColor,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }
