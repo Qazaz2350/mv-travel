@@ -10,6 +10,7 @@ class UploadCard extends StatelessWidget {
   final File? file;
   final VoidCallback onCamera;
   final VoidCallback onGallery;
+  final bool isUploading;
   final VoidCallback onRemove;
   final String? errorText; // <-- Added for validation message
 
@@ -22,6 +23,7 @@ class UploadCard extends StatelessWidget {
     required this.onGallery,
     required this.onRemove,
     this.errorText,
+    this.isUploading = false,
   });
 
   @override

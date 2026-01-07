@@ -81,7 +81,15 @@ class _ApplyProcessView extends StatelessWidget {
           ),
           // Text('${country}${city}', style: TextStyle(fontSize: FontSizes.f16)),
           SizedBox(height: 16.h),
-          Expanded(child: _buildStepContent(vm, context)),
+          Expanded(
+            child: _buildStepContent(
+              vm,
+              context,
+              country: country,
+              city: city,
+              flag: flag,
+            ),
+          ),
           BottomButtons(vm: vm, country: country, city: city, flag: flag),
         ],
       ),
@@ -149,7 +157,13 @@ class _ApplyProcessView extends StatelessWidget {
 
   // ================= CONTENT =================
 
-  Widget _buildStepContent(ApplyProcessViewModel vm, BuildContext context) {
+  Widget _buildStepContent(
+    ApplyProcessViewModel vm,
+    BuildContext context, {
+    required String country,
+    required String city,
+    required String flag,
+  }) {
     switch (vm.currentStep) {
       case 0:
         return UploadCard(
@@ -157,6 +171,8 @@ class _ApplyProcessView extends StatelessWidget {
           description:
               'Lorem ipsum dolor sit amet consectetur. Vestibulum malesuada in amet urna.',
           file: vm.photoFile,
+          isUploading:
+              vm.photoFile != null && vm.photoUrl == null, // show loader
           onRemove: vm.removePhoto,
           onCamera: () => vm.pickFromCamera(true),
           onGallery: () => vm.pickFromGallery(true),
@@ -168,18 +184,15 @@ class _ApplyProcessView extends StatelessWidget {
           description:
               'Please upload a clear copy of your passport. Make sure all details are visible.',
           file: vm.passportFile,
+          isUploading:
+              vm.passportFile != null && vm.passportUrl == null, // show loader
           onRemove: vm.removePassport,
           onCamera: () => vm.pickFromCamera(false),
           onGallery: () => vm.pickFromGallery(false),
-          
         );
 
       case 2:
-        return DetailStepView(
-          country: country, // from ApplyProcess or wherever you have it
-          city: city, // from ApplyProcess or wherever you have it
-          flag: flag,
-        );
+        return DetailStepView(country: country, city: city, flag: flag);
 
       case 3:
         return Paymentdetails();

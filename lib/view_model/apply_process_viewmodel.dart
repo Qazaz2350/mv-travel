@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mvtravel/views/apply_for_visa/app_lists.dart';
+import 'package:provider/provider.dart';
 
 class ApplyProcessViewModel extends ChangeNotifier {
   final ImagePicker picker = ImagePicker();
@@ -20,7 +21,9 @@ class ApplyProcessViewModel extends ChangeNotifier {
   File? get photoFile => model.photoFile;
   File? get passportFile => model.passportFile;
 
-  /// ✅ Updated nextStep to validate files
+  String? get photoUrl => model.photoUrl;
+  String? get passportUrl => model.passportUrl;
+
   void nextStep(BuildContext context) {
     if (model.currentStep == 0 && model.photoFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -57,39 +60,51 @@ class ApplyProcessViewModel extends ChangeNotifier {
 
   void removePhoto() {
     model.photoFile = null;
+    model.photoUrl = null; // clear URL as well
     notifyListeners();
   }
 
   void removePassport() {
     model.passportFile = null;
+    model.passportUrl = null; // clear URL as well
     notifyListeners();
   }
 
   Future<void> pickFromGallery(bool isPhoto) async {
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      if (isPhoto) {
-        model.photoFile = File(image.path);
-      } else {
-        model.passportFile = File(image.path);
-      }
-      notifyListeners();
+      await _handlePickedFile(File(image.path), isPhoto);
     }
   }
 
   Future<void> pickFromCamera(bool isPhoto) async {
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
     if (image != null) {
-      if (isPhoto) {
-        model.photoFile = File(image.path);
-      } else {
-        model.passportFile = File(image.path);
-      }
-      notifyListeners();
+      await _handlePickedFile(File(image.path), isPhoto);
     }
   }
 
-  /// ✅ Upload image to Firebase Storage and return URL
+  /// ✅ Handles both setting local file and uploading to Firebase
+  Future<void> _handlePickedFile(File file, bool isPhoto) async {
+    if (isPhoto) {
+      model.photoFile = file;
+      notifyListeners();
+      final url = await uploadFileToFirebase(file, 'photos');
+      if (url != null) {
+        model.photoUrl = url;
+        notifyListeners();
+      }
+    } else {
+      model.passportFile = file;
+      notifyListeners();
+      final url = await uploadFileToFirebase(file, 'passports');
+      if (url != null) {
+        model.passportUrl = url;
+        notifyListeners();
+      }
+    }
+  }
+
   Future<String?> uploadFileToFirebase(File file, String folder) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -170,11 +185,6 @@ class DetailViewModel extends ChangeNotifier {
       ? 'Select visa type'
       : null;
 
-  String? validatePhoto() => photoDocument == null ? 'Upload your photo' : null;
-
-  String? validatePassportDocument() =>
-      passportDocument == null ? 'Upload your passport' : null;
-
   bool validateForm() {
     final validators = [
       validateFullName(),
@@ -185,8 +195,6 @@ class DetailViewModel extends ChangeNotifier {
       validateDOB(),
       validateNationality(),
       validateVisaType(),
-      validatePhoto(),
-      validatePassportDocument(),
     ];
     return !validators.any((e) => e != null);
   }
@@ -274,26 +282,8 @@ class DetailViewModel extends ChangeNotifier {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
-
-      String? photoUrl;
-      String? passportUrl;
-
-      // Upload images to Firebase Storage
-      if (photoDocument != null) {
-        final uploadVM = ApplyProcessViewModel();
-        photoUrl = await uploadVM.uploadFileToFirebase(
-          photoDocument!,
-          'user_photos',
-        );
-      }
-
-      if (passportDocument != null) {
-        final uploadVM = ApplyProcessViewModel();
-        passportUrl = await uploadVM.uploadFileToFirebase(
-          passportDocument!,
-          'user_passports',
-        );
-      }
+      // ✅ Get URLs from ApplyProcessViewModel
+      final applyVM = context.read<ApplyProcessViewModel>();
 
       final formData = {
         'visaFullName': fullNameController.text,
@@ -310,8 +300,11 @@ class DetailViewModel extends ChangeNotifier {
         'applicationId': generateRandomId(),
         'visaFlag': flag,
         'visaPhoneCode': selectedCountryCode,
-        'photoUrl': photoUrl ?? '',
-        'passportUrl': passportUrl ?? '',
+        // 'photoUrl': photoUrl ?? '',
+        // 'passportUrl': passportUrl ?? '',
+        'photoUrl': applyVM.photoUrl ?? '', // ✅ Save uploaded photo URL
+        'passportUrl':
+            applyVM.passportUrl ?? '', // ✅ Save uploaded passport URL
       };
 
       await FirebaseFirestore.instance

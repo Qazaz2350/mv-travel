@@ -5,7 +5,17 @@ class ApplyProcessModel {
   File? photoFile;
   File? passportFile;
 
-  ApplyProcessModel({this.currentStep = 0, this.photoFile, this.passportFile});
+  /// ✅ Fields to store uploaded file URLs
+  String? photoUrl;
+  String? passportUrl;
+
+  ApplyProcessModel({
+    this.currentStep = 0,
+    this.photoFile,
+    this.passportFile,
+    this.photoUrl,
+    this.passportUrl,
+  });
 }
 
 class DetailModel {
@@ -17,8 +27,6 @@ class DetailModel {
   String address;
   DateTime? dateOfBirth;
   String phoneNumber;
-  String? passportDocumentPath;
-  String? photoPath;
 
   DetailModel({
     required this.fullName,
@@ -29,11 +37,8 @@ class DetailModel {
     required this.address,
     this.dateOfBirth,
     required this.phoneNumber,
-    this.passportDocumentPath,
-    this.photoPath,
   });
 
-  /// Convert model to map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'fullName': fullName,
@@ -44,12 +49,9 @@ class DetailModel {
       'address': address,
       'dateOfBirth': dateOfBirth?.toIso8601String(),
       'phoneNumber': phoneNumber,
-      'passportDocumentPath': passportDocumentPath,
-      'photoPath': photoPath,
     };
   }
 
-  /// Create model from Firestore map
   factory DetailModel.fromMap(Map<String, dynamic> map) {
     return DetailModel(
       fullName: map['fullName'],
@@ -62,8 +64,6 @@ class DetailModel {
           ? DateTime.parse(map['dateOfBirth'])
           : null,
       phoneNumber: map['phoneNumber'],
-      passportDocumentPath: map['passportDocumentPath'],
-      photoPath: map['photoPath'],
     );
   }
 }

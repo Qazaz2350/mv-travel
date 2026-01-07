@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/commen/half_button.dart';
-import 'package:mvtravel/utilis/Nav.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
@@ -24,18 +23,10 @@ class BottomButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (vm.currentStep == 2) {
-      return _thirdStepConfirm(context);
-    }
-
+    if (vm.currentStep == 2) return _thirdStepConfirm(context);
     if (vm.currentStep == 0) {
-      if (vm.photoFile == null) {
-        return _uploadButtons();
-      } else {
-        return _confirmButtons(context);
-      }
+      return vm.photoFile == null ? _uploadButtons() : _confirmButtons(context);
     }
-
     return _defaultButtons(context);
   }
 
@@ -50,29 +41,14 @@ class BottomButtons extends StatelessWidget {
         onTap: () async {
           final detailVM = context.read<DetailViewModel>();
 
-          // ✅ Upload files first if not uploaded yet
-          if (detailVM.photoDocument != null ||
-              detailVM.passportDocument != null) {
-            final uploadVM = ApplyProcessViewModel();
-
-            if (detailVM.photoDocument != null) {
-              final url = await uploadVM.uploadFileToFirebase(
-                detailVM.photoDocument!,
-                'user_photos',
-              );
-              debugPrint('Photo uploaded: $url');
-            }
-
-            if (detailVM.passportDocument != null) {
-              final url = await uploadVM.uploadFileToFirebase(
-                detailVM.passportDocument!,
-                'user_passports',
-              );
-              debugPrint('Passport uploaded: $url');
-            }
+          if ((detailVM.photoDocument != null && vm.photoUrl == null) ||
+              (detailVM.passportDocument != null && vm.passportUrl == null)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Uploading files, please wait...')),
+            );
+            return;
           }
 
-          // Submit form with validation
           await detailVM.submitFormWithValidation(
             context,
             country: country,
@@ -81,13 +57,8 @@ class BottomButtons extends StatelessWidget {
           );
 
           if (detailVM.validateForm()) {
-            // Move to next step
             vm.nextStep(context);
-
-            // Fetch visas after submission
             context.read<VisaTrackingViewModel>().fetchVisas();
-
-            // Clear the form
             detailVM.clearForm();
           }
         },
@@ -149,7 +120,17 @@ class BottomButtons extends StatelessWidget {
               bgColor: AppColors.blue2,
               textColor: AppColors.white,
               icon: Icons.check,
-              onTap: () => vm.nextStep(context),
+              onTap: () {
+                if (vm.photoFile != null && vm.photoUrl == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Photo is still uploading, please wait...'),
+                    ),
+                  );
+                  return;
+                }
+                vm.nextStep(context);
+              },
             ),
           ),
         ],
@@ -158,6 +139,7 @@ class BottomButtons extends StatelessWidget {
   }
 
   Widget _defaultButtons(BuildContext context) {
+    // ✅ Step 3: Confirm Payment — NO Firestore write, only navigate
     if (vm.currentStep == 3) {
       return Container(
         width: double.infinity,
@@ -166,35 +148,11 @@ class BottomButtons extends StatelessWidget {
         child: SizedBox(
           width: double.infinity,
           child: ActionButton(
-            text: ' Confirm Your Apply',
+            text: 'Confirm Your Payment',
             bgColor: AppColors.blue2,
             textColor: AppColors.white,
-            onTap: () async {
-              final detailVM = context.read<DetailViewModel>();
-
-              // ✅ Upload files if they exist
-              if (detailVM.photoDocument != null ||
-                  detailVM.passportDocument != null) {
-                final uploadVM = ApplyProcessViewModel();
-
-                if (detailVM.photoDocument != null) {
-                  final url = await uploadVM.uploadFileToFirebase(
-                    detailVM.photoDocument!,
-                    'user_photos',
-                  );
-                  debugPrint('Photo uploaded: $url');
-                }
-
-                if (detailVM.passportDocument != null) {
-                  final url = await uploadVM.uploadFileToFirebase(
-                    detailVM.passportDocument!,
-                    'user_passports',
-                  );
-                  debugPrint('Passport uploaded: $url');
-                }
-              }
-
-              // Navigate to Home
+            onTap: () {
+              // Simply navigate to Home
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => HomePageView()),
@@ -223,6 +181,17 @@ class BottomButtons extends StatelessWidget {
               onTap: () {
                 if ((vm.currentStep == 0 && vm.photoFile != null) ||
                     (vm.currentStep == 1 && vm.passportFile != null)) {
+                  if ((vm.currentStep == 0 && vm.photoUrl == null) ||
+                      (vm.currentStep == 1 && vm.passportUrl == null)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'File is still uploading, please wait...',
+                        ),
+                      ),
+                    );
+                    return;
+                  }
                   vm.nextStep(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -240,7 +209,7 @@ class BottomButtons extends StatelessWidget {
             child: ActionButton(
               text: 'Live Capture',
               bgColor: AppColors.grey,
-              textColor: AppColors.black,
+              textColor: Colors.black,
               imageIcon: AssetImage('assets/home/applyphoto.png'),
               onTap: () {
                 if (vm.currentStep == 1) {

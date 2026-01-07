@@ -154,61 +154,35 @@ class DetailStepView extends StatelessWidget {
             _phoneField(vm),
             SizedBox(height: 16.h),
 
-            UploadFieldWidget(
-              label: 'Upload Passport Document',
-              acceptedFormats: 'Accept formats JPG, PNG',
-              file: vm.passportDocument,
-              fileName: vm.passportDocument != null
-                  ? vm.passportDocument!.path.split('/').last
-                  : null,
-              onTap: () => vm.pickImage(true),
-              onRemove: () {
-                vm.passportDocument = null;
-                vm.notifyListeners();
-              },
-            ),
+            // UploadFieldWidget(
+            //   label: 'Upload Passport Document',
+            //   acceptedFormats: 'Accept formats JPG, PNG',
+            //   file: vm.passportDocument,
+            //   fileName: vm.passportDocument != null
+            //       ? vm.passportDocument!.path.split('/').last
+            //       : null,
+            //   onTap: () => vm.pickImage(true),
+            //   onRemove: () {
+            //     vm.passportDocument = null;
+            //     vm.notifyListeners();
+            //   },
+            // ),
             SizedBox(height: 16.h),
 
-            UploadFieldWidget(
-              label: 'Photo',
-              acceptedFormats: 'Accept formats JPG, PNG',
-              file: vm.photoDocument,
-              fileName: vm.photoDocument != null
-                  ? vm.photoDocument!.path.split('/').last
-                  : null,
-              onTap: () => vm.pickImage(false),
-              onRemove: () {
-                vm.photoDocument = null;
-                vm.notifyListeners();
-              },
-            ),
-            SizedBox(height: 24.h),
-
-            // Center(
-            //   child: SizedBox(
-            //     width: double.infinity,
-            //     height: 35.h,
-            //     child: ElevatedButton(
-            //       onPressed: () => vm.submitForm(
-            //         context,
-            //         country: country,
-            //         city: city,
-            //         flag: flag,
-            //       ),
-            //       style: ElevatedButton.styleFrom(
-            //         backgroundColor: AppColors.blue2,
-            //         foregroundColor: Colors.white,
-            //         shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(20.r),
-            //         ),
-            //       ),
-            //       child: const Text(
-            //         'save ',
-            //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            //       ),
-            //     ),
-            //   ),
+            // UploadFieldWidget(
+            //   label: 'Photo',
+            //   acceptedFormats: 'Accept formats JPG, PNG',
+            //   file: vm.photoDocument,
+            //   fileName: vm.photoDocument != null
+            //       ? vm.photoDocument!.path.split('/').last
+            //       : null,
+            //   onTap: () => vm.pickImage(false),
+            //   onRemove: () {
+            //     vm.photoDocument = null;
+            //     vm.notifyListeners();
+            //   },
             // ),
+            SizedBox(height: 24.h),
           ],
         ),
       ),
