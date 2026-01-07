@@ -1,19 +1,280 @@
 import 'package:flutter/material.dart';
-import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/view_model/documents_view_model.dart';
+import 'package:provider/provider.dart';
 
-class Documents extends StatelessWidget {
-  const Documents({super.key});
+class DocumentsScreen extends StatelessWidget {
+  const DocumentsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: Center(
-        child: Center(
-          child: Text(
-            'firestore storage is pending for setup ',
-            style: TextStyle(fontSize: 15, color: Colors.blue),
+    return ChangeNotifierProvider(
+      create: (_) => DocumentsViewModel()..fetchDocuments(),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF8F9FD),
+        appBar: AppBar(
+          title: const Text(
+            'Documents',
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: Consumer<DocumentsViewModel>(
+          builder: (context, vm, child) {
+            if (vm.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (vm.errorMessage != null) {
+              return Center(child: Text('Error: ${vm.errorMessage}'));
+            }
+
+            if (vm.documents.isEmpty) {
+              return const Center(child: Text('No documents found'));
+            }
+
+            // Split documents by type
+            final workDocs = vm.documents
+                .where((doc) => doc.type == 'work')
+                .toList();
+            final investmentDocs = vm.documents
+                .where((doc) => doc.type == 'investment')
+                .toList();
+            final userDocs = vm.documents
+                .where((doc) => doc.type == 'user')
+                .toList();
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ---------------- User Documents ----------------
+                  if (userDocs.isNotEmpty) ...[
+                    _buildSectionHeader('User Documents', Colors.deepPurple),
+                    const SizedBox(height: 12),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: userDocs
+                            .asMap()
+                            .entries
+                            .map(
+                              (entry) => _buildDocumentItem(
+                                entry.value,
+                                isLast: entry.key == userDocs.length - 1,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+
+                  // ---------------- Work Documents ----------------
+                  if (workDocs.isNotEmpty) ...[
+                    _buildSectionHeader('Work Documents', Colors.blueAccent),
+                    const SizedBox(height: 12),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: workDocs
+                            .asMap()
+                            .entries
+                            .map(
+                              (entry) => _buildDocumentItem(
+                                entry.value,
+                                isLast: entry.key == workDocs.length - 1,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+
+                  // ---------------- Investment Documents ----------------
+                  if (investmentDocs.isNotEmpty) ...[
+                    _buildSectionHeader('Investment Documents', Colors.green),
+                    const SizedBox(height: 12),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: investmentDocs
+                            .asMap()
+                            .entries
+                            .map(
+                              (entry) => _buildDocumentItem(
+                                entry.value,
+                                isLast: entry.key == investmentDocs.length - 1,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 20,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDocumentItem(DocumentItem doc, {required bool isLast}) {
+    IconData icon;
+    Color iconColor;
+
+    // Determine icon based on file extension or type
+    if (doc.type == 'user') {
+      icon = Icons.person_outline;
+      iconColor = Colors.deepPurple;
+    } else if (doc.name.toLowerCase().endsWith('.pdf')) {
+      icon = Icons.picture_as_pdf_outlined;
+      iconColor = Colors.red;
+    } else if (doc.name.toLowerCase().endsWith('.docx') ||
+        doc.name.toLowerCase().endsWith('.doc')) {
+      icon = Icons.description_outlined;
+      iconColor = Colors.blue;
+    } else if (doc.name.toLowerCase().endsWith('.jpg') ||
+        doc.name.toLowerCase().endsWith('.png')) {
+      icon = Icons.image_outlined;
+      iconColor = Colors.orange;
+    } else {
+      icon = Icons.insert_drive_file_outlined;
+      iconColor = Colors.grey;
+    }
+
+    // For demo purposes, assume documents are checked
+    // You can add a `isChecked` property to DocumentItem model
+    final isChecked = true; // Replace with: doc.isChecked ?? false
+
+    return Container(
+      decoration: BoxDecoration(
+        border: isLast
+            ? null
+            : Border(
+                bottom: BorderSide(
+                  color: Colors.grey.withOpacity(0.1),
+                  width: 1,
+                ),
+              ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Row(
+          children: [
+            // Document Icon
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: iconColor, size: 24),
+            ),
+            const SizedBox(width: 16),
+
+            // Document Name
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    doc.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: isChecked ? Colors.black87 : Colors.black54,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    doc.type == 'work'
+                        ? 'Work Document'
+                        : doc.type == 'investment'
+                        ? 'Investment Document'
+                        : 'User Document',
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+            ),
+
+            // Checkmark
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: isChecked ? Colors.green : Colors.transparent,
+                border: Border.all(
+                  color: isChecked ? Colors.green : Colors.grey.shade300,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: isChecked
+                  ? const Icon(Icons.check, color: Colors.white, size: 18)
+                  : null,
+            ),
+          ],
         ),
       ),
     );

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
-
-import 'package:mvtravel/views/home/tabbar/tabbar.dart';
-
 import 'package:mvtravel/views/home/floating_buttons_widget.dart';
+import 'package:mvtravel/views/home/tabbar/tabbar.dart';
 import 'package:mvtravel/views/home/home_header_widget.dart';
 import 'package:mvtravel/views/home/searchtab.dart';
 import 'package:mvtravel/widgets/shimmer.dart';

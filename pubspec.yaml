@@ -48,6 +48,8 @@ dependencies:
   dropdown_button2:
   shimmer:
   rename_app: ^1.6.5  
+  url_launcher:
+  # photoview:
   
 
 dev_dependencies:

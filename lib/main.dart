@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/landing.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
+import 'package:mvtravel/view_model/documents_view_model.dart';
 import 'package:mvtravel/view_model/onboarding/Purpose_of_visit_ViewModel.dart';
 import 'package:mvtravel/view_model/onboarding/splash_view_model.dart';
+import 'package:mvtravel/view_model/profile_viewmodel.dart';
 import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
 import 'package:mvtravel/views/auth/signin.dart';
 import 'package:mvtravel/views/home/home_dashboard.dart';
@@ -40,6 +42,8 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (_) => DetailViewModel()),
               ChangeNotifierProvider(create: (_) => VisitPurposeViewModel()),
               ChangeNotifierProvider(create: (_) => VisaTrackingViewModel()),
+              ChangeNotifierProvider(create: (_) => UserProfileViewModel()),
+              ChangeNotifierProvider(create: (_) => DocumentsViewModel()),
             ],
             child: MaterialApp(
               home: child,

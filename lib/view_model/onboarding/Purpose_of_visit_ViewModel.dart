@@ -48,13 +48,22 @@ class VisitPurposeViewModel extends ChangeNotifier {
   bool get canProceed => _selectedPurposeId != null;
 
   /// Save the selected purpose to Firebase under current user's uid
+  /// Save the selected purpose to Firebase under current user's uid
   Future<void> saveSelectedPurpose() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null || _selectedPurposeId == null) return;
 
     try {
+      // Find the selected purpose object from the list
+      final selectedPurpose = purposes.firstWhere(
+        (p) => p.id == _selectedPurposeId,
+        orElse: () =>
+            VisitPurpose(id: '', imagePath: '', title: '', description: ''),
+      );
+
+      // Save only the title to Firestore
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
-        {'selectedPurpose': _selectedPurposeId},
+        {'visaType': selectedPurpose.title},
         SetOptions(merge: true), // keeps other data intact
       );
     } catch (e) {
