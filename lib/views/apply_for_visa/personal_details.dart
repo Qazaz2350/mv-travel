@@ -1,5 +1,5 @@
-// ignore_for_file: invalid_use_of_protected_member, dead_code, invalid_use_of_visible_for_testing_member, prefer_null_aware_operators
-import 'dart:io';
+// ignore_for_file: deprecated_member_use
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -87,7 +87,6 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Full Name
             AppTextField(
               label: 'Full Name',
               hint: 'Enter your full name',
@@ -95,7 +94,6 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Email
             AppTextField(
               label: 'Email Address',
               hint: 'you@example.com',
@@ -104,7 +102,6 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Nationality
             _dropdownField(
               context,
               'Nationality',
@@ -118,7 +115,6 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Passport Number
             AppTextField(
               label: 'Passport Number',
               hint: '**** **** **** ****',
@@ -126,7 +122,6 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Visa Type
             _dropdownField(
               context,
               'Visa Type',
@@ -140,7 +135,6 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Address
             AppTextField(
               label: 'Address',
               hint: 'address home town',
@@ -149,7 +143,6 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Date of Birth
             AppDateField(
               label: 'Birth Date',
               hint: 'Select your birth date',
@@ -158,11 +151,9 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Phone
             _phoneField(vm),
             SizedBox(height: 16.h),
 
-            /// Passport Upload
             UploadFieldWidget(
               label: 'Upload Passport Document',
               acceptedFormats: 'Accept formats JPG, PNG',
@@ -178,7 +169,6 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
 
-            /// Photo Upload
             UploadFieldWidget(
               label: 'Photo',
               acceptedFormats: 'Accept formats JPG, PNG',
@@ -194,13 +184,17 @@ class DetailStepView extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            /// Confirm Button
             // Center(
             //   child: SizedBox(
             //     width: double.infinity,
             //     height: 35.h,
             //     child: ElevatedButton(
-            //       onPressed: () => vm.submitForm(context),
+            //       onPressed: () => vm.submitForm(
+            //         context,
+            //         country: country,
+            //         city: city,
+            //         flag: flag,
+            //       ),
             //       style: ElevatedButton.styleFrom(
             //         backgroundColor: AppColors.blue2,
             //         foregroundColor: Colors.white,

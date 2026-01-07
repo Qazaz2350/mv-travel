@@ -32,6 +32,40 @@ class DetailModel {
     this.passportDocumentPath,
     this.photoPath,
   });
+
+  /// Convert model to map for Firestore
+  Map<String, dynamic> toMap() {
+    return {
+      'fullName': fullName,
+      'email': email,
+      'nationality': nationality,
+      'passportNumber': passportNumber,
+      'visaType': visaType,
+      'address': address,
+      'dateOfBirth': dateOfBirth?.toIso8601String(),
+      'phoneNumber': phoneNumber,
+      'passportDocumentPath': passportDocumentPath,
+      'photoPath': photoPath,
+    };
+  }
+
+  /// Create model from Firestore map
+  factory DetailModel.fromMap(Map<String, dynamic> map) {
+    return DetailModel(
+      fullName: map['fullName'],
+      email: map['email'],
+      nationality: map['nationality'],
+      passportNumber: map['passportNumber'],
+      visaType: map['visaType'],
+      address: map['address'],
+      dateOfBirth: map['dateOfBirth'] != null
+          ? DateTime.parse(map['dateOfBirth'])
+          : null,
+      phoneNumber: map['phoneNumber'],
+      passportDocumentPath: map['passportDocumentPath'],
+      photoPath: map['photoPath'],
+    );
+  }
 }
 
 class PaymentModel {

@@ -50,7 +50,29 @@ class BottomButtons extends StatelessWidget {
         onTap: () async {
           final detailVM = context.read<DetailViewModel>();
 
-          // ✅ Submit form with validation
+          // ✅ Upload files first if not uploaded yet
+          if (detailVM.photoDocument != null ||
+              detailVM.passportDocument != null) {
+            final uploadVM = ApplyProcessViewModel();
+
+            if (detailVM.photoDocument != null) {
+              final url = await uploadVM.uploadFileToFirebase(
+                detailVM.photoDocument!,
+                'user_photos',
+              );
+              debugPrint('Photo uploaded: $url');
+            }
+
+            if (detailVM.passportDocument != null) {
+              final url = await uploadVM.uploadFileToFirebase(
+                detailVM.passportDocument!,
+                'user_passports',
+              );
+              debugPrint('Passport uploaded: $url');
+            }
+          }
+
+          // Submit form with validation
           await detailVM.submitFormWithValidation(
             context,
             country: country,
@@ -58,7 +80,6 @@ class BottomButtons extends StatelessWidget {
             flag: flag,
           );
 
-          // Only move to next step and clear form if form is valid
           if (detailVM.validateForm()) {
             // Move to next step
             vm.nextStep(context);
@@ -148,18 +169,37 @@ class BottomButtons extends StatelessWidget {
             text: ' Confirm Your Apply',
             bgColor: AppColors.blue2,
             textColor: AppColors.white,
-            onTap: () {
-              if ((vm.photoFile != null || vm.passportFile != null)) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => HomePageView()),
-                  (route) => false,
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please upload the file first')),
-                );
+            onTap: () async {
+              final detailVM = context.read<DetailViewModel>();
+
+              // ✅ Upload files if they exist
+              if (detailVM.photoDocument != null ||
+                  detailVM.passportDocument != null) {
+                final uploadVM = ApplyProcessViewModel();
+
+                if (detailVM.photoDocument != null) {
+                  final url = await uploadVM.uploadFileToFirebase(
+                    detailVM.photoDocument!,
+                    'user_photos',
+                  );
+                  debugPrint('Photo uploaded: $url');
+                }
+
+                if (detailVM.passportDocument != null) {
+                  final url = await uploadVM.uploadFileToFirebase(
+                    detailVM.passportDocument!,
+                    'user_passports',
+                  );
+                  debugPrint('Passport uploaded: $url');
+                }
               }
+
+              // Navigate to Home
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => HomePageView()),
+                (route) => false,
+              );
             },
           ),
         ),

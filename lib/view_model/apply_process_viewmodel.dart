@@ -9,6 +9,7 @@ import 'package:mvtravel/model/apply_process_model.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mvtravel/views/apply_for_visa/app_lists.dart';
 
 class ApplyProcessViewModel extends ChangeNotifier {
@@ -21,7 +22,6 @@ class ApplyProcessViewModel extends ChangeNotifier {
 
   /// ✅ Updated nextStep to validate files
   void nextStep(BuildContext context) {
-    // Step 0 requires photo
     if (model.currentStep == 0 && model.photoFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -32,7 +32,6 @@ class ApplyProcessViewModel extends ChangeNotifier {
       return;
     }
 
-    // Step 1 requires passport
     if (model.currentStep == 1 && model.passportFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -43,7 +42,6 @@ class ApplyProcessViewModel extends ChangeNotifier {
       return;
     }
 
-    // Move to next step
     if (model.currentStep < 3) {
       model.currentStep++;
       notifyListeners();
@@ -88,6 +86,27 @@ class ApplyProcessViewModel extends ChangeNotifier {
         model.passportFile = File(image.path);
       }
       notifyListeners();
+    }
+  }
+
+  /// ✅ Upload image to Firebase Storage and return URL
+  Future<String?> uploadFileToFirebase(File file, String folder) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return null;
+
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(10000)}';
+      final ref = FirebaseStorage.instance.ref().child(
+        '$folder/${user.uid}/$fileName',
+      );
+      final uploadTask = ref.putFile(file);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('Error uploading file: $e');
+      return null;
     }
   }
 }
@@ -245,6 +264,7 @@ class DetailViewModel extends ChangeNotifier {
     return '$letterPart-$numberPart';
   }
 
+  /// ✅ Updated submitForm to upload images and save URLs in Firestore
   Future<void> submitForm(
     BuildContext context, {
     required String country,
@@ -254,6 +274,26 @@ class DetailViewModel extends ChangeNotifier {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
+
+      String? photoUrl;
+      String? passportUrl;
+
+      // Upload images to Firebase Storage
+      if (photoDocument != null) {
+        final uploadVM = ApplyProcessViewModel();
+        photoUrl = await uploadVM.uploadFileToFirebase(
+          photoDocument!,
+          'user_photos',
+        );
+      }
+
+      if (passportDocument != null) {
+        final uploadVM = ApplyProcessViewModel();
+        passportUrl = await uploadVM.uploadFileToFirebase(
+          passportDocument!,
+          'user_passports',
+        );
+      }
 
       final formData = {
         'visaFullName': fullNameController.text,
@@ -270,6 +310,8 @@ class DetailViewModel extends ChangeNotifier {
         'applicationId': generateRandomId(),
         'visaFlag': flag,
         'visaPhoneCode': selectedCountryCode,
+        'photoUrl': photoUrl ?? '',
+        'passportUrl': passportUrl ?? '',
       };
 
       await FirebaseFirestore.instance
@@ -285,7 +327,7 @@ class DetailViewModel extends ChangeNotifier {
         ),
       );
     } catch (e) {
-      // Handle errors if needed
+      debugPrint('Error submitting form: $e');
     }
   }
 

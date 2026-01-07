@@ -38,7 +38,6 @@ class _ApplyProcessView extends StatelessWidget {
   final String flag;
 
   const _ApplyProcessView({
-    super.key,
     required this.country,
     required this.city,
     required this.flag,
