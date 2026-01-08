@@ -40,15 +40,14 @@ class DocumentsViewModel extends ChangeNotifier {
           .get();
 
       final data = docSnapshot.data();
-
       if (data != null) {
         // ---------------- Work Documents ----------------
         final work = data['workApplication'];
-        if (work != null) {
-          final offerLetterUrl = work['offerLetterUrl'] as String?;
+        if (work != null && work is Map<String, dynamic>) {
+          final offerLetterUrl = (work['offerLetterUrl'] ?? '').toString();
           final offerLetterFileName =
-              work['offerLetterFileName'] as String? ?? 'Job Offer Letter';
-          if (offerLetterUrl != null && offerLetterUrl.isNotEmpty) {
+              (work['offerLetterFileName'] ?? 'Job Offer Letter').toString();
+          if (offerLetterUrl.isNotEmpty) {
             documents.add(
               DocumentItem(
                 name: offerLetterFileName,
@@ -56,27 +55,34 @@ class DocumentsViewModel extends ChangeNotifier {
                 type: 'work',
               ),
             );
+            print(
+              'Work document added: $offerLetterFileName -> $offerLetterUrl',
+            );
           }
         }
 
         // ---------------- Investment Documents ----------------
         final investment = data['investmentDetails'];
-        if (investment != null) {
+        if (investment != null && investment is Map<String, dynamic>) {
           final uploadedDocs =
               investment['uploadedDocuments'] as List<dynamic>?;
           if (uploadedDocs != null && uploadedDocs.isNotEmpty) {
             for (var doc in uploadedDocs) {
-              final fileName =
-                  doc['investmentDocument'] ?? 'Investment Document';
-              final fileUrl = doc['fileUrl'] ?? '';
-              if (fileUrl.isNotEmpty) {
-                documents.add(
-                  DocumentItem(
-                    name: fileName,
-                    url: fileUrl,
-                    type: 'investment',
-                  ),
-                );
+              if (doc is Map<String, dynamic>) {
+                final fileName =
+                    (doc['investmentDocument'] ?? 'Investment Document')
+                        .toString();
+                final fileUrl = (doc['fileUrl'] ?? '').toString();
+                if (fileUrl.isNotEmpty) {
+                  documents.add(
+                    DocumentItem(
+                      name: fileName,
+                      url: fileUrl,
+                      type: 'investment',
+                    ),
+                  );
+                  print('Investment document added: $fileName -> $fileUrl');
+                }
               }
             }
           }
@@ -88,17 +94,22 @@ class DocumentsViewModel extends ChangeNotifier {
           .collection('users')
           .doc(user.uid)
           .collection('visas')
-          .orderBy('createdAt', descending: true)
-          .get();
+          .get(); // Removed orderBy in case createdAt doesn't exist
+
+      if (visaSnapshot.docs.isEmpty) {
+        print('No visas found for user ${user.uid}');
+      }
 
       for (var visaDoc in visaSnapshot.docs) {
         final visaData = visaDoc.data();
+        print('Visa doc id: ${visaDoc.id}, data: $visaData');
 
-        final visaCountry = visaData['visaCountry'] as String?;
-        final photoUrl = visaData['photoUrl'] as String?;
-        final passportUrl = visaData['passportUrl'] as String?;
+        final visaCountry = (visaData['visaCountry'] ?? 'Unknown Visa')
+            .toString();
+        final photoUrl = (visaData['photoUrl'] ?? '').toString();
+        final passportUrl = (visaData['passportUrl'] ?? '').toString();
 
-        if (photoUrl != null && photoUrl.isNotEmpty) {
+        if (photoUrl.isNotEmpty) {
           documents.add(
             DocumentItem(
               name: 'Photo',
@@ -107,9 +118,10 @@ class DocumentsViewModel extends ChangeNotifier {
               visaCountry: visaCountry,
             ),
           );
+          print('Photo added: $photoUrl');
         }
 
-        if (passportUrl != null && passportUrl.isNotEmpty) {
+        if (passportUrl.isNotEmpty) {
           documents.add(
             DocumentItem(
               name: 'Passport',
@@ -118,12 +130,14 @@ class DocumentsViewModel extends ChangeNotifier {
               visaCountry: visaCountry,
             ),
           );
+          print('Passport added: $passportUrl');
         }
       }
 
       isLoading = false;
       notifyListeners();
-    } catch (e) {
+    } catch (e, stack) {
+      print('Error fetching documents: $e\n$stack');
       errorMessage = e.toString();
       isLoading = false;
       notifyListeners();

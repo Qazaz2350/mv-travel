@@ -49,7 +49,7 @@ dependencies:
   shimmer:
   rename_app: ^1.6.5  
   url_launcher:
-  # photoview:
+  photo_view:
   
 
 dev_dependencies:
