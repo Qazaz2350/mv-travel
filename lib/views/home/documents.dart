@@ -34,51 +34,77 @@ class DocumentsScreen extends StatelessWidget {
               return const Center(child: Text('No documents found'));
             }
 
-            // Split documents by type
+            // ---------------- Work & Investment Documents ----------------
             final workDocs = vm.documents
                 .where((doc) => doc.type == 'work')
                 .toList();
             final investmentDocs = vm.documents
                 .where((doc) => doc.type == 'investment')
                 .toList();
-            final userDocs = vm.documents
-                .where((doc) => doc.type == 'user')
-                .toList();
+
+            // ---------------- User Documents Grouped by Visa Country ----------------
+            final Map<String, List<DocumentItem>> visaGroupedDocs = {};
+            for (var doc in vm.documents.where((d) => d.type == 'user')) {
+              final country = doc.visaCountry ?? 'Unknown Visa';
+              visaGroupedDocs.putIfAbsent(country, () => []);
+              visaGroupedDocs[country]!.add(doc);
+            }
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ---------------- User Documents ----------------
-                  if (userDocs.isNotEmpty) ...[
-                    _buildSectionHeader('User Documents', Colors.deepPurple),
+                  // ---------------- User Documents by Visa ----------------
+                  if (visaGroupedDocs.isNotEmpty) ...[
+                    _buildSectionHeader('Visa Documents', Colors.deepPurple),
                     const SizedBox(height: 12),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
+                    ...visaGroupedDocs.entries.map((entry) {
+                      final country = entry.key;
+                      final docs = entry.value;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Visa Country Title
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8, top: 16),
+                            child: Text(
+                              'Visa – $country',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.04),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: docs
+                                  .asMap()
+                                  .entries
+                                  .map(
+                                    (entry) => _buildDocumentItem(
+                                      entry.value,
+                                      isLast: entry.key == docs.length - 1,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
                           ),
                         ],
-                      ),
-                      child: Column(
-                        children: userDocs
-                            .asMap()
-                            .entries
-                            .map(
-                              (entry) => _buildDocumentItem(
-                                entry.value,
-                                isLast: entry.key == userDocs.length - 1,
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
+                      );
+                    }).toList(),
                     const SizedBox(height: 24),
                   ],
 
@@ -181,7 +207,6 @@ class DocumentsScreen extends StatelessWidget {
     IconData icon;
     Color iconColor;
 
-    // Determine icon based on file extension or type
     if (doc.type == 'user') {
       icon = Icons.person_outline;
       iconColor = Colors.deepPurple;
@@ -201,9 +226,7 @@ class DocumentsScreen extends StatelessWidget {
       iconColor = Colors.grey;
     }
 
-    // For demo purposes, assume documents are checked
-    // You can add a `isChecked` property to DocumentItem model
-    final isChecked = true; // Replace with: doc.isChecked ?? false
+    final isChecked = true;
 
     return Container(
       decoration: BoxDecoration(
@@ -220,7 +243,6 @@ class DocumentsScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Row(
           children: [
-            // Document Icon
             Container(
               width: 48,
               height: 48,
@@ -231,8 +253,6 @@ class DocumentsScreen extends StatelessWidget {
               child: Icon(icon, color: iconColor, size: 24),
             ),
             const SizedBox(width: 16),
-
-            // Document Name
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,8 +277,6 @@ class DocumentsScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Checkmark
             Container(
               width: 28,
               height: 28,

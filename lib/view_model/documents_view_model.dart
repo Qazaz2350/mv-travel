@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// Model to represent a document
 class DocumentItem {
   final String name; // Descriptive name
-  final String url;
+  final String url; // File URL
   final String type; // 'work', 'investment', or 'user'
+  final String? visaCountry; // Optional: for user documents linked to a visa
 
-  DocumentItem({required this.name, required this.url, required this.type});
+  DocumentItem({
+    required this.name,
+    required this.url,
+    required this.type,
+    this.visaCountry,
+  });
 }
 
 class DocumentsViewModel extends ChangeNotifier {
@@ -18,10 +25,9 @@ class DocumentsViewModel extends ChangeNotifier {
   /// Fetch Work, Investment, and User-uploaded documents (photo & passport)
   Future<void> fetchDocuments() async {
     isLoading = true;
-    notifyListeners();
-
-    documents.clear();
     errorMessage = null;
+    documents.clear();
+    notifyListeners();
 
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -83,24 +89,34 @@ class DocumentsViewModel extends ChangeNotifier {
           .doc(user.uid)
           .collection('visas')
           .orderBy('createdAt', descending: true)
-          .limit(1)
           .get();
 
-      if (visaSnapshot.docs.isNotEmpty) {
-        final latestVisa = visaSnapshot.docs.first.data();
+      for (var visaDoc in visaSnapshot.docs) {
+        final visaData = visaDoc.data();
 
-        final photoUrl = latestVisa['photoUrl'] as String?;
-        final passportUrl = latestVisa['passportUrl'] as String?;
+        final visaCountry = visaData['visaCountry'] as String?;
+        final photoUrl = visaData['photoUrl'] as String?;
+        final passportUrl = visaData['passportUrl'] as String?;
 
         if (photoUrl != null && photoUrl.isNotEmpty) {
           documents.add(
-            DocumentItem(name: 'User Photo', url: photoUrl, type: 'user'),
+            DocumentItem(
+              name: 'Photo',
+              url: photoUrl,
+              type: 'user',
+              visaCountry: visaCountry,
+            ),
           );
         }
 
         if (passportUrl != null && passportUrl.isNotEmpty) {
           documents.add(
-            DocumentItem(name: 'Passport', url: passportUrl, type: 'user'),
+            DocumentItem(
+              name: 'Passport',
+              url: passportUrl,
+              type: 'user',
+              visaCountry: visaCountry,
+            ),
           );
         }
       }
