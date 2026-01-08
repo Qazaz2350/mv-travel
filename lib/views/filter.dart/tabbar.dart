@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
+import 'package:mvtravel/views/filter.dart/invesment.dart';
+import 'package:mvtravel/views/filter.dart/student_tabbarview.dart';
+import 'package:mvtravel/views/filter.dart/travel.dart';
 import 'package:mvtravel/views/filter.dart/work_tabbar_view.dart';
 
 class FilterTabsScreen extends StatefulWidget {
@@ -70,10 +73,10 @@ class _FilterTabsScreenState extends State<FilterTabsScreen>
           child: TabBarView(
             controller: _tabController,
             children: const [
-              Center(child: Text('Travel Content')),
-              Center(child: Text('Student Content')),
+              Center(child: TravelFiltersScreen()),
+              Center(child: StudentFiltersScreen()),
               Center(child: JobFiltersScreen()),
-              Center(child: Text('Investment Content')),
+              Center(child: InvestmentFiltersScreen()),
             ],
           ),
         ),

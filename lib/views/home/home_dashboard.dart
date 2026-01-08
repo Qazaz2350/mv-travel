@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
@@ -41,6 +42,8 @@ class _HomePageViewState extends State<HomePageView> {
         child: _viewModel.isLoading
             ? const HomeShimmer()
             : RefreshIndicator(
+                color: CupertinoColors.activeBlue,
+                backgroundColor: Colors.white,
                 onRefresh: _viewModel.refreshData,
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),

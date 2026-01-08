@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvtravel/model/home_page_model.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePageViewModel extends ChangeNotifier {
@@ -14,11 +13,18 @@ class HomePageViewModel extends ChangeNotifier {
   // New: Filtered list of destinations
   List<TravelDestination> filteredDestinations = [];
 
+  // ---------------- Profile Fields ----------------
+  String profileFullName = "Pending";
+  String? profileImageUrl;
+
   HomePageViewModel() {
     _loadData();
 
     // Listen to search bar changes
     searchController.addListener(_filterDestinations);
+
+    // Fetch profile immediately and print
+    fetchUserProfile();
   }
 
   Future<void> _loadData() async {
@@ -195,6 +201,35 @@ class HomePageViewModel extends ChangeNotifier {
 
   Future<void> refreshData() async {
     await _loadData();
+    await fetchUserProfile(); // refresh profile too
+  }
+
+  // ---------------- Fetch profile and print ----------------
+  Future<void> fetchUserProfile() async {
+    final fb_auth.User? firebaseUser =
+        fb_auth.FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) return;
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get();
+
+      if (!doc.exists) return;
+
+      final data = doc.data()!;
+      profileFullName = data['fullName'] ?? profileFullName;
+      profileImageUrl = data['profileImageUrl'];
+
+      // Print profile info to console
+      print("Fetched Profile Name: $profileFullName");
+      print("Fetched Profile Image URL: $profileImageUrl");
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error fetching profile: $e");
+    }
   }
 
   void updateCategory(VisaCategory category) {

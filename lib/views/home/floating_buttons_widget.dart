@@ -19,7 +19,7 @@ class FloatingButtonsWidget extends StatelessWidget {
           shape: CircleBorder(),
           heroTag: 'phone',
           onPressed: () {
-            Nav.push(context, ContactNumberScreen());
+            Nav.push(context, ContactProfileScreen());
           },
           backgroundColor: AppColors.blue1,
           child: Icon(Icons.phone, color: Colors.white),
@@ -32,7 +32,7 @@ class FloatingButtonsWidget extends StatelessWidget {
           shape: CircleBorder(),
           heroTag: 'chat2',
           onPressed: () {
-            Nav.push(context, ContactProfileScreen());
+            Nav.push(context, ContactNumberScreen());
           },
           backgroundColor: AppColors.green1,
           child: Icon(Icons.chat_bubble, color: Colors.white),

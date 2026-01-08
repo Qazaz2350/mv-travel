@@ -103,23 +103,301 @@ class _HomeTabbarState extends State<HomeTabbar> {
                 ),
 
                 // SizedBox(height: 10.h),
-                Center(
-                  child: Text(
-                    'Student',
-                    style: TextStyle(fontSize: FontSizes.f14),
-                  ),
+                Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(24),
+
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // First Section
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade400,
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              "Explore the World, One Trip at a Time",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Text(
+                              "Discover tourist destinations that turn learning into adventure. From historic landmarks to breathtaking natural views",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                height: 1.6,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 12),
+
+                          // Decorative Divider
+                          Container(
+                            width: 60,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.blue.shade400,
+                                  Colors.blue.shade200,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+
+                          SizedBox(height: 12),
+
+                          // Second Section
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade400,
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              "Travel Smart, Travel Together",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Text(
+                              "Affordable, safe, and exciting trips designed especially for students. Enjoy guided tours",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                height: 1.6,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FeaturedDestinationsWidget(
+                      destinations:
+                          widget.viewModel.homeData.featuredDestinations,
+                    ),
+                  ],
                 ),
-                Center(
-                  child: Text(
-                    'Work',
-                    style: TextStyle(fontSize: FontSizes.f14),
-                  ),
+                Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // First Section
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade400,
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              "Build Your Career, One Opportunity at a Time",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Text(
+                              "Explore work opportunities that shape your future. From entry-level roles to international placements, start your professional journey with confidence.",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                height: 1.6,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 12),
+
+                          // Decorative Divider
+                          Container(
+                            width: 60,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.blue.shade400,
+                                  Colors.blue.shade200,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+
+                          SizedBox(height: 12),
+
+                          // Second Section
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade400,
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              "Work Smart, Grow Together",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Text(
+                              "Reliable, skill-focused, and career-driven work options designed to help you gain experience, earn confidently, and grow professionally.",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                height: 1.6,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FeaturedDestinationsWidget(
+                      destinations:
+                          widget.viewModel.homeData.featuredDestinations,
+                    ),
+                  ],
                 ),
-                Center(
-                  child: Text(
-                    'Investment',
-                    style: TextStyle(fontSize: FontSizes.f14),
-                  ),
+
+                Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // First Section
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade400,
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              "Invest Smart, Build a Secure Future",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Text(
+                              "Discover investment opportunities designed to grow your wealth. From low-risk plans to long-term strategies, make informed financial decisions with confidence.",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                height: 1.6,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 12),
+
+                          // Decorative Divider
+                          Container(
+                            width: 60,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.blue.shade400,
+                                  Colors.blue.shade200,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+
+                          SizedBox(height: 12),
+
+                          // Second Section
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade400,
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              "Grow Together with Trusted Investments",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Container(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Text(
+                              "Secure, transparent, and goal-oriented investment options that help you plan ahead, protect your capital, and achieve financial growth over time.",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                height: 1.6,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FeaturedDestinationsWidget(
+                      destinations:
+                          widget.viewModel.homeData.featuredDestinations,
+                    ),
+                  ],
                 ),
               ],
             ),
