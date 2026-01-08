@@ -79,34 +79,6 @@ class SearchBarWidget extends StatelessWidget {
                 ),
               ),
             ),
-
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.w, vertical: 6.h),
-              width: 60.w, // make width equal to height
-              height: 60.h,
-              decoration: BoxDecoration(
-                color: AppColors.blue1,
-                shape: BoxShape.circle,
-              ),
-              alignment: Alignment.center, // center the icon
-              child: GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true, // allows full screen
-                    backgroundColor:
-                        Colors.transparent, // keep your rounded corners visible
-                    builder: (context) => FiltersDialog(),
-                  );
-                },
-                child: ImageIcon(
-                  AssetImage('assets/home/settings.png'),
-                  size: 20,
-                  color: Colors.white,
-                ),
-              ),
-              // child: Icon(Icons.tune, color: Colors.white, size: 22),
-            ),
           ],
         ),
       ),

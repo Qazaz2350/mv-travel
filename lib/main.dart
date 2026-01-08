@@ -9,10 +9,6 @@ import 'package:mvtravel/view_model/onboarding/Purpose_of_visit_ViewModel.dart';
 import 'package:mvtravel/view_model/onboarding/splash_view_model.dart';
 import 'package:mvtravel/view_model/profile_viewmodel.dart';
 import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
-import 'package:mvtravel/views/auth/signin.dart';
-import 'package:mvtravel/views/home/home_dashboard.dart';
-import 'package:mvtravel/views/onboarding/onboarding.dart';
-import 'package:mvtravel/views/onboarding/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -48,12 +44,18 @@ class MyApp extends StatelessWidget {
             child: MaterialApp(
               home: child,
               debugShowCheckedModeBanner: false,
-              routes: {'/onboarding': (context) => const OnboardingScreen()},
               theme: ThemeData(
+                useMaterial3: true, // ✅ IMPORTANT
+                appBarTheme: const AppBarTheme(
+                  surfaceTintColor: Colors.white,
+
+                  elevation: 0,
+                  scrolledUnderElevation: 0,
+                ),
                 textSelectionTheme: const TextSelectionThemeData(
-                  cursorColor: Colors.blue, // Cursor color
-                  selectionColor: AppColors.blue, // Highlighted text
-                  selectionHandleColor: Colors.blue, // Drag handle color
+                  cursorColor: Colors.blue,
+                  selectionColor: AppColors.blue,
+                  selectionHandleColor: Colors.blue,
                 ),
               ),
             ),

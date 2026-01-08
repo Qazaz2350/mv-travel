@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:mvtravel/views/auth/signin.dart';
+import 'package:mvtravel/views/auth/signup.dart';
 
 class UserProfileViewModel extends ChangeNotifier {
   bool isLoading = false;
@@ -226,7 +227,7 @@ class UserProfileViewModel extends ChangeNotifier {
     _safeNotify();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => SignInScreen()),
+      MaterialPageRoute(builder: (context) => SignUpScreen()),
     );
   }
 
