@@ -125,6 +125,7 @@ class DocumentsViewModel extends ChangeNotifier {
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
       if (image == null) return null;
+      print(image.path);
       return File(image.path);
     } catch (e) {
       errorMessage = e.toString();
@@ -144,6 +145,7 @@ class DocumentsViewModel extends ChangeNotifier {
       );
 
       if (result == null || result.files.single.path == null) return null;
+      print(result.files.single.path);
       return File(result.files.single.path!);
     } catch (e) {
       errorMessage = e.toString();
@@ -153,7 +155,7 @@ class DocumentsViewModel extends ChangeNotifier {
   }
 
   /// ------------------------------------------------------------
-  /// UPLOAD FILE → STORAGE FOLDER → SAVE NAME & URL
+  /// UPLOAD FILE → STORAGE FOLDER → SAVE NAME & URL → FETCH NAME & URL
   /// ------------------------------------------------------------
   Future<void> uploadUserFile({
     required File file,
@@ -181,7 +183,7 @@ class DocumentsViewModel extends ChangeNotifier {
       final downloadUrl = await ref.getDownloadURL();
 
       // ---------- FIRESTORE (Save name + url only) ----------
-      await FirebaseFirestore.instance
+      final docRef = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .collection('user_documents')
@@ -191,6 +193,54 @@ class DocumentsViewModel extends ChangeNotifier {
             'fileType': fileType,
             'createdAt': FieldValue.serverTimestamp(),
           });
+
+      // ---------- FETCH BACK NAME & URL ----------
+      final savedDoc = await docRef.get();
+      final savedData = savedDoc.data();
+      if (savedData != null) {
+        final savedName = savedData['name'] ?? 'Unknown';
+        final savedUrl = savedData['url'] ?? '';
+        print('Uploaded Document Name: $savedName, URL: $savedUrl');
+      }
+
+      isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      errorMessage = e.toString();
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// ------------------------------------------------------------
+  /// DELETE USER UPLOADED DOCUMENT
+  /// ------------------------------------------------------------
+  Future<void> deleteUserDocument(DocumentItem docItem) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception("User not logged in");
+
+      // ---------- Delete from Firebase Storage ----------
+      final storageRef = FirebaseStorage.instance.refFromURL(docItem.url);
+      await storageRef.delete();
+
+      // ---------- Delete from Firestore ----------
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('user_documents')
+          .where('url', isEqualTo: docItem.url)
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      // ---------- Remove from local list ----------
+      documents.removeWhere((d) => d.url == docItem.url);
 
       isLoading = false;
       notifyListeners();

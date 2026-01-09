@@ -47,9 +47,12 @@ dependencies:
   firebase_storage:
   dropdown_button2:
   shimmer:
-  rename_app: ^1.6.5  
+  rename_app: 
   url_launcher:
   photo_view:
+  open_filex:
+  path_provider:
+  http:
   
 
 dev_dependencies:
