@@ -61,7 +61,7 @@ class DocumentsScreen extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.blue3,
-            fontSize: 16,
+            fontSize: 17,
           ),
         ),
         content: Text(
@@ -92,7 +92,7 @@ class DocumentsScreen extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Container(child: Text('${doc.name} deleted')),
+            content: Text('${doc.name} deleted'),
             backgroundColor: Colors.red,
           ),
         );
@@ -122,72 +122,145 @@ class DocumentsScreen extends StatelessWidget {
                     ),
                     builder: (_) {
                       return SafeArea(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: const Icon(
-                                Icons.image,
-                                color: AppColors.blue2,
-                              ),
-                              title: const Text(
-                                'Pick Image',
-                                style: TextStyle(color: AppColors.black),
-                              ),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                final pickedFile = await vm
-                                    .pickImageFromGallery();
-                                if (pickedFile != null) {
-                                  await vm.uploadUserFile(
-                                    file: pickedFile,
-                                    name: pickedFile.path.split('/').last,
-                                    fileType: 'user',
-                                  );
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Image uploaded successfully!',
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                }
-                              },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.black,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(20),
                             ),
-                            ListTile(
-                              leading: const Icon(
-                                Icons.insert_drive_file,
-                                color: AppColors.blue2,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Handle bar
+                              Container(
+                                margin: const EdgeInsets.only(
+                                  top: 12,
+                                  bottom: 8,
+                                ),
+                                width: 40,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: AppColors.white.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
                               ),
-                              title: const Text(
-                                'Pick File',
-                                style: TextStyle(color: AppColors.black),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                child: Column(
+                                  children: [
+                                    _buildOptionTile(
+                                      context: context,
+                                      icon: Icons.image_rounded,
+                                      title: 'Pick Image',
+                                      subtitle: 'Choose from gallery',
+                                      onTap: () async {
+                                        Navigator.pop(context);
+                                        final pickedFile = await vm
+                                            .pickImageFromGallery();
+                                        if (pickedFile != null) {
+                                          await vm.uploadUserFile(
+                                            file: pickedFile,
+                                            name: pickedFile.path
+                                                .split('/')
+                                                .last,
+                                            fileType: 'user',
+                                          );
+                                          await vm.fetchDocuments();
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor:
+                                                    AppColors.green2,
+                                                behavior:
+                                                    SnackBarBehavior.floating,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                content: const Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.check_circle,
+                                                      color: AppColors.white,
+                                                    ),
+                                                    SizedBox(width: 12),
+                                                    Text(
+                                                      'Image uploaded successfully!',
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                    ),
+
+                                    const SizedBox(height: 12),
+
+                                    _buildOptionTile(
+                                      context: context,
+                                      icon: Icons.description_rounded,
+                                      title: 'Pick File',
+                                      subtitle: 'Choose a document',
+                                      onTap: () async {
+                                        Navigator.pop(context);
+                                        final pickedFile = await vm
+                                            .pickDocumentFromDevice();
+                                        if (pickedFile != null) {
+                                          await vm.uploadUserFile(
+                                            file: pickedFile,
+                                            name: pickedFile.path
+                                                .split('/')
+                                                .last,
+                                            fileType: 'user',
+                                          );
+                                          await vm.fetchDocuments();
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor:
+                                                    AppColors.green2,
+                                                behavior:
+                                                    SnackBarBehavior.floating,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                content: const Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.check_circle,
+                                                      color: AppColors.white,
+                                                    ),
+                                                    SizedBox(width: 12),
+                                                    Text(
+                                                      'File uploaded successfully!',
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                final pickedFile = await vm
-                                    .pickDocumentFromDevice();
-                                if (pickedFile != null) {
-                                  await vm.uploadUserFile(
-                                    file: pickedFile,
-                                    name: pickedFile.path.split('/').last,
-                                    fileType: 'user',
-                                  );
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'File uploaded successfully!',
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                }
-                              },
-                            ),
-                          ],
+
+                              const SizedBox(height: 8),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -467,8 +540,8 @@ class DocumentsScreen extends StatelessWidget {
               )
             else
               Container(
-                width: 60,
-                height: 60,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: AppColors.blue2.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -480,7 +553,7 @@ class DocumentsScreen extends StatelessWidget {
                 child: const Icon(
                   Icons.insert_drive_file_outlined,
                   color: AppColors.blue1,
-                  size: 32,
+                  size: 15,
                 ),
               ),
             const SizedBox(width: 16),
@@ -536,6 +609,75 @@ class DocumentsScreen extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+
+  // Helper method to add after your widget
+  Widget _buildOptionTile({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.white.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.blue2.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: AppColors.blue2, size: 24),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: AppColors.white.withOpacity(0.6),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppColors.white.withOpacity(0.3),
+                size: 16,
+              ),
+            ],
+          ),
         ),
       ),
     );
