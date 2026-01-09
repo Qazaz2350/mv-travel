@@ -7,9 +7,11 @@ import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/commen/full_size_button.dart';
 import 'package:mvtravel/commen/progress_indicator.dart';
-import 'package:mvtravel/commen/skip_button.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/onboarding/Purpose_of_visit_ViewModel.dart';
+import 'package:mvtravel/views/onboarding/Investment%20Details.dart';
+import 'package:mvtravel/views/onboarding/Work_Application_Details.dart';
+import 'package:mvtravel/views/onboarding/international_students_view.dart';
 import 'package:mvtravel/views/onboarding/travel_visit_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -106,40 +108,55 @@ class _VisitPurposeContent extends StatelessWidget {
                   return _PurposeCard(
                     purpose: purpose,
                     isSelected: viewModel.isPurposeSelected(purpose.id),
-                    onTap: () {
-                      viewModel.selectPurpose(
-                        purpose.id,
-                      ); // just select, don't navigate
+                    onTap: () async {
+                      viewModel.selectPurpose(purpose.id); // select the purpose
+                      await viewModel.saveSelectedPurpose(); // save to Firebase
+
+                      // Navigate based on selected purpose
+                      switch (purpose.id) {
+                        case 'travel':
+                          Nav.push(context, const TravelVisaView());
+                          break;
+                        case 'student':
+                          Nav.push(context, InternationalStudentsView());
+                          break;
+                        case 'work':
+                          Nav.push(context, const WorkApplicationDetailsView());
+                          break;
+                        case 'investment':
+                          Nav.push(context, const InvestmentDetailsView());
+                          break;
+                      }
                     },
                   );
                 },
               ),
             ),
             SizedBox(height: 16.h),
-            FRectangleButton(
-              text: 'Next',
-              color: AppColors.blue3,
-              onPressed: () async {
-                final selectedId = viewModel.selectedPurposeId;
-                if (selectedId == null) {
-                  // Optionally show a warning
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please select a purpose to proceed.'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
 
-                // Save the selected purpose to Firebase
-                await viewModel.saveSelectedPurpose();
+            // FRectangleButton(
+            //   text: 'Next',
+            //   color: AppColors.blue3,
+            //   onPressed: () async {
+            //     final selectedId = viewModel.selectedPurposeId;
+            //     if (selectedId == null) {
+            //       // Optionally show a warning
+            //       ScaffoldMessenger.of(context).showSnackBar(
+            //         const SnackBar(
+            //           content: Text('Please select a purpose to proceed.'),
+            //           backgroundColor: Colors.red,
+            //         ),
+            //       );
+            //       return;
+            //     }
 
-                // Navigate based on selection
-                Nav.push(context, TravelVisaView());
-              },
-            ),
+            //     // Save the selected purpose to Firebase
+            //     await viewModel.saveSelectedPurpose();
 
+            //     // Navigate based on selection
+            //     Nav.push(context, TravelVisaView());
+            //   },
+            // ),
             SizedBox(height: 24.h),
           ],
         ),

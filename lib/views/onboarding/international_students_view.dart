@@ -7,6 +7,7 @@ import 'package:mvtravel/commen/progress_indicator.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/onboarding/international_students_viewmodel.dart';
 import 'package:mvtravel/views/onboarding/Work_Application_Details.dart';
+import 'package:mvtravel/views/onboarding/loading_page.dart';
 import 'package:provider/provider.dart';
 
 class InternationalStudentsView extends StatelessWidget {
@@ -25,7 +26,7 @@ class InternationalStudentsView extends StatelessWidget {
                 icon: Icon(Icons.arrow_back, color: AppColors.black),
                 onPressed: () => Nav.pop(context),
               ),
-              title: Padding( 
+              title: Padding(
                 padding: EdgeInsets.only(left: 70.w),
                 child: Text(
                   "Student Details",
@@ -177,7 +178,7 @@ class InternationalStudentsView extends StatelessWidget {
                     onPressed: () async {
                       final vm = context.read<InternationalStudentsViewModel>();
                       await vm.saveToFirebase(); // Save data to Firebase
-                      Nav.push(context, WorkApplicationDetailsView());
+                      Nav.push(context, LoadingScreenView());
                     },
                   ),
 

@@ -1,20 +1,19 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 /// Model to represent a document
 class DocumentItem {
   final String name; // Descriptive name
   final String url; // File URL
-  final String type; // 'work', 'investment', or 'user'
-  final String? visaCountry; // Optional: for user documents linked to a visa
+  final String type; // 'work', 'investment', 'user'
 
-  DocumentItem({
-    required this.name,
-    required this.url,
-    required this.type,
-    this.visaCountry,
-  });
+  DocumentItem({required this.name, required this.url, required this.type});
 }
 
 class DocumentsViewModel extends ChangeNotifier {
@@ -22,7 +21,9 @@ class DocumentsViewModel extends ChangeNotifier {
   String? errorMessage;
   List<DocumentItem> documents = [];
 
-  /// Fetch Work, Investment, and User-uploaded documents (photo & passport)
+  /// ------------------------------------------------------------
+  /// FETCH Work, Investment + User Uploaded Documents
+  /// ------------------------------------------------------------
   Future<void> fetchDocuments() async {
     isLoading = true;
     errorMessage = null;
@@ -33,7 +34,7 @@ class DocumentsViewModel extends ChangeNotifier {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) throw Exception("User not logged in");
 
-      // ---------------- Work & Investment Documents ----------------
+      // ---------------- Work Documents ----------------
       final docSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -41,12 +42,12 @@ class DocumentsViewModel extends ChangeNotifier {
 
       final data = docSnapshot.data();
       if (data != null) {
-        // ---------------- Work Documents ----------------
         final work = data['workApplication'];
         if (work != null && work is Map<String, dynamic>) {
           final offerLetterUrl = (work['offerLetterUrl'] ?? '').toString();
           final offerLetterFileName =
               (work['offerLetterFileName'] ?? 'Job Offer Letter').toString();
+
           if (offerLetterUrl.isNotEmpty) {
             documents.add(
               DocumentItem(
@@ -54,9 +55,6 @@ class DocumentsViewModel extends ChangeNotifier {
                 url: offerLetterUrl,
                 type: 'work',
               ),
-            );
-            print(
-              'Work document added: $offerLetterFileName -> $offerLetterUrl',
             );
           }
         }
@@ -66,6 +64,7 @@ class DocumentsViewModel extends ChangeNotifier {
         if (investment != null && investment is Map<String, dynamic>) {
           final uploadedDocs =
               investment['uploadedDocuments'] as List<dynamic>?;
+
           if (uploadedDocs != null && uploadedDocs.isNotEmpty) {
             for (var doc in uploadedDocs) {
               if (doc is Map<String, dynamic>) {
@@ -73,6 +72,7 @@ class DocumentsViewModel extends ChangeNotifier {
                     (doc['investmentDocument'] ?? 'Investment Document')
                         .toString();
                 final fileUrl = (doc['fileUrl'] ?? '').toString();
+
                 if (fileUrl.isNotEmpty) {
                   documents.add(
                     DocumentItem(
@@ -81,7 +81,6 @@ class DocumentsViewModel extends ChangeNotifier {
                       type: 'investment',
                     ),
                   );
-                  print('Investment document added: $fileName -> $fileUrl');
                 }
               }
             }
@@ -89,55 +88,113 @@ class DocumentsViewModel extends ChangeNotifier {
         }
       }
 
-      // ---------------- User-uploaded Photo & Passport ----------------
-      final visaSnapshot = await FirebaseFirestore.instance
+      // ---------------- User Uploaded Documents ----------------
+      final userDocsSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
-          .collection('visas')
-          .get(); // Removed orderBy in case createdAt doesn't exist
+          .collection('user_documents')
+          .orderBy('createdAt', descending: true)
+          .get();
 
-      if (visaSnapshot.docs.isEmpty) {
-        print('No visas found for user ${user.uid}');
-      }
-
-      for (var visaDoc in visaSnapshot.docs) {
-        final visaData = visaDoc.data();
-        print('Visa doc id: ${visaDoc.id}, data: $visaData');
-
-        final visaCountry = (visaData['visaCountry'] ?? 'Unknown Visa')
-            .toString();
-        final photoUrl = (visaData['photoUrl'] ?? '').toString();
-        final passportUrl = (visaData['passportUrl'] ?? '').toString();
-
-        if (photoUrl.isNotEmpty) {
-          documents.add(
-            DocumentItem(
-              name: 'Photo',
-              url: photoUrl,
-              type: 'user',
-              visaCountry: visaCountry,
-            ),
-          );
-          print('Photo added: $photoUrl');
-        }
-
-        if (passportUrl.isNotEmpty) {
-          documents.add(
-            DocumentItem(
-              name: 'Passport',
-              url: passportUrl,
-              type: 'user',
-              visaCountry: visaCountry,
-            ),
-          );
-          print('Passport added: $passportUrl');
-        }
+      for (var doc in userDocsSnapshot.docs) {
+        final data = doc.data();
+        documents.add(
+          DocumentItem(
+            name: data['name'] ?? 'Document',
+            url: data['url'] ?? '',
+            type: data['fileType'] ?? 'user',
+          ),
+        );
       }
 
       isLoading = false;
       notifyListeners();
-    } catch (e, stack) {
-      print('Error fetching documents: $e\n$stack');
+    } catch (e) {
+      errorMessage = e.toString();
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// ------------------------------------------------------------
+  /// PICK IMAGE FROM GALLERY
+  /// ------------------------------------------------------------
+  Future<File?> pickImageFromGallery() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+      if (image == null) return null;
+      return File(image.path);
+    } catch (e) {
+      errorMessage = e.toString();
+      notifyListeners();
+      return null;
+    }
+  }
+
+  /// ------------------------------------------------------------
+  /// PICK DOCUMENT FROM DEVICE
+  /// ------------------------------------------------------------
+  Future<File?> pickDocumentFromDevice() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'doc', 'docx', 'jpg', 'png'],
+      );
+
+      if (result == null || result.files.single.path == null) return null;
+      return File(result.files.single.path!);
+    } catch (e) {
+      errorMessage = e.toString();
+      notifyListeners();
+      return null;
+    }
+  }
+
+  /// ------------------------------------------------------------
+  /// UPLOAD FILE → STORAGE FOLDER → SAVE NAME & URL
+  /// ------------------------------------------------------------
+  Future<void> uploadUserFile({
+    required File file,
+    required String name,
+    required String fileType,
+  }) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception("User not logged in");
+
+      final extension = file.path.split('.').last;
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.$extension';
+
+      // ---------- STORAGE (Folder auto-created) ----------
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('user_documents')
+          .child(user.uid)
+          .child(fileName);
+
+      await ref.putFile(file);
+      final downloadUrl = await ref.getDownloadURL();
+
+      // ---------- FIRESTORE (Save name + url only) ----------
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('user_documents')
+          .add({
+            'name': name,
+            'url': downloadUrl,
+            'fileType': fileType,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+
+      isLoading = false;
+      notifyListeners();
+    } catch (e) {
       errorMessage = e.toString();
       isLoading = false;
       notifyListeners();

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/nav.dart';
-import 'package:mvtravel/view_model/profile_image_viewmodel.dart';
 import 'package:mvtravel/view_model/profile_viewmodel.dart';
 import 'package:mvtravel/views/profile/profile_edit_page.dart';
 import 'package:provider/provider.dart';
@@ -17,14 +16,15 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late UserProfileViewModel _viewModel;
+
   @override
   void initState() {
     super.initState();
-    // Initialize ViewModel and fetch user profile once
     _viewModel = UserProfileViewModel();
     _viewModel.fetchUserProfile();
   }
 
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => UserProfileViewModel()..fetchUserProfile(),
@@ -58,20 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               centerTitle: true,
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.edit_outlined, color: AppColors.black),
-                  onPressed: () {
-                    Nav.push(
-                      context,
-                      ChangeNotifierProvider.value(
-                        value: viewModel, // pass the same UserProfileViewModel
-                        child: const ProfilePictureEditPage(),
-                      ),
-                    );
-                  },
-                ),
-              ],
             ),
             body: SingleChildScrollView(
               child: Padding(
@@ -80,7 +66,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 16.h),
-
                     // Profile Header
                     Center(
                       child: Container(
@@ -92,9 +77,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: EdgeInsets.symmetric(vertical: 22.h),
                         child: Column(
                           children: [
-                            Consumer<UserProfileViewModel>(
-                              builder: (context, viewModel, child) {
-                                return CircleAvatar(
+                            Stack(
+                              children: [
+                                CircleAvatar(
                                   radius: 50.r,
                                   backgroundImage:
                                       viewModel.profileImageFile != null
@@ -117,10 +102,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                         )
                                       : null,
-                                );
-                              },
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Nav.push(
+                                        context,
+                                        ChangeNotifierProvider.value(
+                                          value: viewModel,
+                                          child: const ProfilePictureEditPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.blue1,
+                                      ),
+                                      padding: EdgeInsets.all(6.r),
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 18.r,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-
                             SizedBox(height: 16.h),
                             Text(
                               viewModel.fullName,
@@ -154,29 +165,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         children: [
                           _buildSectionHeader('Personal Information'),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.cake_outlined,
                             title: 'Birth Date',
                             subtitle: viewModel.birthDate,
-                            onTap: () {},
                           ),
-                          _buildInfoTile(
-                            icon: Icons.description_outlined,
-                            title: 'Passport Number',
-                            subtitle: viewModel.passportNumber,
-                            onTap: () {},
-                          ),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.public,
                             title: 'Nationality',
                             subtitle: viewModel.nationality,
-                            onTap: () {},
                           ),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.phone_outlined,
                             title: 'Phone Number',
                             subtitle: viewModel.phoneNumber,
-                            onTap: () {},
                           ),
                         ],
                       ),
@@ -193,23 +195,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         children: [
                           _buildSectionHeader('Travel Details'),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.flight_takeoff,
                             title: 'Purpose of Travel',
                             subtitle: viewModel.purposeOfTravel,
-                            onTap: () {},
                           ),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.credit_card,
                             title: 'Visa Type',
                             subtitle: viewModel.visaType,
-                            onTap: () {},
                           ),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.calendar_today_outlined,
                             title: 'Travel Dates',
                             subtitle: viewModel.travelDates,
-                            onTap: () {},
                           ),
                         ],
                       ),
@@ -225,11 +224,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Column(
                         children: [
-                          _buildSectionHeader('Uploaded Documents'),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.calendar_today_outlined,
                             title: 'Offer Letter',
-                            subtitle: viewModel.offerLetterFileName,
+                            subtitle:
+                                (viewModel.offerLetterUrl != "Pending" &&
+                                    viewModel.offerLetterUrl.isNotEmpty)
+                                ? viewModel.offerLetterFileName
+                                : null,
                             onTap: () {
                               if (viewModel.offerLetterUrl != "Pending" &&
                                   viewModel.offerLetterUrl.isNotEmpty) {
@@ -237,7 +239,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               }
                             },
                           ),
-                          // Investment documents can be uncommented if needed
                         ],
                       ),
                     ),
@@ -252,67 +253,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Column(
                         children: [
-                          _buildSectionHeader('Communication Preferences'),
-                          _buildInfoTile(
+                          // _buildSectionHeader('Communication Preferences'),
+                          _buildInfoTileIfAvailable(
                             icon: Icons.email_outlined,
                             title: 'Email Notification',
                             subtitle: viewModel.emailNotification
                                 ? "Enabled"
-                                : "Pending",
-                            onTap: () {},
+                                : null,
                           ),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.sms_outlined,
                             title: 'SMS Alerts',
-                            subtitle: viewModel.smsAlerts
-                                ? "Enabled"
-                                : "Pending",
-                            onTap: () {},
+                            subtitle: viewModel.smsAlerts ? "Enabled" : null,
                           ),
-                          _buildInfoTile(
+                          _buildInfoTileIfAvailable(
                             icon: Icons.chat_bubble_outline,
                             title: 'WhatsApp Update',
                             subtitle: viewModel.whatsappUpdate
                                 ? "Enabled"
-                                : "Pending",
-                            onTap: () {},
-                          ),
-                          SizedBox(height: 24.h),
-                          SizedBox(
-                            width: 300.w, // Full width
-                            child: ElevatedButton(
-                              onPressed: () {
-                                viewModel.logout(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Colors.red, // Button background
-                                foregroundColor: AppColors.white, // Text color
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 12.h,
-                                ), // Height of button
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    12.r,
-                                  ), // Rounded corners
-                                ),
-                              ),
-                              child: Text(
-                                "Log out",
-                                style: TextStyle(
-                                  fontSize: FontSizes.f16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
+                                : null,
                           ),
 
+                          // SizedBox(height: 24.h),
                           SizedBox(height: 24.h),
                         ],
                       ),
                     ),
 
                     SizedBox(height: 24.h),
+                    Center(
+                      child: SizedBox(
+                        width: 300.w,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            viewModel.logout(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: AppColors.white,
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          child: Text(
+                            "Log out",
+                            style: TextStyle(
+                              fontSize: FontSizes.f16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -340,18 +333,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildInfoTile({
+  /// Only builds tile if subtitle is not null or empty
+  Widget _buildInfoTileIfAvailable({
     required IconData icon,
     required String title,
     String? subtitle,
-    required VoidCallback onTap,
+    VoidCallback? onTap,
   }) {
-    // Set Pending = orange, all other data = green
-    Color getSubtitleColor(String text) {
-      if (text.toLowerCase() == "pending") return Colors.orange;
-      return Colors.green;
+    if (subtitle == null ||
+        subtitle.toLowerCase() == "pending" ||
+        subtitle.isEmpty) {
+      return SizedBox.shrink();
     }
 
+    return _buildInfoTile(
+      icon: icon,
+      title: title,
+      subtitle: subtitle,
+      onTap: onTap ?? () {},
+    );
+  }
+
+  Widget _buildInfoTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.r)),
       child: InkWell(
@@ -382,16 +390,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: AppColors.black,
                       ),
                     ),
-                    if (subtitle != null) ...[
-                      SizedBox(height: 4.h),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: FontSizes.f12,
-                          color: getSubtitleColor(subtitle),
-                        ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: FontSizes.f12,
+                        color: Colors.green,
                       ),
-                    ],
+                    ),
                   ],
                 ),
               ),

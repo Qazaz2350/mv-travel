@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/landing.dart';
+import 'package:mvtravel/model/visa_tracking_model.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
 import 'package:mvtravel/view_model/documents_view_model.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (_) => VisaTrackingViewModel()),
               ChangeNotifierProvider(create: (_) => UserProfileViewModel()),
               ChangeNotifierProvider(create: (_) => DocumentsViewModel()),
+              // ChangeNotifierProvider(create: (_) => VisaTrackingModel()),
             ],
             child: MaterialApp(
               home: child,

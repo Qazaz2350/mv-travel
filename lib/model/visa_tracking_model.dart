@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class VisaTrackingModel {
+class VisaTrackingModel extends ChangeNotifier {
   final String type;
   final String status;
   final String country;

@@ -7,6 +7,7 @@ import 'package:mvtravel/commen/progress_indicator.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/onboarding/travel_visit_viewmodel.dart';
 import 'package:mvtravel/views/onboarding/international_students_view.dart';
+import 'package:mvtravel/views/onboarding/loading_page.dart';
 import 'package:provider/provider.dart';
 
 class TravelVisaView extends StatelessWidget {
@@ -211,7 +212,7 @@ class _TravelVisaContent extends StatelessWidget {
                   final vm = context.read<TravelVisaViewModel>();
                   await vm
                       .saveToFirebase(); // Saves startDate & endDate as Timestamp
-                  Nav.push(context, InternationalStudentsView());
+                  Nav.push(context, LoadingScreenView());
                 },
               ),
             ],

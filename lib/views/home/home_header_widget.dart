@@ -23,7 +23,6 @@ class _HeaderWidgetState extends State<HeaderWidget> {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Row(
         children: [
- 
           SizedBox(
             width: 46.w,
             height: 46.h,

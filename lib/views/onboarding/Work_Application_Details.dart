@@ -8,6 +8,7 @@ import 'package:mvtravel/commen/progress_indicator.dart';
 import 'package:mvtravel/view_model/onboarding/work_application_details_viewmodel.dart';
 import 'package:mvtravel/utilis/Nav.dart';
 import 'package:mvtravel/views/onboarding/Investment%20Details.dart';
+import 'package:mvtravel/views/onboarding/loading_page.dart';
 
 class WorkApplicationDetailsView extends StatefulWidget {
   const WorkApplicationDetailsView({Key? key}) : super(key: key);
@@ -150,7 +151,7 @@ class _WorkApplicationDetailsViewState
                         final success = await _viewModel.saveWorkDetails();
 
                         if (success && mounted) {
-                          Nav.push(context, const InvestmentDetailsView());
+                          Nav.push(context, const LoadingScreenView());
                         } else if (_viewModel.errorMessage != null && mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
