@@ -60,7 +60,7 @@ class UploadCard extends StatelessWidget {
                           AssetImage('assets/home/upload.png'),
                           size: 40,
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 2.h),
                         Text(
                           'Tap to Upload',
                           style: TextStyle(
@@ -122,7 +122,7 @@ class UploadCard extends StatelessWidget {
 
   Widget _card(Widget child) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.white,

@@ -5,13 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/model/home_page_model.dart';
-import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/view_model/visa_tracking_view_model.dart';
 import 'package:mvtravel/views/home/Action_Buttons_Widget.dart';
 import 'package:mvtravel/views/home/active_application_widget.dart';
 import 'package:mvtravel/views/home/featured_destinations_widget.dart';
-import 'package:mvtravel/views/visa_tracking/visa_tracking.dart';
 import 'package:provider/provider.dart';
 // import 'package:mvtravel/views/home/featured_destinations_widget.dart';
 
@@ -93,9 +91,7 @@ class _HomeTabbarState extends State<HomeTabbar> {
                     ),
                     SizedBox(height: 15.h),
                     GestureDetector(
-                      onTap: () {
-                        Nav.push(context, const VisaTracking());
-                      },
+                      onTap: () {},
                       child: ChangeNotifierProvider(
                         create: (_) => VisaTrackingViewModel(),
                         child: const ActiveApplicationWidget(),

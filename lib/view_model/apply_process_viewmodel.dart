@@ -143,6 +143,8 @@ class DetailViewModel extends ChangeNotifier {
 
   File? passportDocument;
   File? photoDocument;
+  String? firebaseEmail;
+  String? firebaseFullName;
 
   DateTime? selectedDate;
 
@@ -162,9 +164,9 @@ class DetailViewModel extends ChangeNotifier {
   String? validateEmail() =>
       emailController.text.trim().isEmpty ? 'Email is required' : null;
 
-  String? validatePassport() => passportController.text.trim().isEmpty
-      ? 'Passport number is required'
-      : null;
+  // String? validatePassport() => passportController.text.trim().isEmpty
+  //     ? 'Passport number is required'
+  //     : null;
 
   String? validateAddress() =>
       addressController.text.trim().isEmpty ? 'Address is required' : null;
@@ -189,7 +191,7 @@ class DetailViewModel extends ChangeNotifier {
     final validators = [
       validateFullName(),
       validateEmail(),
-      validatePassport(),
+      // validatePassport(),
       validateAddress(),
       validatePhone(),
       validateDOB(),
@@ -206,12 +208,28 @@ class DetailViewModel extends ChangeNotifier {
     required String flag,
   }) async {
     if (!validateForm()) {
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Please fill all required fields and upload documents'),
+      //     backgroundColor: Colors.red,
+      //   ),
+      // );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill all required fields and upload documents'),
+        SnackBar(
+          content: const Text('Please fill all required fields'),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating, // makes it float above bottom
+          margin: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 90,
+          ), // adjust position
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
+
       return;
     }
     await submitForm(context, country: country, city: city, flag: flag);
@@ -314,9 +332,18 @@ class DetailViewModel extends ChangeNotifier {
           .add(formData);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Data saved successfully!'),
+        SnackBar(
+          content: const Text('Data saved successfully!'),
           backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating, // makes it float above bottom
+          margin: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 90,
+          ), // adjust position
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
     } catch (e) {
@@ -340,6 +367,40 @@ class DetailViewModel extends ChangeNotifier {
     photoDocument = null;
 
     notifyListeners();
+  }
+
+  Future<void> fetchUserDataFromFirestore() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        debugPrint('No signed-in user found.');
+        return;
+      }
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        debugPrint('No document found for UID: ${user.uid}');
+        return;
+      }
+
+      final data = userDoc.data();
+      final fullName = data?['fullName'] ?? '';
+      final email = data?['email'] ?? '';
+
+      fullNameController.text = fullName;
+      emailController.text = email;
+      debugPrint(
+        'Error fetching user data from Firestore: ${fullNameController.text}',
+      );
+
+      notifyListeners(); // update UI
+    } catch (e) {
+      debugPrint('Error fetching user data from Firestore: $e');
+    }
   }
 }
 

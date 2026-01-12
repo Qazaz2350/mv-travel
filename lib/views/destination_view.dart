@@ -3,6 +3,7 @@ import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/view_model/home_page_viewmodel.dart';
 import 'package:mvtravel/views/visa_detail_screen/visa_detail_view.dart';
+import 'package:mvtravel/widgets/filter_shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -204,14 +205,7 @@ class _DestinationViewState extends State<DestinationView> {
                           ),
                         ),
                         child: vm.isLoading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors.blue2,
-                                  ),
-                                  strokeWidth: 3,
-                                ),
-                              )
+                            ? const ShimmerLoadingPage() // <-- Use your shimmer here
                             : _buildFilteredList(vm),
                       ),
                     ),

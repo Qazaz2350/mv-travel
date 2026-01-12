@@ -135,7 +135,7 @@ class DocumentsScreen extends StatelessWidget {
                               // Handle bar
                               Container(
                                 margin: const EdgeInsets.only(
-                                  top: 12,
+                                  // top: 120,
                                   bottom: 8,
                                 ),
                                 width: 40,
@@ -147,10 +147,7 @@ class DocumentsScreen extends StatelessWidget {
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
+                                padding: const EdgeInsets.only(top: 12),
                                 child: Column(
                                   children: [
                                     _buildOptionTile(
@@ -162,6 +159,7 @@ class DocumentsScreen extends StatelessWidget {
                                         Navigator.pop(context);
                                         final pickedFile = await vm
                                             .pickImageFromGallery();
+
                                         if (pickedFile != null) {
                                           await vm.uploadUserFile(
                                             file: pickedFile,
@@ -170,21 +168,17 @@ class DocumentsScreen extends StatelessWidget {
                                                 .last,
                                             fileType: 'user',
                                           );
+
                                           await vm.fetchDocuments();
+
                                           if (context.mounted) {
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
-                                              SnackBar(
+                                              const SnackBar(
                                                 backgroundColor:
                                                     AppColors.green2,
-                                                behavior:
-                                                    SnackBarBehavior.floating,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                content: const Row(
+                                                content: Row(
                                                   children: [
                                                     Icon(
                                                       Icons.check_circle,
@@ -214,6 +208,7 @@ class DocumentsScreen extends StatelessWidget {
                                         Navigator.pop(context);
                                         final pickedFile = await vm
                                             .pickDocumentFromDevice();
+
                                         if (pickedFile != null) {
                                           await vm.uploadUserFile(
                                             file: pickedFile,
@@ -222,21 +217,18 @@ class DocumentsScreen extends StatelessWidget {
                                                 .last,
                                             fileType: 'user',
                                           );
+
                                           await vm.fetchDocuments();
+
                                           if (context.mounted) {
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
-                                              SnackBar(
+                                              const SnackBar(
                                                 backgroundColor:
                                                     AppColors.green2,
-                                                behavior:
-                                                    SnackBarBehavior.floating,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                content: const Row(
+                                                padding: EdgeInsets.all(16),
+                                                content: Row(
                                                   children: [
                                                     Icon(
                                                       Icons.check_circle,

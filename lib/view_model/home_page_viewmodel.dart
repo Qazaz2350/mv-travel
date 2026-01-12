@@ -223,8 +223,9 @@ class HomePageViewModel extends ChangeNotifier {
       profileImageUrl = data['profileImageUrl'];
 
       // Print profile info to console
-      print("Fetched Profile Name: $profileFullName");
-      print("Fetched Profile Image URL: $profileImageUrl");
+      // print("Fetched Profile Name: $profileFullName");
+
+      // print("Fetched Profile Image URL: $profileImageUrl");
 
       notifyListeners();
     } catch (e) {

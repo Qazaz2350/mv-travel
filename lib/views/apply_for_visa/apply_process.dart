@@ -57,7 +57,7 @@ class _ApplyProcessView extends StatelessWidget {
           onPressed: () => Nav.pop(context),
         ),
         title: Text(
-          'Apply For Visa',
+          'Apply for visa',
           style: TextStyle(
             color: AppColors.black,
             fontSize: FontSizes.f20,
@@ -169,7 +169,7 @@ class _ApplyProcessView extends StatelessWidget {
         return UploadCard(
           title: 'Upload Photo',
           description:
-              'Lorem ipsum dolor sit amet consectetur. Vestibulum malesuada in amet urna.',
+              'Make sure the image is well-lit, in focus, and shows all details clearly',
           file: vm.photoFile,
           isUploading:
               vm.photoFile != null && vm.photoUrl == null, // show loader

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:mvtravel/utilis/FontSizes.dart';
+import 'package:mvtravel/views/whastapp.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/utilis/nav.dart';
 import 'package:mvtravel/views/home/callView.dart';
-import 'package:mvtravel/views/home/documents.dart';
-import 'package:mvtravel/views/whastapp.dart';
 
 class FloatingButtonsWidget extends StatelessWidget {
   const FloatingButtonsWidget({super.key});
+
+  Future<void> openWhatsApp() async {
+    const phoneNumber = "923281223062"; // NO +
+    final Uri whatsappUrl = Uri.parse("https://wa.me/$phoneNumber");
+
+    await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,27 +22,25 @@ class FloatingButtonsWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         FloatingActionButton(
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
           heroTag: 'phone',
           onPressed: () {
             Nav.push(context, ContactProfileScreen());
           },
           backgroundColor: AppColors.blue1,
-          child: Icon(Icons.phone, color: Colors.white),
+          child: const Icon(Icons.phone, color: Colors.white),
         ),
-        SizedBox(height: 12.h),
 
         SizedBox(height: 12.h),
 
         FloatingActionButton(
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
           heroTag: 'chat2',
-          onPressed: () {
-            Nav.push(context, ContactNumberScreen());
-          },
-          backgroundColor: AppColors.green1,
-          child: Icon(Icons.chat_bubble, color: Colors.white),
+          onPressed: openWhatsApp, // ✅ FIXED
+          backgroundColor: const Color(0xff31ab20),
+          child: Image.asset("assets/home/whatsapp.png", height: 30.h),
         ),
+
         SizedBox(height: 100.h),
       ],
     );

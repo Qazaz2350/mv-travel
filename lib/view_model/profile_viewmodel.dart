@@ -119,7 +119,10 @@ class UserProfileViewModel extends ChangeNotifier {
 
       // -------- BASIC --------
       fullName = data['fullName'] ?? fullName;
+      print("Full Name: $fullName");
+
       email = data['email'] ?? email;
+      print("Email: $email");
       nationality = data['nationality'] ?? nationality;
       phoneNumber = data['phoneNumber'] ?? phoneNumber;
       passportNumber = data['visaPassportNumber'] ?? passportNumber;

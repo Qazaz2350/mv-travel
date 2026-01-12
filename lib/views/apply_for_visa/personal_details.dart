@@ -1,21 +1,18 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:mvtravel/commen/app_text_field.dart';
 import 'package:mvtravel/views/apply_for_visa/app_lists.dart';
 import 'package:mvtravel/widgets/calender.dart';
 import 'package:provider/provider.dart';
-
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
-import 'package:mvtravel/views/apply_for_visa/upload_container.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 
-class DetailStepView extends StatelessWidget {
+class DetailStepView extends StatefulWidget {
   final String country;
+
   final String city;
   final String flag;
 
@@ -27,6 +24,20 @@ class DetailStepView extends StatelessWidget {
   });
 
   @override
+  State<DetailStepView> createState() => _DetailStepViewState();
+}
+
+class _DetailStepViewState extends State<DetailStepView> {
+  bool isChecked = false;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final detailVM = context.read<DetailViewModel>();
+      detailVM.fetchUserDataFromFirestore();
+    });
+  }
+
   Widget build(BuildContext context) {
     final vm = context.watch<DetailViewModel>(); // shared instance
 
@@ -38,13 +49,17 @@ class DetailStepView extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Selected country: ",
-                  style: TextStyle(
-                    color: AppColors.black,
-                    fontSize: FontSizes.f12,
-                    fontWeight: FontWeight.w500,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      "Selected country: ",
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontSize: FontSizes.f12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -73,7 +88,7 @@ class DetailStepView extends StatelessWidget {
                       ),
                       SizedBox(width: 8),
                       Text(
-                        "$country, $city",
+                        "${widget.country}, ${widget.city}",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: FontSizes.f12,
@@ -113,13 +128,12 @@ class DetailStepView extends StatelessWidget {
                 vm.notifyListeners();
               },
             ),
-            SizedBox(height: 16.h),
 
-            AppTextField(
-              label: 'Passport Number',
-              hint: '**** **** **** ****',
-              controller: vm.passportController,
-            ),
+            // AppTextField(
+            //   label: 'Passport Number',
+            //   hint: '**** **** **** ****',
+            //   controller: vm.passportController,
+            // ),
             SizedBox(height: 16.h),
 
             _dropdownField(
@@ -190,7 +204,6 @@ class DetailStepView extends StatelessWidget {
   }
 
   // ================= HELPERS =================
-
   Widget _card(Widget child) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w),
@@ -282,93 +295,186 @@ class DetailStepView extends StatelessWidget {
       vm.selectedCountryCode = AppLists.countries.first['code']!;
     }
 
-    return Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 3,
-          child: DropdownButtonFormField2<String>(
-            isExpanded: true,
-            value: vm.selectedCountryCode, // store only code
+        Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: DropdownButtonFormField2<String>(
+                isExpanded: true,
+                value: vm.selectedCountryCode, // store only code
 
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: AppColors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.r),
-                borderSide: BorderSide(color: AppColors.grey2.withOpacity(0.3)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.r),
-                borderSide: BorderSide(color: AppColors.blue),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 2.w,
-                vertical: 14.h,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                    borderSide: BorderSide(
+                      color: AppColors.grey2.withOpacity(0.3),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                    borderSide: BorderSide(color: AppColors.blue),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 2.w,
+                    vertical: 14.h,
+                  ),
+                ),
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: 250.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                items: AppLists.countries
+                    .map(
+                      (country) => DropdownMenuItem(
+                        value: country['code'], // only code is stored
+                        child: Text(
+                          "${country['flag']} (${country['code']})", // UI shows flag
+                          style: TextStyle(
+                            fontSize: FontSizes.f14,
+                            color: AppColors.grey2,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    vm.selectedCountryCode = value; // update ViewModel directly
+                    vm.notifyListeners();
+                  }
+                },
               ),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight: 250.h,
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(8.r),
+            SizedBox(width: 12.w),
+            Expanded(
+              flex: 4,
+              child: TextField(
+                controller: vm.phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  hintText: 'xxx-xxx-xxxx',
+                  hintStyle: TextStyle(
+                    color: AppColors.grey2,
+                    fontSize: FontSizes.f14,
+                  ),
+                  filled: true,
+                  fillColor: AppColors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                    borderSide: BorderSide(
+                      color: AppColors.grey2.withOpacity(0.3),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                    borderSide: BorderSide(
+                      color: AppColors.grey2.withOpacity(0.3),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                    borderSide: BorderSide(color: AppColors.blue),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 14.h,
+                  ),
+                ),
               ),
             ),
-            items: AppLists.countries
-                .map(
-                  (country) => DropdownMenuItem(
-                    value: country['code'], // only code is stored
-                    child: Text(
-                      "${country['flag']} (${country['code']})", // UI shows flag
-                      style: TextStyle(
-                        fontSize: FontSizes.f14,
-                        color: AppColors.grey2,
+          ],
+        ),
+        SizedBox(height: 8.h),
+        AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: Color(0xFFF5F9FF),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isChecked
+                  ? Color(0xFF1E88E5).withOpacity(0.4)
+                  : Color(0xFF90CAF9).withOpacity(0.3),
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            children: [
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  gradient: isChecked
+                      ? LinearGradient(
+                          colors: [Color(0xFF1976D2), Color(0xFF2196F3)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
+                  color: isChecked ? null : Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isChecked
+                        ? Colors.transparent
+                        : Color(0xFF64B5F6).withOpacity(0.5),
+                    width: 2,
+                  ),
+                ),
+                child: Theme(
+                  data: ThemeData(
+                    checkboxTheme: CheckboxThemeData(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
-                )
-                .toList(),
-            onChanged: (value) {
-              if (value != null) {
-                vm.selectedCountryCode = value; // update ViewModel directly
-                vm.notifyListeners();
-              }
-            },
-          ),
-        ),
-        SizedBox(width: 12.w),
-        Expanded(
-          flex: 4,
-          child: TextField(
-            controller: vm.phoneController,
-            keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
-              hintText: 'xxx-xxx-xxxx',
-              hintStyle: TextStyle(
-                color: AppColors.grey2,
-                fontSize: FontSizes.f14,
+                  child: Checkbox(
+                    checkColor: Colors.white,
+                    activeColor: Colors.transparent,
+                    fillColor: MaterialStateProperty.all(Colors.transparent),
+                    side: BorderSide.none,
+                    value: isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value ?? false;
+                      });
+                    },
+                  ),
+                ),
               ),
-              filled: true,
-              fillColor: AppColors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.r),
-                borderSide: BorderSide(color: AppColors.grey2.withOpacity(0.3)),
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Use my uploaded documents",
+                      style: TextStyle(
+                        fontSize: FontSizes.f14,
+                        color: Color(0xFF0D47A1),
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.3,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.r),
-                borderSide: BorderSide(color: AppColors.grey2.withOpacity(0.3)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.r),
-                borderSide: BorderSide(color: AppColors.blue),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 14.h,
-              ),
-            ),
+            ],
           ),
         ),
       ],

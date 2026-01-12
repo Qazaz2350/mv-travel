@@ -24,6 +24,115 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _viewModel.fetchUserProfile();
   }
 
+  void _showPhotoOptionsBottomSheet(
+    BuildContext context,
+    UserProfileViewModel viewModel,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25.r),
+              topRight: Radius.circular(25.r),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 12.h),
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: AppColors.grey2.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Text(
+                'Profile Photo',
+                style: TextStyle(
+                  fontSize: FontSizes.f16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              _buildBottomSheetOption(
+                context: context,
+                icon: Icons.photo_camera,
+                title: 'Upload Photo',
+                onTap: () {
+                  Navigator.pop(context);
+                  viewModel.pickAndUploadProfileImage();
+                },
+              ),
+              Divider(height: 1, color: AppColors.grey.withOpacity(0.5)),
+              _buildBottomSheetOption(
+                context: context,
+                icon: Icons.delete_outline,
+                title: 'Remove Photo',
+                titleColor: Colors.red,
+                iconColor: Colors.red,
+                onTap: () {
+                  Navigator.pop(context);
+                  viewModel.removeProfileImage();
+                },
+              ),
+              SizedBox(height: 20.h),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomSheetOption({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color? titleColor,
+    Color? iconColor,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        child: Row(
+          children: [
+            Container(
+              width: 48.w,
+              height: 48.w,
+              decoration: BoxDecoration(
+                color: (iconColor ?? AppColors.blue1).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                icon,
+                color: iconColor ?? AppColors.blue1,
+                size: 24.sp,
+              ),
+            ),
+            SizedBox(width: 16.w),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: FontSizes.f16,
+                fontWeight: FontWeight.w500,
+                color: titleColor ?? AppColors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -89,10 +198,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 viewModel.profileImageUrl!,
                                               )
                                             : const AssetImage(
-                                                    'assets/home/profile.avif',
+                                                    'assets/home/user.png',
                                                   )
                                                   as ImageProvider),
-                                  child: viewModel.isLoading
+                                  child: viewModel.isUploading
                                       ? SizedBox(
                                           width: 30.r,
                                           height: 30.r,
@@ -108,12 +217,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   right: 0,
                                   child: GestureDetector(
                                     onTap: () {
-                                      Nav.push(
+                                      _showPhotoOptionsBottomSheet(
                                         context,
-                                        ChangeNotifierProvider.value(
-                                          value: viewModel,
-                                          child: const ProfilePictureEditPage(),
-                                        ),
+                                        viewModel,
                                       );
                                     },
                                     child: Container(
@@ -124,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: EdgeInsets.all(6.r),
                                       child: Icon(
                                         Icons.edit,
-                                        size: 18.r,
+                                        size: 14.r,
                                         color: Colors.white,
                                       ),
                                     ),
@@ -245,42 +351,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     SizedBox(height: 16.h),
 
-                    // Communication Preferences
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(19.r),
-                        color: AppColors.white,
-                      ),
-                      child: Column(
-                        children: [
-                          // _buildSectionHeader('Communication Preferences'),
-                          _buildInfoTileIfAvailable(
-                            icon: Icons.email_outlined,
-                            title: 'Email Notification',
-                            subtitle: viewModel.emailNotification
-                                ? "Enabled"
-                                : null,
-                          ),
-                          _buildInfoTileIfAvailable(
-                            icon: Icons.sms_outlined,
-                            title: 'SMS Alerts',
-                            subtitle: viewModel.smsAlerts ? "Enabled" : null,
-                          ),
-                          _buildInfoTileIfAvailable(
-                            icon: Icons.chat_bubble_outline,
-                            title: 'WhatsApp Update',
-                            subtitle: viewModel.whatsappUpdate
-                                ? "Enabled"
-                                : null,
-                          ),
-
-                          // SizedBox(height: 24.h),
-                          SizedBox(height: 24.h),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: 24.h),
                     Center(
                       child: SizedBox(
                         width: 300.w,
