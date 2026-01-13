@@ -47,51 +47,67 @@ class _ApplyProcessView extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<ApplyProcessViewModel>();
 
-    return Scaffold(
-      backgroundColor: AppColors.grey,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.black),
-          onPressed: () => Nav.pop(context),
-        ),
-        title: Text(
-          'Apply for visa',
-          style: TextStyle(
-            color: AppColors.black,
-            fontSize: FontSizes.f20,
-            fontWeight: FontWeight.w600,
+    return WillPopScope(
+      onWillPop: () async {
+        if (vm.currentStep > 0) {
+          vm.previousStep(); // 👈 previous _buildStepItem par jayega
+          return false; // ❌ screen pop nahi hogi
+        }
+        return true; // ✅ agar step 0 hai to screen pop ho
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.grey,
+        appBar: AppBar(
+          backgroundColor: AppColors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: AppColors.black),
+            onPressed: () {
+              if (vm.currentStep > 0) {
+                vm.previousStep(); // 👈 same logic for appbar back
+              } else {
+                Nav.pop(context);
+              }
+            },
           ),
+          title: Text(
+            'Apply for visa',
+            style: TextStyle(
+              color: AppColors.black,
+              fontSize: FontSizes.f20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: 16.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.r),
-              child: Container(
-                color: AppColors.white,
-                child: _buildStepper(vm),
+
+        body: Column(
+          children: [
+            SizedBox(height: 16.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.r),
+                child: Container(
+                  color: AppColors.white,
+                  child: _buildStepper(vm),
+                ),
               ),
             ),
-          ),
-          // Text('${country}${city}', style: TextStyle(fontSize: FontSizes.f16)),
-          SizedBox(height: 16.h),
-          Expanded(
-            child: _buildStepContent(
-              vm,
-              context,
-              country: country,
-              city: city,
-              flag: flag,
+            // Text('${country}${city}', style: TextStyle(fontSize: FontSizes.f16)),
+            SizedBox(height: 16.h),
+            Expanded(
+              child: _buildStepContent(
+                vm,
+                context,
+                country: country,
+                city: city,
+                flag: flag,
+              ),
             ),
-          ),
-          BottomButtons(vm: vm, country: country, city: city, flag: flag),
-        ],
+            BottomButtons(vm: vm, country: country, city: city, flag: flag),
+          ],
+        ),
       ),
     );
   }

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Nav {
-  static push(BuildContext context, Widget page) =>
-      Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+  // Make push generic
+  static Future<T?> push<T>(BuildContext context, Widget widget) {
+    return Navigator.push<T>(
+      context,
+      MaterialPageRoute(builder: (_) => widget),
+    );
+  }
 
-  static pop(BuildContext context) => Navigator.pop(context);
+  static void pop<T>(BuildContext context, [T? result]) {
+    Navigator.pop(context, result);
+  }
 }
