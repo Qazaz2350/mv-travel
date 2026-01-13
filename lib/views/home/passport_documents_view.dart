@@ -13,6 +13,8 @@ class PassportDocumentsView extends StatefulWidget {
 }
 
 class _PassportDocumentsViewState extends State<PassportDocumentsView> {
+  bool isSelecting = false;
+
   final Map<String, bool> selectedDocs = {};
 
   Future<void> _openDocument(String url) async {
@@ -125,10 +127,22 @@ class _PassportDocumentsViewState extends State<PassportDocumentsView> {
                           value: selectedDocs[doc.name],
                           onChanged: (value) {
                             setState(() {
+                              selectedDocs.updateAll((key, val) => false);
                               selectedDocs[doc.name] = value ?? false;
                             });
                           },
+                          fillColor: MaterialStateProperty.resolveWith<Color>((
+                            states,
+                          ) {
+                            if (states.contains(MaterialState.selected)) {
+                              return AppColors
+                                  .blue2; // ✅ selected checkbox color
+                            }
+                            return AppColors.grey1; // ✅ unselected color
+                          }),
+                          checkColor: AppColors.white, // ✅ tick color
                         ),
+
                         title: Text(
                           doc.name,
                           style: const TextStyle(
@@ -162,40 +176,64 @@ class _PassportDocumentsViewState extends State<PassportDocumentsView> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () async {
-                        final selectedEntry = selectedDocs.entries.firstWhere(
-                          (e) => e.value,
-                          orElse: () => const MapEntry('', false),
-                        );
+                      onPressed: isSelecting
+                          ? null
+                          : () async {
+                              // disable button when selecting
+                              final selectedEntry = selectedDocs.entries
+                                  .firstWhere(
+                                    (e) => e.value,
+                                    orElse: () => const MapEntry('', false),
+                                  );
 
-                        if (selectedEntry.key.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please select a document'),
-                            ),
-                          );
-                          return;
-                        }
+                              if (selectedEntry.key.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Please select a document'),
+                                  ),
+                                );
+                                return;
+                              }
 
-                        final vm = context.read<DocumentsViewModel>();
-                        final doc = vm.documents.firstWhere(
-                          (d) => d.name == selectedEntry.key,
-                        );
-                        final file = await vm.downloadDocumentAsFile(doc.url);
+                              setState(() {
+                                isSelecting = true; // start selecting
+                              });
 
-                        Navigator.pop(context, file); // return File to caller
-                      },
+                              try {
+                                final vm = context.read<DocumentsViewModel>();
+                                final doc = vm.documents.firstWhere(
+                                  (d) => d.name == selectedEntry.key,
+                                );
+                                final file = await vm.downloadDocumentAsFile(
+                                  doc.url,
+                                );
+
+                                Navigator.pop(
+                                  context,
+                                  file,
+                                ); // return File to caller
+                              } finally {
+                                if (mounted) {
+                                  setState(() {
+                                    isSelecting = false; // stop selecting
+                                  });
+                                }
+                              }
+                            },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.blue2,
+                        backgroundColor: isSelecting
+                            ? AppColors.grey1
+                            : AppColors.blue2, // change color
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'Select',
+                      child: Text(
+                        isSelecting ? 'Selecting...' : 'Select',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
+                          color: AppColors.white,
                         ),
                       ),
                     ),

@@ -124,6 +124,16 @@ class ApplyProcessViewModel extends ChangeNotifier {
       return null;
     }
   }
+
+  /// ✅ File picked from PassportDocumentsView
+  Future<void> setPhotoFromFile(File file) async {
+    await _handlePickedFile(file, true); // true = photo
+  }
+
+  /// ✅ File picked from PassportDocumentsView
+  Future<void> setPassportFromFile(File file) async {
+    await _handlePickedFile(file, false); // false = passport
+  }
 }
 
 // ------------------- The rest of your code stays exactly the same -------------------

@@ -1,11 +1,14 @@
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mvtravel/views/apply_for_visa/extrapickbox.dart';
 import 'package:mvtravel/views/apply_for_visa/payment_view.dart';
 import 'package:mvtravel/views/apply_for_visa/bottom_botton.dart';
 import 'package:mvtravel/views/apply_for_visa/personal_details.dart';
 import 'package:mvtravel/views/apply_for_visa/upload_card.dart';
+import 'package:mvtravel/views/home/passport_documents_view.dart';
 import 'package:provider/provider.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
@@ -182,29 +185,75 @@ class _ApplyProcessView extends StatelessWidget {
   }) {
     switch (vm.currentStep) {
       case 0:
-        return UploadCard(
-          title: 'Upload Photo',
-          description:
-              'Make sure the image is well-lit, in focus, and shows all details clearly',
-          file: vm.photoFile,
-          isUploading:
-              vm.photoFile != null && vm.photoUrl == null, // show loader
-          onRemove: vm.removePhoto,
-          onCamera: () => vm.pickFromCamera(true),
-          onGallery: () => vm.pickFromGallery(true),
+        return Column(
+          children: [
+            UploadCard(
+              title: 'Upload Photo',
+              description:
+                  'Make sure the image is well-lit, in focus, and shows all details clearly',
+              file: vm.photoFile,
+              isUploading: vm.photoFile != null && vm.photoUrl == null,
+              onRemove: vm.removePhoto,
+              onCamera: () => vm.pickFromCamera(true),
+              onGallery: () => vm.pickFromGallery(true),
+            ),
+
+            // SizedBox(height: 12.h),
+            if (vm.photoFile == null) ...[
+              SizedBox(height: 12.h),
+              extraPickBox(
+                title: 'Select from uploaded documents',
+                onTap: () async {
+                  final file = await Navigator.push<File?>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const PassportDocumentsView(),
+                    ),
+                  );
+
+                  if (file != null) {
+                    vm.setPhotoFromFile(file);
+                  }
+                },
+              ),
+            ],
+          ],
         );
 
       case 1:
-        return UploadCard(
-          title: 'Upload Passport',
-          description:
-              'Please upload a clear copy of your passport. Make sure all details are visible.',
-          file: vm.passportFile,
-          isUploading:
-              vm.passportFile != null && vm.passportUrl == null, // show loader
-          onRemove: vm.removePassport,
-          onCamera: () => vm.pickFromCamera(false),
-          onGallery: () => vm.pickFromGallery(false),
+        return Column(
+          children: [
+            UploadCard(
+              title: 'Upload Passport',
+              description:
+                  'Please upload a clear copy of your passport. Make sure all details are visible.',
+              file: vm.passportFile,
+              isUploading: vm.passportFile != null && vm.passportUrl == null,
+              onRemove: vm.removePassport,
+              onCamera: () => vm.pickFromCamera(false),
+              onGallery: () => vm.pickFromGallery(false),
+            ),
+
+            // SizedBox(height: 12.h),
+            if (vm.passportFile == null) ...[
+              SizedBox(height: 12.h),
+              extraPickBox(
+                title: 'Select from uploaded documents',
+                onTap: () async {
+                  final file = await Navigator.push<File?>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const PassportDocumentsView(),
+                    ),
+                  );
+
+                  if (file != null) {
+                    vm.setPassportFromFile(file);
+                  }
+                },
+              ),
+            ],
+          ],
         );
 
       case 2:
