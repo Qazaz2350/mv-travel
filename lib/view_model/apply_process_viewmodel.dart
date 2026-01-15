@@ -398,14 +398,26 @@ class DetailViewModel extends ChangeNotifier {
       }
 
       final data = userDoc.data();
-      final fullName = data?['fullName'] ?? '';
-      final email = data?['email'] ?? '';
+      if (data == null) return;
+
+      // Existing fields
+      final fullName = data['fullName'] ?? '';
+      final email = data['email'] ?? '';
+
+      // New fields
+      final rawPhone = data['phoneNumber'] ?? '';
+      final phone = rawPhone.length > 3 ? rawPhone.substring(3) : '';
+
+      // Nationality mapping
+      final rawNationality = data['nationality'] ?? '';
+      selectedNationality = AppLists.nationalities.firstWhere(
+        (n) => n.contains(rawNationality),
+        orElse: () => '',
+      );
 
       fullNameController.text = fullName;
       emailController.text = email;
-      debugPrint(
-        'Error fetching user data from Firestore: ${fullNameController.text}',
-      );
+      phoneController.text = phone;
 
       notifyListeners(); // update UI
     } catch (e) {

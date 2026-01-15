@@ -46,61 +46,6 @@ class _DetailStepViewState extends State<DetailStepView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Row(
-            //   crossAxisAlignment: CrossAxisAlignment.center,
-            //   children: [
-            //     Row(
-            //       children: [
-            //         Text(
-            //           "Selected country: ",
-            //           style: TextStyle(
-            //             color: AppColors.black,
-            //             fontSize: FontSizes.f12,
-            //             fontWeight: FontWeight.w500,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     Container(
-            //       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            //       decoration: BoxDecoration(
-            //         color: AppColors.blue2.withOpacity(0.1),
-            //         borderRadius: BorderRadius.circular(20),
-            //         // border: Border.all(color: AppColors.blue2, width: 1),
-            //       ),
-            //       child: Row(
-            //         mainAxisSize: MainAxisSize.min,
-            //         children: [
-            //           Container(
-            //             width: 8,
-            //             height: 8,
-            //             decoration: BoxDecoration(
-            //               color: Colors.green,
-            //               shape: BoxShape.circle,
-            //               boxShadow: [
-            //                 BoxShadow(
-            //                   color: Colors.green.withOpacity(0.5),
-            //                   blurRadius: 4,
-            //                   spreadRadius: 1,
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //           SizedBox(width: 8),
-            //           Text(
-            //             "${widget.country}, ${widget.city}",
-            //             style: TextStyle(
-            //               color: Colors.black,
-            //               fontSize: FontSizes.f12,
-            //               fontWeight: FontWeight.w600,
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // SizedBox(height: 16.h),
             AppTextField(
               label: 'Full Name',
               hint: 'Enter your full name',
@@ -128,11 +73,6 @@ class _DetailStepViewState extends State<DetailStepView> {
               },
             ),
 
-            // AppTextField(
-            //   label: 'Passport Number',
-            //   hint: '**** **** **** ****',
-            //   controller: vm.passportController,
-            // ),
             SizedBox(height: 16.h),
 
             _dropdownField(
@@ -152,7 +92,7 @@ class _DetailStepViewState extends State<DetailStepView> {
               label: 'Address',
               hint: 'address home town',
               controller: vm.addressController,
-              maxLines: 3,
+              maxLines: 2,
             ),
             SizedBox(height: 16.h),
 
@@ -167,34 +107,6 @@ class _DetailStepViewState extends State<DetailStepView> {
             _phoneField(vm),
             SizedBox(height: 16.h),
 
-            // UploadFieldWidget(
-            //   label: 'Upload Passport Document',
-            //   acceptedFormats: 'Accept formats JPG, PNG',
-            //   file: vm.passportDocument,
-            //   fileName: vm.passportDocument != null
-            //       ? vm.passportDocument!.path.split('/').last
-            //       : null,
-            //   onTap: () => vm.pickImage(true),
-            //   onRemove: () {
-            //     vm.passportDocument = null;
-            //     vm.notifyListeners();
-            //   },
-            // ),
-            SizedBox(height: 16.h),
-
-            // UploadFieldWidget(
-            //   label: 'Photo',
-            //   acceptedFormats: 'Accept formats JPG, PNG',
-            //   file: vm.photoDocument,
-            //   fileName: vm.photoDocument != null
-            //       ? vm.photoDocument!.path.split('/').last
-            //       : null,
-            //   onTap: () => vm.pickImage(false),
-            //   onRemove: () {
-            //     vm.photoDocument = null;
-            //     vm.notifyListeners();
-            //   },
-            // ),
             SizedBox(height: 24.h),
           ],
         ),
@@ -237,8 +149,7 @@ class _DetailStepViewState extends State<DetailStepView> {
         SizedBox(height: 8.h),
         DropdownButtonFormField2<String>(
           isExpanded: true,
-
-          value: value,
+          value: items.contains(value) ? value : null, // ✅ Safe check
           hint: Text(
             hint,
             style: TextStyle(color: AppColors.grey2, fontSize: FontSizes.f14),
@@ -258,10 +169,6 @@ class _DetailStepViewState extends State<DetailStepView> {
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(color: AppColors.grey1),
             ),
-            contentPadding: EdgeInsets.symmetric(
-              // horizontal: 16.w,
-              // vertical: 14.h,
-            ),
           ),
           items: items
               .map(
@@ -273,12 +180,12 @@ class _DetailStepViewState extends State<DetailStepView> {
               .toList(),
           onChanged: onChanged,
           dropdownStyleData: DropdownStyleData(
-            maxHeight: 300.h, // adjust height here
+            maxHeight: 300.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.r),
               color: AppColors.white,
             ),
-            offset: Offset(0, 0), // opens below the field
+            offset: Offset(0, 0),
           ),
         ),
       ],

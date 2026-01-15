@@ -72,7 +72,11 @@ class AppDateField extends StatelessWidget {
               },
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.grey2),
+            hintStyle: TextStyle(
+              fontSize: 12.sp,
+              color: AppColors.grey2,
+              fontWeight: FontWeight.w500,
+            ),
             contentPadding: EdgeInsets.symmetric(
               vertical: 12.h,
               horizontal: 12.w,

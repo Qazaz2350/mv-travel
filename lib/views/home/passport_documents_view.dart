@@ -79,25 +79,23 @@ class _PassportDocumentsViewState extends State<PassportDocumentsView> {
                 ),
               );
             }
+            final userDocs = vm.documents
+                .where((d) => d.type == 'user' || d.type.isEmpty)
+                .toList();
+            if (userDocs.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No documents found',
+                  style: TextStyle(color: AppColors.black, fontSize: 16),
+                ),
+              );
+            }
 
             if (vm.errorMessage != null) {
               return Center(
                 child: Text(
                   'Error: ${vm.errorMessage}',
                   style: const TextStyle(color: AppColors.black),
-                ),
-              );
-            }
-
-            final userDocs = vm.documents
-                .where((d) => d.type == 'user')
-                .toList();
-
-            if (userDocs.isEmpty) {
-              return const Center(
-                child: Text(
-                  'No documents found',
-                  style: TextStyle(color: AppColors.grey, fontSize: 16),
                 ),
               );
             }
