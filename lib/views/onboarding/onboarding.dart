@@ -22,82 +22,22 @@ class OnboardingScreen extends StatelessWidget {
           return Scaffold(
             body: Stack(
               children: [
-                // PageView
+                // PageView only for images
                 PageView.builder(
                   controller: vm.pageController,
                   onPageChanged: vm.onPageChanged,
                   itemCount: vm.pages.length,
                   itemBuilder: (context, index) {
-                    return OnboardingPage(data: vm.pages[index]);
+                    return Image.asset(
+                      vm.pages[index].image,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Container(color: AppColors.blue2),
+                    );
                   },
                 ),
 
-                // Top Bar (Back and Skip)
-                // SafeArea(
-                //   child: Padding(
-                //     padding: EdgeInsets.symmetric(
-                //       horizontal: 16.w,
-                //       vertical: 10.h,
-                //     ),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //       children: [
-                //         if (vm.currentPage > 0)
-                //           GestureDetector(
-                //             onTap: vm.previousPage,
-                //             child: Container(
-                //               padding: EdgeInsets.all(8.w),
-                //               decoration: BoxDecoration(
-                //                 color: Colors.white.withOpacity(0.3),
-                //                 shape: BoxShape.circle,
-                //               ),
-                //               child: Icon(
-                //                 Icons.arrow_back,
-                //                 color: Colors.white,
-                //                 size: 24,
-                //               ),
-                //             ),
-                //           )
-                //         else
-                //           SizedBox(width: 40.w),
-
-                //         if (vm.currentPage < vm.pages.length - 1)
-                //           GestureDetector(
-                //             onTap: () {
-                //               Navigator.push(
-                //                 context,
-                //                 MaterialPageRoute(
-                //                   builder: (_) => const SignUpScreen(),
-                //                 ),
-                //               );
-                //             },
-                //             child: Container(
-                //               padding: EdgeInsets.symmetric(
-                //                 horizontal: 20.w,
-                //                 vertical: 10.h,
-                //               ),
-                //               decoration: BoxDecoration(
-                //                 color: AppColors.blue1,
-                //                 borderRadius: BorderRadius.circular(20.r),
-                //               ),
-                //               child: Text(
-                //                 'Skip',
-                //                 style: TextStyle(
-                //                   color: Colors.white,
-                //                   fontSize: FontSizes.f14,
-                //                   fontWeight: FontWeight.w600,
-                //                 ),
-                //               ),
-                //             ),
-                //           )
-                //         else
-                //           SizedBox(width: 80.w),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-
-                // Bottom Content
+                // Overlay: gradient + text + button
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -123,44 +63,68 @@ class OnboardingScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            vm.pages[vm.currentPage].title,
-                            style: TextStyle(
-                              fontSize: FontSizes.f28,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 12.h),
-                          Text(
-                            vm.pages[vm.currentPage].description,
-                            style: TextStyle(
-                              fontSize: FontSizes.f16,
-                              color: Colors.white.withOpacity(0.9),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 30.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              vm.pages.length,
-                              (index) => AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                margin: EdgeInsets.symmetric(horizontal: 4.w),
-                                width: vm.currentPage == index ? 40.w : 8.w,
-                                height: 8.h,
-                                decoration: BoxDecoration(
-                                  color: vm.currentPage == index
-                                      ? AppColors.blue1
-                                      : Colors.white.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(4.r),
+                          // TEXT AREA: Swipe forwards to PageView
+                          GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onHorizontalDragUpdate: (details) {
+                              vm.pageController.position.moveTo(
+                                vm.pageController.position.pixels -
+                                    details.delta.dx,
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  vm.pages[vm.currentPage].title,
+                                  style: TextStyle(
+                                    fontSize: FontSizes.f28,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                              ),
+                                SizedBox(height: 12.h),
+                                Text(
+                                  vm.pages[vm.currentPage].description,
+                                  style: TextStyle(
+                                    fontSize: FontSizes.f16,
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 30.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    vm.pages.length,
+                                    (index) => AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 4.w,
+                                      ),
+                                      width: vm.currentPage == index
+                                          ? 40.w
+                                          : 8.w,
+                                      height: 8.h,
+                                      decoration: BoxDecoration(
+                                        color: vm.currentPage == index
+                                            ? AppColors.blue1
+                                            : Colors.white.withOpacity(0.4),
+                                        borderRadius: BorderRadius.circular(
+                                          4.r,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 30.h),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 30.h),
+
+                          // BUTTON AREA: no swipe, only clickable
                           SizedBox(
                             width: double.infinity,
                             child: FRectangleButton(
@@ -190,40 +154,6 @@ class OnboardingScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-class OnboardingPage extends StatelessWidget {
-  final OnboardingData data;
-
-  const OnboardingPage({Key? key, required this.data}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset(
-          data.image,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) =>
-              Container(color: AppColors.blue2),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                Colors.black.withOpacity(0.3),
-                Colors.black.withOpacity(0.7),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -46,62 +46,61 @@ class _DetailStepViewState extends State<DetailStepView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "Selected country: ",
-                      style: TextStyle(
-                        color: AppColors.black,
-                        fontSize: FontSizes.f12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.blue2.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    // border: Border.all(color: AppColors.blue2, width: 1),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.green.withOpacity(0.5),
-                              blurRadius: 4,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        "${widget.country}, ${widget.city}",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: FontSizes.f12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.h),
-
+            // Row(
+            //   crossAxisAlignment: CrossAxisAlignment.center,
+            //   children: [
+            //     Row(
+            //       children: [
+            //         Text(
+            //           "Selected country: ",
+            //           style: TextStyle(
+            //             color: AppColors.black,
+            //             fontSize: FontSizes.f12,
+            //             fontWeight: FontWeight.w500,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //     Container(
+            //       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            //       decoration: BoxDecoration(
+            //         color: AppColors.blue2.withOpacity(0.1),
+            //         borderRadius: BorderRadius.circular(20),
+            //         // border: Border.all(color: AppColors.blue2, width: 1),
+            //       ),
+            //       child: Row(
+            //         mainAxisSize: MainAxisSize.min,
+            //         children: [
+            //           Container(
+            //             width: 8,
+            //             height: 8,
+            //             decoration: BoxDecoration(
+            //               color: Colors.green,
+            //               shape: BoxShape.circle,
+            //               boxShadow: [
+            //                 BoxShadow(
+            //                   color: Colors.green.withOpacity(0.5),
+            //                   blurRadius: 4,
+            //                   spreadRadius: 1,
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //           SizedBox(width: 8),
+            //           Text(
+            //             "${widget.country}, ${widget.city}",
+            //             style: TextStyle(
+            //               color: Colors.black,
+            //               fontSize: FontSizes.f12,
+            //               fontWeight: FontWeight.w600,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // SizedBox(height: 16.h),
             AppTextField(
               label: 'Full Name',
               hint: 'Enter your full name',

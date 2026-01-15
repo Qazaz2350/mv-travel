@@ -36,7 +36,14 @@ class AppTextField extends StatelessWidget {
         TextField(
           controller: controller,
           keyboardType: keyboardType,
-          maxLines: 1,
+          maxLines: maxLines, // use your maxLines property
+          textAlignVertical: TextAlignVertical.center, // <-- vertical center
+
+          style: TextStyle(
+            fontSize: FontSizes.f14, // set your desired text size here
+            color: AppColors.black,
+            fontWeight: FontWeight.w500, // optional
+          ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
@@ -57,7 +64,7 @@ class AppTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(color: AppColors.blue),
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12.h),
+            // contentPadding: EdgeInsets.symmetric(horizontal: 12.h),
           ),
         ),
       ],

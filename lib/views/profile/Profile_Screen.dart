@@ -356,7 +356,87 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 300.w,
                         child: ElevatedButton(
                           onPressed: () {
-                            viewModel.logout(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return AlertDialog(
+                                  backgroundColor: AppColors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.r),
+                                  ),
+                                  content: SizedBox(
+                                    width: 420.w, // 👈 dialog width
+
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Confirm Logout",
+                                          style: TextStyle(
+                                            fontSize: FontSizes.f16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        SizedBox(height: 12.h),
+                                        Text(
+                                          "Are you sure you want to log out?",
+                                          style: TextStyle(
+                                            fontSize: FontSizes.f14,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                        SizedBox(height: 20.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                  fontSize: FontSizes.f14,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 8.w),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                viewModel.logout(context);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                                foregroundColor:
+                                                    AppColors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        8.r,
+                                                      ),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                "Log out",
+                                                style: TextStyle(
+                                                  fontSize: FontSizes.f14,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,

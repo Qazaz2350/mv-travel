@@ -341,7 +341,7 @@ class DocumentsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'No documents found',
+                      'No docs yet', // <-- change this line
                       style: TextStyle(fontSize: 16, color: AppColors.grey),
                     ),
                   ],

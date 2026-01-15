@@ -73,7 +73,7 @@ class PhoneNumberScreen extends StatelessWidget {
                     children: [
                       Container(
                         width: 110,
-                        height: 49,
+                        height: 48.5,
                         decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
@@ -119,7 +119,7 @@ class PhoneNumberScreen extends StatelessWidget {
                                     const SizedBox(width: 8),
                                     Text(
                                       country['code']!,
-                                      style: const TextStyle(fontSize: 16),
+                                      style: TextStyle(fontSize: FontSizes.f16),
                                     ),
                                   ],
                                 ),
@@ -135,6 +135,7 @@ class PhoneNumberScreen extends StatelessWidget {
                       const SizedBox(width: 10),
 
                       /// 📱 PHONE NUMBER FIELD
+                      /// SIZE
                       Expanded(
                         child: TextField(
                           controller: vm.phoneController,

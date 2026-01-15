@@ -35,6 +35,11 @@ class AppDateField extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         TextFormField(
+          style: TextStyle(
+            fontSize:
+                12.sp, // <-- sets font size of both normal and selected text
+            color: Colors.black,
+          ),
           controller: controller,
           readOnly: true,
           onTap:
@@ -67,7 +72,7 @@ class AppDateField extends StatelessWidget {
               },
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(fontSize: 12.sp, color: AppColors.grey2),
+            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.grey2),
             contentPadding: EdgeInsets.symmetric(
               vertical: 12.h,
               horizontal: 12.w,

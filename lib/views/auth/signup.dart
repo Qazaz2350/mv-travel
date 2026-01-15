@@ -247,15 +247,6 @@ class SignUpScreen extends StatelessWidget {
                             onPressed: () {},
                           ),
                           SizedBox(width: 12.w),
-                          _buildSocialButton(
-                            text: 'Apple',
-                            icon: Icon(
-                              Icons.apple,
-                              color: Colors.black,
-                              size: 24.sp,
-                            ),
-                            onPressed: () {},
-                          ),
                         ],
                       ),
                       SizedBox(height: 24.h),

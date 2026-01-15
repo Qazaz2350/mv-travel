@@ -60,7 +60,7 @@ class SearchBarWidget extends StatelessWidget {
                       prefixIcon: Padding(
                         padding: EdgeInsets.only(left: 16.w, right: 12.w),
                         child: ImageIcon(
-                          AssetImage('assets/home/search.png'),
+                          AssetImage('assets/home/searchhome.png'),
                           size: 20,
                           color: Color(0xff5C5C5C),
                         ),

@@ -98,7 +98,33 @@ class UploadCard extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12.r),
-            child: Image.file(file, fit: BoxFit.cover),
+            child: Image.file(
+              file,
+              fit: BoxFit.cover,
+              // <-- handle file load errors here
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: AppColors.grey2,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.checklist_outlined,
+                          size: 50.sp,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          'file uploaded but preview not supported',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
         Positioned(

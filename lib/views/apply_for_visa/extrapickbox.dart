@@ -7,7 +7,7 @@ Widget extraPickBox({required String title, required VoidCallback onTap}) {
   return Container(
     // color: AppColors.blue3,
     padding: EdgeInsets.symmetric(vertical: 10.h),
-    margin: EdgeInsets.symmetric(horizontal: 10.h),
+    margin: EdgeInsets.symmetric(horizontal: 6.h),
     decoration: BoxDecoration(
       color: AppColors.white,
       borderRadius: BorderRadius.circular(12.r),

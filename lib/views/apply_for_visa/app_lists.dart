@@ -60,8 +60,6 @@ class AppLists {
     'Student',
     'Work',
     'Investment',
-    'Business',
-    'Tourist',
   ];
 
   /// Country Calling Codes

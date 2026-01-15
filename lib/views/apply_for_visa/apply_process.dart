@@ -122,13 +122,13 @@ class _ApplyProcessView extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
       child: Row(
         children: [
-          _buildStepItem(vm, "assets/home/applyphoto.png", 'Photo', 0),
+          _buildStepItem(vm, "assets/home/face.png", 'Photo', 0),
           _buildStepLine(vm, 0),
-          _buildStepItem(vm, "assets/home/applypassport.png", 'Passport', 1),
+          _buildStepItem(vm, "assets/home/passport.png", 'Passport', 1),
           _buildStepLine(vm, 1),
-          _buildStepItem(vm, "assets/home/applyuser.png", 'Detail', 2),
+          _buildStepItem(vm, "assets/home/details.png", 'Detail', 2),
           _buildStepLine(vm, 2),
-          _buildStepItem(vm, "assets/home/applycheckout.png", 'Checkout', 3),
+          _buildStepItem(vm, "assets/home/checkout.png", 'Checkout', 3),
         ],
       ),
     );
@@ -200,7 +200,6 @@ class _ApplyProcessView extends StatelessWidget {
 
             // SizedBox(height: 12.h),
             if (vm.photoFile == null) ...[
-              SizedBox(height: 12.h),
               extraPickBox(
                 title: 'Select from uploaded documents',
                 onTap: () async {
@@ -236,7 +235,6 @@ class _ApplyProcessView extends StatelessWidget {
 
             // SizedBox(height: 12.h),
             if (vm.passportFile == null) ...[
-              SizedBox(height: 12.h),
               extraPickBox(
                 title: 'Select from uploaded documents',
                 onTap: () async {

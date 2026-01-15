@@ -9,7 +9,7 @@
 
 
     <application
-        android:label="mvtravel"
+        android:label="mbtravel"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity   
