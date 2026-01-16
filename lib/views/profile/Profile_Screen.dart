@@ -278,6 +278,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           _buildInfoTileIfAvailable(
                             icon: Icons.public,
+                            title: 'Residence',
+                            subtitle: viewModel.residence,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(19.r),
+                              color: AppColors.white,
+                            ),
+                            child: Column(
+                              children: [
+                                // _buildSectionHeader('Investment Details'),
+                                _buildInfoTileIfAvailable(
+                                  icon: Icons.monetization_on_outlined,
+                                  title: 'Investment Amount',
+                                  subtitle: viewModel.investmentAmount,
+                                ),
+                                _buildInfoTileIfAvailable(
+                                  icon: Icons.account_balance_wallet_outlined,
+                                  title: 'Investment Type',
+                                  subtitle: viewModel.investmentType,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(19.r),
+                              color: AppColors.white,
+                            ),
+                            child: Column(
+                              children: [
+                                // _buildSectionHeader('Work Application'),
+                                _buildInfoTileIfAvailable(
+                                  icon: Icons.work_outline,
+                                  title: 'Job Title',
+                                  subtitle: viewModel.jobTitle,
+                                ),
+                                _buildInfoTileIfAvailable(
+                                  icon: Icons.timelapse_outlined,
+                                  title: 'Experience',
+                                  subtitle: viewModel.experience,
+                                ),
+                                _buildInfoTileIfAvailable(
+                                  icon: Icons.attach_money_outlined,
+                                  title: 'Salary',
+                                  subtitle: viewModel.salary,
+                                ),
+                                if (viewModel.hasJobOffer)
+                                  _buildInfoTileIfAvailable(
+                                    icon: Icons.check_circle_outline,
+                                    title: 'Job Offer',
+                                    subtitle: "Yes",
+                                  ),
+                              ],
+                            ),
+                          ),
+
+                          // _buildInfoTileIfAvailable(
+                          //   icon: Icons.phone_outlined,
+                          //   title: 'Phone Number',
+                          //   subtitle: viewModel.phoneDialCode.isNotEmpty
+                          //       ? "${viewModel.phoneDialCode} ${viewModel.phoneNumber}"
+                          //       : viewModel.phoneNumber,
+                          // ),
+                          _buildInfoTileIfAvailable(
+                            icon: Icons.public,
                             title: 'Nationality',
                             subtitle: viewModel.nationality,
                           ),

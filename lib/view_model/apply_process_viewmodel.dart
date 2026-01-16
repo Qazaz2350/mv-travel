@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mvtravel/commen/country_list.dart';
 import 'package:mvtravel/model/apply_process_model.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -140,6 +141,7 @@ class ApplyProcessViewModel extends ChangeNotifier {
 
 class DetailViewModel extends ChangeNotifier {
   final fullNameController = TextEditingController();
+  final platfromController = TextEditingController();
   final emailController = TextEditingController();
   final passportController = TextEditingController();
   final addressController = TextEditingController();
@@ -148,8 +150,11 @@ class DetailViewModel extends ChangeNotifier {
   final dobController = TextEditingController();
 
   String? selectedNationality;
+  String? selectedPlatformcountry;
   String? selectedVisaType;
-  String selectedCountryCode = AppLists.countries.first['code']!;
+  // Pick default country code
+  // String selectedCountryCode = countryList.first.code;
+  String selectedDialCode = countryList.first.dialCode; // ✅ add this
 
   File? passportDocument;
   File? photoDocument;
@@ -160,6 +165,7 @@ class DetailViewModel extends ChangeNotifier {
 
   void disposeControllers() {
     fullNameController.dispose();
+    platfromController.dispose();
     emailController.dispose();
     passportController.dispose();
     addressController.dispose();
@@ -170,6 +176,9 @@ class DetailViewModel extends ChangeNotifier {
 
   String? validateFullName() =>
       fullNameController.text.trim().isEmpty ? 'Full name is required' : null;
+
+  String? validatePlatform() =>
+      platfromController.text.trim().isEmpty ? 'Platform is required' : null;
 
   String? validateEmail() =>
       emailController.text.trim().isEmpty ? 'Email is required' : null;
@@ -189,6 +198,11 @@ class DetailViewModel extends ChangeNotifier {
 
   String? validateNationality() =>
       selectedNationality == null || selectedNationality!.isEmpty
+      ? 'Select nationality'
+      : null;
+
+  String? validatePlatformCountry() =>
+      selectedPlatformcountry == null || selectedPlatformcountry!.isEmpty
       ? 'Select nationality'
       : null;
 
@@ -315,8 +329,22 @@ class DetailViewModel extends ChangeNotifier {
 
       final formData = {
         'visaFullName': fullNameController.text,
+        'visaPlatform': platfromController.text,
+
         'visaEmail': emailController.text,
-        'visaNationality': selectedNationality,
+        'visaNationality': countryList
+            .firstWhere(
+              (c) => c.code == selectedNationality,
+              orElse: () => countryList.first,
+            )
+            .name,
+        'VisaPlatformCountry': countryList
+            .firstWhere(
+              (c) => c.code == selectedPlatformcountry,
+              orElse: () => countryList.first,
+            )
+            .name,
+
         'visaPassportNumber': passportController.text,
         'visaType': selectedVisaType,
         'addressForVisa': addressController.text,
@@ -327,7 +355,7 @@ class DetailViewModel extends ChangeNotifier {
         'createdAt': FieldValue.serverTimestamp(),
         'applicationId': generateRandomId(),
         'visaFlag': flag,
-        'visaPhoneCode': selectedCountryCode,
+        'visaPhoneCode': selectedDialCode,
         // 'photoUrl': photoUrl ?? '',
         // 'passportUrl': passportUrl ?? '',
         'photoUrl': applyVM.photoUrl ?? '', // ✅ Save uploaded photo URL
@@ -363,13 +391,16 @@ class DetailViewModel extends ChangeNotifier {
 
   void clearForm() {
     fullNameController.clear();
+    platfromController.clear();
     emailController.clear();
     passportController.clear();
     addressController.clear();
     phoneController.clear();
     dobController.clear();
+    phonecode.clear();
 
     selectedNationality = null;
+    selectedPlatformcountry = null;
     selectedVisaType = null;
     selectedDate = null;
 
@@ -382,44 +413,39 @@ class DetailViewModel extends ChangeNotifier {
   Future<void> fetchUserDataFromFirestore() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        debugPrint('No signed-in user found.');
-        return;
-      }
+      if (user == null) return;
 
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .get();
 
-      if (!userDoc.exists) {
-        debugPrint('No document found for UID: ${user.uid}');
-        return;
-      }
+      if (!userDoc.exists) return;
 
       final data = userDoc.data();
       if (data == null) return;
 
-      // Existing fields
-      final fullName = data['fullName'] ?? '';
-      final email = data['email'] ?? '';
+      // 🔹 Basic fields
+      fullNameController.text = data['fullName'] ?? '';
+      emailController.text = data['email'] ?? '';
 
-      // New fields
+      // 🔹 Nationality
+      final nationalityMap = data['nationality'] as Map<String, dynamic>?;
+      if (nationalityMap != null) {
+        selectedNationality = nationalityMap['code'] ?? countryList.first.code;
+      }
+
+      // 🔹 Phone dial code and number
+      selectedDialCode = data['phoneDialcode'] ?? '+92'; // use saved dial code
       final rawPhone = data['phoneNumber'] ?? '';
-      final phone = rawPhone.length > 3 ? rawPhone.substring(3) : '';
+      phoneController.text = rawPhone.startsWith(selectedDialCode)
+          ? rawPhone.substring(selectedDialCode.length)
+          : rawPhone;
 
-      // Nationality mapping
-      final rawNationality = data['nationality'] ?? '';
-      selectedNationality = AppLists.nationalities.firstWhere(
-        (n) => n.contains(rawNationality),
-        orElse: () => '',
-      );
+      // 🔹 Visa type
+      selectedVisaType = data['visaType'];
 
-      fullNameController.text = fullName;
-      emailController.text = email;
-      phoneController.text = phone;
-
-      notifyListeners(); // update UI
+      notifyListeners();
     } catch (e) {
       debugPrint('Error fetching user data from Firestore: $e');
     }

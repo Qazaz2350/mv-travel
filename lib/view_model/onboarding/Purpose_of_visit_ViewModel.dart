@@ -45,7 +45,7 @@ class VisitPurposeViewModel extends ChangeNotifier {
     return _selectedPurposeId == purposeId;
   }
 
-  bool get canProceed => _selectedPurposeId != null;
+  bool get canProceed => _selectedPurposeId != null;  
 
   /// Save the selected purpose to Firebase under current user's uid
   /// Save the selected purpose to Firebase under current user's uid

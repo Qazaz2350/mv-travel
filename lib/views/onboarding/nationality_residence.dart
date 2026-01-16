@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:mvtravel/commen/country_list.dart';
 import 'package:mvtravel/utilis/FontSizes.dart';
 import 'package:mvtravel/utilis/colors.dart';
 import 'package:mvtravel/commen/full_size_button.dart';
@@ -11,6 +12,7 @@ import 'package:mvtravel/view_model/onboarding/nationality_residence_viewmodel.d
 import 'package:mvtravel/views/onboarding/purpose_of_visit.dart';
 import 'package:mvtravel/widgets/message.dart';
 import 'package:provider/provider.dart';
+import 'package:country_flags/country_flags.dart';
 
 class NationalityResidenceScreen extends StatelessWidget {
   const NationalityResidenceScreen({Key? key}) : super(key: key);
@@ -80,8 +82,9 @@ class NationalityResidenceScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
+                      child: DropdownButton2<Country>(
                         isExpanded: true,
+                        value: vm.selectedNationality,
                         hint: Text(
                           'Select your nationality',
                           style: TextStyle(
@@ -89,12 +92,9 @@ class NationalityResidenceScreen extends StatelessWidget {
                             color: AppColors.grey2,
                           ),
                         ),
-                        value: vm.selectedNationality,
                         iconStyleData: IconStyleData(
                           icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
                         ),
-
-                        /// ✅ dropdown opens below
                         dropdownStyleData: DropdownStyleData(
                           maxHeight: 440,
                           decoration: BoxDecoration(
@@ -103,41 +103,35 @@ class NationalityResidenceScreen extends StatelessWidget {
                           ),
                           offset: const Offset(0, 4),
                         ),
-
                         items: vm.countries.map((country) {
-                          return DropdownMenuItem<String>(
-                            value: country['name'],
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                // horizontal: 12.w,
-                                vertical: 8.h,
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(4.w),
-                                    child: Text(
-                                      country['flag']!,
-                                      style: TextStyle(fontSize: 14.sp),
+                          return DropdownMenuItem<Country>(
+                            value: country,
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(4.w),
+                                  child: CountryFlag.fromCountryCode(
+                                    country.code
+                                        .toLowerCase(), // make sure code is lowercase
+                                    theme: const ImageTheme(
+                                      width: 22,
+                                      height: 14,
                                     ),
                                   ),
-                                  SizedBox(width: 12.w),
-                                  Expanded(
-                                    child: Text(
-                                      country['name']!,
-                                      style: TextStyle(
-                                        fontSize: FontSizes.f14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Text(
+                                  country.name,
+                                  style: TextStyle(
+                                    fontSize: FontSizes.f14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           );
                         }).toList(),
-
                         onChanged: vm.setNationality,
                       ),
                     ),
@@ -165,8 +159,9 @@ class NationalityResidenceScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
+                      child: DropdownButton2<Country>(
                         isExpanded: true,
+                        value: vm.selectedResidence,
                         hint: Text(
                           'Select your country of residence',
                           style: TextStyle(
@@ -174,12 +169,9 @@ class NationalityResidenceScreen extends StatelessWidget {
                             color: AppColors.grey2,
                           ),
                         ),
-                        value: vm.selectedResidence,
                         iconStyleData: IconStyleData(
                           icon: Icon(Icons.keyboard_arrow_down, size: 22.sp),
                         ),
-
-                        /// ✅ dropdown opens below
                         dropdownStyleData: DropdownStyleData(
                           maxHeight: 400,
                           decoration: BoxDecoration(
@@ -188,41 +180,35 @@ class NationalityResidenceScreen extends StatelessWidget {
                           ),
                           offset: const Offset(0, 4),
                         ),
-
                         items: vm.countries.map((country) {
-                          return DropdownMenuItem<String>(
-                            value: country['name'],
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 0.w,
-                                // vertical: 8.h,
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.all(4.w),
-                                    child: Text(
-                                      country['flag']!,
-                                      style: TextStyle(fontSize: 13.sp),
-                                    ),
+                          return DropdownMenuItem<Country>(
+                            value: country,
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(4.w),
+                                  child: CountryFlag.fromCountryCode(
+                                    country.code
+                                        .toLowerCase(), // ✅ must be lowercase ISO code
+                                    theme: const ImageTheme(
+                                      width: 22,
+                                      height: 14,
+                                    ), // set size
                                   ),
-                                  SizedBox(width: 12.w),
-                                  Expanded(
-                                    child: Text(
-                                      country['name']!,
-                                      style: TextStyle(
-                                        fontSize: FontSizes.f14,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Text(
+                                  country.name,
+                                  style: TextStyle(
+                                    fontSize: FontSizes.f14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           );
                         }).toList(),
-
                         onChanged: vm.setResidence,
                       ),
                     ),

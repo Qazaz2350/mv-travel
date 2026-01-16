@@ -1,3 +1,4 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -107,21 +108,32 @@ class PhoneNumberScreen extends StatelessWidget {
                               ),
                             ),
 
-                            items: vm.countryCodes.map((country) {
+                            items: vm.countries.map((country) {
                               return DropdownMenuItem<String>(
-                                value: country['code'],
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      country['flag']!,
-                                      style: const TextStyle(fontSize: 13),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      country['code']!,
-                                      style: TextStyle(fontSize: FontSizes.f16),
-                                    ),
-                                  ],
+                                value: country.dialCode, // store dial code
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CountryFlag.fromCountryCode(
+                                        country.code
+                                            .toLowerCase(), // lowercase ISO code
+                                        theme: const ImageTheme(
+                                          width: 22,
+                                          height: 14,
+                                        ),
+                                      ),
+                                      SizedBox(width: 6.w),
+                                      Text(
+                                        "(${country.dialCode})",
+                                        style: TextStyle(
+                                          fontSize: FontSizes.f14,
+                                          color: AppColors.grey2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             }).toList(),

@@ -53,8 +53,8 @@ dependencies:
   open_filex:
   path_provider:
   http:
-  flutter_svg:
-  country_icons:
+  flutter_svg: 
+  country_flags: ^4.1.1
   
 
 dev_dependencies:

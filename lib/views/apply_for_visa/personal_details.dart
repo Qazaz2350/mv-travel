@@ -1,9 +1,10 @@
 // ignore_for_file: deprecated_member_use
+import 'package:country_flags/country_flags.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mvtravel/commen/app_text_field.dart';
-import 'package:mvtravel/views/apply_for_visa/app_lists.dart';
+import 'package:mvtravel/commen/country_list.dart';
 import 'package:mvtravel/widgets/calender.dart';
 import 'package:provider/provider.dart';
 import 'package:mvtravel/view_model/apply_process_viewmodel.dart';
@@ -60,32 +61,65 @@ class _DetailStepViewState extends State<DetailStepView> {
               keyboardType: TextInputType.emailAddress,
             ),
             SizedBox(height: 16.h),
-
-            _dropdownField(
+            _dropdownFieldCountry(
               context,
               'Nationality',
               'Select your nationality',
-              vm.selectedNationality,
-              AppLists.nationalities,
+              vm.selectedNationality, // stores country name
+              countryList,
               (value) {
-                vm.selectedNationality = value;
+                // value is the country code, convert to name
+                final selected = countryList.firstWhere(
+                  (c) => c.code == value,
+                  orElse: () => countryList.first,
+                );
+                vm.selectedNationality = selected.code;
+
                 vm.notifyListeners();
               },
             ),
+            SizedBox(height: 16.h),
+            _dropdownFieldCountry(
+              context,
+              'Country Platform',
+              'Select your platform country',
+              vm.selectedPlatformcountry, // ✅ use platform country
+              countryList,
+              (value) {
+                if (value != null) {
+                  final selected = countryList.firstWhere(
+                    (c) => c.code == value,
+                    orElse: () => countryList.first,
+                  );
+                  vm.selectedPlatformcountry =
+                      selected.code; // ✅ update platform country
+                  vm.notifyListeners();
+                }
+              },
+            ),
 
+            SizedBox(height: 16.h),
+            _phoneField(vm),
+            SizedBox(height: 16.h),
+            AppTextField(
+              label: 'City Platform',
+              hint: 'Flight origin city ',
+              controller: vm.platfromController,
+            ),
             SizedBox(height: 16.h),
 
             _dropdownField(
               context,
               'Visa Type',
-              'Travel, student, work, investment',
+              'Select Visa Type', // generic hint
               vm.selectedVisaType,
-              AppLists.visaTypes,
+              visaTypeList, // ✅ pick directly from list
               (value) {
                 vm.selectedVisaType = value;
                 vm.notifyListeners();
               },
             ),
+
             SizedBox(height: 16.h),
 
             AppTextField(
@@ -102,12 +136,12 @@ class _DetailStepViewState extends State<DetailStepView> {
               controller: vm.dobController,
               onTap: () => vm.selectDate(context),
             ),
+
             SizedBox(height: 16.h),
 
-            _phoneField(vm),
-            SizedBox(height: 16.h),
+            // SizedBox(height: 16.h),
 
-            SizedBox(height: 24.h),
+            // SizedBox(height: 240.h),
           ],
         ),
       ),
@@ -127,12 +161,12 @@ class _DetailStepViewState extends State<DetailStepView> {
     );
   }
 
-  Widget _dropdownField(
+  Widget _dropdownFieldCountry(
     BuildContext context,
     String label,
     String hint,
-    String? value,
-    List<String> items,
+    String? selectedCode, // ISO code stored
+    List<Country> countries,
     Function(String?) onChanged,
   ) {
     return Column(
@@ -149,7 +183,9 @@ class _DetailStepViewState extends State<DetailStepView> {
         SizedBox(height: 8.h),
         DropdownButtonFormField2<String>(
           isExpanded: true,
-          value: items.contains(value) ? value : null, // ✅ Safe check
+          value: countries.any((c) => c.code == selectedCode)
+              ? selectedCode
+              : null,
           hint: Text(
             hint,
             style: TextStyle(color: AppColors.grey2, fontSize: FontSizes.f14),
@@ -170,17 +206,113 @@ class _DetailStepViewState extends State<DetailStepView> {
               borderSide: BorderSide(color: AppColors.grey1),
             ),
           ),
-          items: items
+          items: countries
               .map(
-                (item) => DropdownMenuItem(
-                  value: item,
-                  child: Text(item, style: TextStyle(fontSize: FontSizes.f14)),
+                (country) => DropdownMenuItem(
+                  value: country.code,
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(4.w),
+                        child: CountryFlag.fromCountryCode(
+                          country.code.toLowerCase(),
+                          theme: const ImageTheme(width: 22, height: 14),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Text(
+                        country.name,
+                        style: TextStyle(
+                          fontSize: FontSizes.f14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
               .toList(),
           onChanged: onChanged,
           dropdownStyleData: DropdownStyleData(
-            maxHeight: 300.h,
+            maxHeight: 250.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.r),
+              color: AppColors.white,
+            ),
+            offset: Offset(0, 0),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _dropdownField(
+    BuildContext context,
+    String label,
+    String hint,
+    String? selectedValue,
+    List<String> items,
+    Function(String?) onChanged,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: FontSizes.f14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.black,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        DropdownButtonFormField2<String>(
+          isExpanded: true,
+          value: items.contains(selectedValue)
+              ? selectedValue
+              : null, // safe check
+          hint: Text(
+            hint,
+            style: TextStyle(color: AppColors.grey2, fontSize: FontSizes.f14),
+          ),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+              borderSide: BorderSide(color: AppColors.grey2.withOpacity(0.3)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+              borderSide: BorderSide(color: AppColors.grey2.withOpacity(0.3)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+              borderSide: BorderSide(color: AppColors.blue),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+              vertical: 14.h,
+            ),
+          ),
+          items: items
+              .map(
+                (item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: TextStyle(
+                      fontSize: FontSizes.f14,
+                      color: AppColors.grey2,
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+          onChanged: onChanged,
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 250.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.r),
               color: AppColors.white,
@@ -193,14 +325,13 @@ class _DetailStepViewState extends State<DetailStepView> {
   }
 
   Widget _phoneField(DetailViewModel vm) {
-    // Ensure selectedCountryCode exists in the list
-    final isValidCode = AppLists.countries.any(
-      (c) => c['code'] == vm.selectedCountryCode,
+    final isValidDialCode = countryList.any(
+      (c) => c.dialCode == vm.selectedDialCode,
     );
-    if (!isValidCode) {
-      vm.selectedCountryCode = AppLists.countries.first['code']!;
-    }
 
+    if (!isValidDialCode) {
+      vm.selectedDialCode = countryList.first.dialCode;
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -210,8 +341,9 @@ class _DetailStepViewState extends State<DetailStepView> {
               flex: 3,
               child: DropdownButtonFormField2<String>(
                 isExpanded: true,
-                value: vm.selectedCountryCode, // store only code
-
+                value: countryList.any((c) => c.dialCode == vm.selectedDialCode)
+                    ? vm.selectedDialCode
+                    : countryList.first.dialCode,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: AppColors.white,
@@ -234,34 +366,48 @@ class _DetailStepViewState extends State<DetailStepView> {
                   ),
                 ),
                 dropdownStyleData: DropdownStyleData(
-                  maxHeight: 250.h,
+                  maxHeight: 200.h, // allow enough height
                   decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(8.r),
                   ),
+                  // remove 'offset' entirely for automatic positioning
                 ),
-                items: AppLists.countries
-                    .map(
-                      (country) => DropdownMenuItem(
-                        value: country['code'], // only code is stored
-                        child: Text(
-                          "${country['flag']} (${country['code']})", // UI shows flag
-                          style: TextStyle(
-                            fontSize: FontSizes.f14,
-                            color: AppColors.grey2,
+
+                items: countryList.map((country) {
+                  return DropdownMenuItem<String>(
+                    value: country.dialCode,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CountryFlag.fromCountryCode(
+                            country.code.toLowerCase(),
+                            theme: const ImageTheme(width: 22, height: 14),
                           ),
-                        ),
+                          SizedBox(width: 6.w),
+                          Text(
+                            "(${country.dialCode})",
+                            style: TextStyle(
+                              fontSize: FontSizes.f14,
+                              color: AppColors.grey2,
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                    .toList(),
+                    ),
+                  );
+                }).toList(),
                 onChanged: (value) {
                   if (value != null) {
-                    vm.selectedCountryCode = value; // update ViewModel directly
+                    vm.selectedDialCode = value;
                     vm.notifyListeners();
                   }
                 },
               ),
             ),
+
             SizedBox(width: 12.w),
             Expanded(
               flex: 4,

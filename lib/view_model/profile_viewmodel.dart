@@ -21,6 +21,21 @@ class UserProfileViewModel extends ChangeNotifier {
   String phoneNumber = "Pending";
   String offerLetterUrl = "Pending";
   String offerLetterFileName = "Pending";
+  // ---------------- PHONE ----------------
+  String phoneDialCode = "+92";
+
+  // ---------------- RESIDENCE ----------------
+  String residence = "Pending";
+
+  // ---------------- INVESTMENT ----------------
+  String investmentAmount = "Pending";
+  String investmentType = "Pending";
+
+  // ---------------- WORK ----------------
+  String jobTitle = "Pending";
+  String experience = "Pending";
+  String salary = "Pending";
+  bool hasJobOffer = false;
 
   // ---------------- INVESTMENT ----------------
   String fileName = "";
@@ -118,62 +133,46 @@ class UserProfileViewModel extends ChangeNotifier {
       final data = doc.data()!;
 
       // -------- BASIC --------
+      // -------- BASIC --------
       fullName = data['fullName'] ?? fullName;
-      print("Full Name: $fullName");
-
       email = data['email'] ?? email;
-      print("Email: $email");
-      nationality = data['nationality'] ?? nationality;
-      phoneNumber = data['phoneNumber'] ?? phoneNumber;
       passportNumber = data['visaPassportNumber'] ?? passportNumber;
 
       // -------- BIRTH DATE --------
-      if (data['birthDate'] != null && data['birthDate'] is int) {
-        final date = DateTime.fromMillisecondsSinceEpoch(data['birthDate']);
-        birthDate = DateFormat('dd MMM yyyy').format(date);
+      final birth = data['birthDate'];
+      if (birth != null) {
+        if (birth is int) {
+          birthDate = DateFormat(
+            'dd MMM yyyy',
+          ).format(DateTime.fromMillisecondsSinceEpoch(birth));
+        } else if (birth is Timestamp) {
+          birthDate = DateFormat('dd MMM yyyy').format(birth.toDate());
+        }
       }
 
       // -------- PROFILE IMAGE --------
       profileImageUrl = data['profileImageUrl'];
 
-      // -------- OFFER LETTER --------
-      final workApp = data['workApplication'];
-      if (workApp != null) {
-        offerLetterFileName =
-            workApp['offerLetterFileName'] ?? offerLetterFileName;
-        offerLetterUrl = workApp['offerLetterUrl'] ?? offerLetterUrl;
+      // -------- PHONE DIAL CODE --------
+      phoneDialCode = data['phoneDialcode'] ?? phoneDialCode;
+      phoneNumber = data['phoneNumber'] ?? phoneNumber;
+
+      // -------- NATIONALITY & RESIDENCE --------
+      if (data['nationality'] != null && data['nationality'] is Map) {
+        nationality = data['nationality']['name'] ?? nationality;
+      }
+      if (data['residence'] != null && data['residence'] is Map) {
+        residence = data['residence']['name'] ?? residence;
       }
 
-      // -------- INVESTMENT DOCUMENTS --------
-      investmentDocuments = [];
-      if (data['uploadedDocuments'] is List &&
-          data['uploadedDocuments'].isNotEmpty) {
-        investmentDocuments = (data['uploadedDocuments'] as List)
-            .map<Map<String, String>>(
-              (doc) => {
-                'fileUrl': doc['fileUrl'] ?? "",
-                'investmentDocument': doc['investmentDocument'] ?? "",
-              },
-            )
-            .toList();
-
-        isInvestmentUploaded = investmentDocuments.isNotEmpty;
-
-        if (investmentDocuments.isNotEmpty) {
-          investmentDocUrl = investmentDocuments[0]['fileUrl']!;
-          fileName = investmentDocuments[0]['investmentDocument']!;
-        }
-      } else {
-        investmentDocUrl = "";
-        fileName = "";
-        isInvestmentUploaded = false;
-      }
+      // -------- VISIT PURPOSE / VISA TYPE --------
+      visaType = data['visaType']?.toString() ?? visaType;
+      purposeOfTravel = data['purposeOfTravel'] ?? purposeOfTravel;
 
       // -------- TRAVEL VISA --------
       final travelVisa = data['travelVisa'];
-      if (travelVisa != null) {
+      if (travelVisa != null && travelVisa is Map) {
         purposeOfTravel = travelVisa['reason'] ?? purposeOfTravel;
-        // visaType = (travelVisa['visaType'] ?? visaType).toString();
 
         final start = travelVisa['startDate'];
         final end = travelVisa['endDate'];
@@ -182,21 +181,27 @@ class UserProfileViewModel extends ChangeNotifier {
           final e = DateFormat('dd MMM yyyy').format(end.toDate());
           travelDates = "$s - $e";
         }
-      } else {
-        visaType = data['selectedPurpose'] ?? visaType;
-        purposeOfTravel = data['purposeOfTravel'] ?? purposeOfTravel;
       }
-      // -------- VISA TYPE --------
-      visaType = data['visaType']?.toString() ?? visaType;
-      purposeOfTravel = data['purposeOfTravel'] ?? purposeOfTravel;
 
-      // -------- TRAVEL DATES (optional, if you still have start/end) --------
-      final start = data['startDate'];
-      final end = data['endDate'];
-      if (start is Timestamp && end is Timestamp) {
-        final s = DateFormat('dd MMM yyyy').format(start.toDate());
-        final e = DateFormat('dd MMM yyyy').format(end.toDate());
-        travelDates = "$s - $e";
+      // -------- INVESTMENT DETAILS --------
+      final investment = data['investmentDetails'];
+      if (investment != null) {
+        investmentAmount = investment['amount']?.toString() ?? investmentAmount;
+        investmentType =
+            investment['investmentType']?.toString() ?? investmentType;
+        // uploaded documents are already handled in your existing code
+      }
+
+      // -------- WORK APPLICATION --------
+      final workApp = data['workApplication'];
+      if (workApp != null) {
+        offerLetterFileName =
+            workApp['offerLetterFileName'] ?? offerLetterFileName;
+        offerLetterUrl = workApp['offerLetterUrl'] ?? offerLetterUrl;
+        jobTitle = workApp['jobTitle'] ?? jobTitle;
+        experience = workApp['experience'] ?? experience;
+        salary = workApp['salary'] ?? salary;
+        hasJobOffer = workApp['hasJobOffer'] ?? hasJobOffer;
       }
 
       // -------- COMMUNICATION PREFS --------

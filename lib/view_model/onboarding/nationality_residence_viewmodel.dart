@@ -1,75 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mvtravel/commen/country_list.dart';
+// import '../models/country_list.dart'; // 🔹 import the reusable list
 
 class NationalityResidenceViewModel extends ChangeNotifier {
-  String? selectedNationality;
-  String? selectedResidence;
+  Country? selectedNationality;
+  Country? selectedResidence;
 
-  /// List of countries with flags
-  List<Map<String, String>> countries = [
-    {'name': 'Pakistan', 'flag': '🇵🇰'},
-    {'name': 'India', 'flag': '🇮🇳'},
-    {'name': 'United States', 'flag': '🇺🇸'},
-    {'name': 'United Kingdom', 'flag': '🇬🇧'},
-    {'name': 'Canada', 'flag': '🇨🇦'},
-    {'name': 'Australia', 'flag': '🇦🇺'},
-    {'name': 'Germany', 'flag': '🇩🇪'},
-    {'name': 'France', 'flag': '🇫🇷'},
-    {'name': 'Italy', 'flag': '🇮🇹'},
-    {'name': 'Spain', 'flag': '🇪🇸'},
-    {'name': 'Brazil', 'flag': '🇧🇷'},
-    {'name': 'Mexico', 'flag': '🇲🇽'},
-    {'name': 'China', 'flag': '🇨🇳'},
-    {'name': 'Japan', 'flag': '🇯🇵'},
-    {'name': 'South Korea', 'flag': '🇰🇷'},
-    {'name': 'Russia', 'flag': '🇷🇺'},
-    {'name': 'Turkey', 'flag': '🇹🇷'},
-    {'name': 'Saudi Arabia', 'flag': '🇸🇦'},
-    {'name': 'UAE', 'flag': '🇦🇪'},
-    {'name': 'Egypt', 'flag': '🇪🇬'},
-    {'name': 'South Africa', 'flag': '🇿🇦'},
-    {'name': 'Nigeria', 'flag': '🇳🇬'},
-    {'name': 'Kenya', 'flag': '🇰🇪'},
-    {'name': 'Argentina', 'flag': '🇦🇷'},
-    {'name': 'Chile', 'flag': '🇨🇱'},
-    {'name': 'Colombia', 'flag': '🇨🇴'},
-    {'name': 'Thailand', 'flag': '🇹🇭'},
-    {'name': 'Vietnam', 'flag': '🇻🇳'},
-    {'name': 'Malaysia', 'flag': '🇲🇾'},
-    {'name': 'Indonesia', 'flag': '🇮🇩'},
-    {'name': 'Philippines', 'flag': '🇵🇭'},
-    {'name': 'Singapore', 'flag': '🇸🇬'},
-    {'name': 'New Zealand', 'flag': '🇳🇿'},
-    {'name': 'Norway', 'flag': '🇳🇴'},
-    {'name': 'Sweden', 'flag': '🇸🇪'},
-    {'name': 'Finland', 'flag': '🇫🇮'},
-    {'name': 'Netherlands', 'flag': '🇳🇱'},
-    {'name': 'Switzerland', 'flag': '🇨🇭'},
-    {'name': 'Ireland', 'flag': '🇮🇪'},
-    {'name': 'Belgium', 'flag': '🇧🇪'},
-  ];
+  /// 🔹 Use the reusable country list
+  List<Country> countries = countryList;
 
-  void setNationality(String? value) {
-    selectedNationality = value;
+  /// Setters
+  void setNationality(Country? country) {
+    selectedNationality = country;
     notifyListeners();
   }
 
-  void setResidence(String? value) {
-    selectedResidence = value;
+  void setResidence(Country? country) {
+    selectedResidence = country;
     notifyListeners();
   }
 
   /// 🔥 Firebase-ready map
+  /// 🔥 Firebase-ready map including name and flag info
   Map<String, dynamic> toMap() {
-    return {'nationality': selectedNationality, 'residence': selectedResidence};
+    return {
+      'nationality': {
+        'code': selectedNationality?.code,
+        'name': selectedNationality?.name,
+        'dial': selectedNationality?.dialCode,
+        // flag can be generated from code, so storing code is enough
+      },
+      'residence': {
+        'code': selectedResidence?.code,
+        'name': selectedResidence?.name,
+        'dial': selectedResidence?.dialCode,
+      },
+    };
   }
 
   /// ✅ Validation getters
-  bool get isNationalityValid =>
-      selectedNationality != null && selectedNationality!.isNotEmpty;
-  bool get isResidenceValid =>
-      selectedResidence != null && selectedResidence!.isNotEmpty;
+  bool get isNationalityValid => selectedNationality != null;
+  bool get isResidenceValid => selectedResidence != null;
 
   /// ✅ Overall validation
   bool get isValid => isNationalityValid && isResidenceValid;

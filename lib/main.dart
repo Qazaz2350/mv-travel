@@ -41,12 +41,10 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (_) => VisaTrackingViewModel()),
               ChangeNotifierProvider(create: (_) => UserProfileViewModel()),
               ChangeNotifierProvider(create: (_) => DocumentsViewModel()),
-              
-              
+
               // ChangeNotifierProvider(create: (_) => VisaTrackingModel()),
             ],
             child: MaterialApp(
-              
               home: child,
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
